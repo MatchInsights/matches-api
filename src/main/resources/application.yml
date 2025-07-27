@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: before-you-bet
+
+
+api-data:
+  url: https://v3.football.api-sports.io
+  key: a101d3af7861d9f45070012450bc5247
+
+cors:
+  allowed:
+    - http://localhost:5173
+    - https://before-you-bet.com
+    - https://www.before-you-bet.com
