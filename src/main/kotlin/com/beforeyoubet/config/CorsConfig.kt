@@ -1,29 +1,20 @@
 package com.beforeyoubet.config
 
 import com.beforeyoubet.props.CorsProps
-import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.web.cors.CorsConfiguration
-import org.springframework.web.cors.reactive.CorsWebFilter
-import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource
+import org.springframework.web.servlet.config.annotation.CorsRegistry
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
 @Configuration
 class CorsConfig(
     private val corsProps: CorsProps,
-) {
+) : WebMvcConfigurer {
 
-    @Bean
-    fun corsFilter(): CorsWebFilter {
-        val config = CorsConfiguration().apply {
-            allowedOrigins = corsProps.allowed
-            allowedMethods = listOf("GET", "POST", "PUT", "DELETE")
-            allowedHeaders = listOf("*")
-        }
-
-        val source = UrlBasedCorsConfigurationSource().apply {
-            registerCorsConfiguration("/**", config)
-        }
-
-        return CorsWebFilter(source)
+    override fun addCorsMappings(registry: CorsRegistry) {
+        registry.addMapping("/**")
+            .allowedOrigins(*corsProps.allowed.toTypedArray())
+            .allowedMethods("GET", "POST", "PUT", "DELETE")
+            .allowedHeaders("*")
     }
+
 }
