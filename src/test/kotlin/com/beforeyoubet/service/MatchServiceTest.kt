@@ -1,6 +1,7 @@
 package com.beforeyoubet.service
 
 import com.beforeyoubet.client.ApiSportsClient
+import com.beforeyoubet.model.MatchStatus
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -83,7 +84,8 @@ class MatchServiceTest {
     @Test
     fun shouldGetTodayMatches() {
         every { apiSportsClient.fethTodayMatches(any()) } returns listOf(matchData)
-        val matches = underTest.getTodayMatches()
+
+        val matches = underTest.getTodayMatches(MatchStatus.LIVE)
 
         assertThat(matches).hasSize(1)
 
