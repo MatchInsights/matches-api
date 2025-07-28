@@ -29,17 +29,17 @@ class MatchControllerTest {
 
     @Test
     fun shouldGetLeagueInfo() {
-        every { matchService.getTodayMatches() } returns listOf(
+        every { matchService.getTodayMatches(any()) } returns listOf(
             TodayMatch()
         )
 
         val response = mvc.perform(
-            get("/api/matches/today")
+            get("/api/matches/today/LIVE")
                 .contentType(MediaType.APPLICATION_JSON)
         ).andReturn().response
 
         assertThat(response.status).isEqualTo(HttpStatus.OK.value())
 
-        verify { matchService.getTodayMatches() }
+        verify { matchService.getTodayMatches(any()) }
     }
 }
