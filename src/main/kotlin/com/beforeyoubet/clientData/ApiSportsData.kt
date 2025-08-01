@@ -13,6 +13,7 @@ data class MatchStatus(
 )
 
 data class League(
+    val id: Int? = null,
     val name: String? = null,
     val country: String? = null,
     val logo: String? = null,

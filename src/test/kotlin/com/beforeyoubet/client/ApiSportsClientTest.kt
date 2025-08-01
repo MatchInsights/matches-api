@@ -1,9 +1,8 @@
-package com.beforeyoubet
+package com.beforeyoubet.client
 
-import com.beforeyoubet.client.ApiSportsClient
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
-import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -47,9 +46,57 @@ class ApiSportsClientTest {
                 .addHeader("Content-Type", "application/json")
         )
 
-        val result = underTest.fethTodayMatches("/fixtures?date=2025-07-27")
+        val result = underTest.fetchTodayMatches("/fixtures?date=2025-07-27")
 
-        assertThat(result).isNotEmpty
+        Assertions.assertThat(result).isNotEmpty
 
     }
+
+    @Test
+    fun `should fetch league standings`() {
+        val mockJson = """
+        {
+          "response": [
+            {
+              "league": {
+                "standings": [
+                  [
+                    {
+                      "rank": 1,
+                      "team": {
+                        "id": 33,
+                        "name": "Manchester United"
+                      },
+                      "points": 86,
+                      "form": "WDLWW"
+                    },
+                    {
+                      "rank": 2,
+                      "team": {
+                        "id": 34,
+                        "name": "Manchester City"
+                      },
+                      "points": 85,
+                      "form": "WWWWW"
+                    }
+                  ]
+                ]
+              }
+            }
+          ]
+        }
+    """.trimIndent()
+
+        mockWebServer.enqueue(
+            MockResponse()
+                .setResponseCode(200)
+                .setBody(mockJson)
+                .addHeader("Content-Type", "application/json")
+        )
+
+        val result = underTest.fetchLeagueStandings("/standings?league=39&season=2025")
+
+        Assertions.assertThat(result).hasSize(2)
+    }
+
 }

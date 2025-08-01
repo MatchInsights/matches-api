@@ -16,7 +16,7 @@ class MatchService(private val apiSportsClient: ApiSportsClient) {
     fun getTodayMatches(status: MatchStatus): List<TodayMatch> {
         val today = LocalDate.now().toString()
 
-        val response = apiSportsClient.fethTodayMatches("/fixtures?date=$today&status=${status.code}")
+        val response = apiSportsClient.fetchTodayMatches("/fixtures?date=$today&status=${status.code}")
 
         return response.map { TodayMatch.fromMapData(it) }
             .sortedByDescending { ZonedDateTime.parse(it.date) }

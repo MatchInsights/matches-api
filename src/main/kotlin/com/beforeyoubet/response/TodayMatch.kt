@@ -77,6 +77,7 @@ data class TodayMatch(
             leagueDataMap: Map<String, Any>?
         ): League? =
             League(
+                id = leagueDataMap?.let { leagueDataMap["id"] as Int? },
                 name = leagueDataMap?.let { leagueDataMap["name"] as String? },
                 country = leagueDataMap?.let { leagueDataMap["country"] as String? },
                 logo = leagueDataMap?.let { leagueDataMap["logo"] as String? },
