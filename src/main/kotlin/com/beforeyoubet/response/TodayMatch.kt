@@ -22,7 +22,7 @@ data class TodayMatch(
             return TodayMatch(
                 matchResponse.fixture.id,
                 matchResponse.fixture.date,
-                matchResponse.venue ?: Venue(),
+                matchResponse.fixture.venue ?: Venue(),
                 matchResponse.fixture.status ?: MatchStatus(),
                 matchResponse.league,
                 matchResponse.teams.home ?: Team(),

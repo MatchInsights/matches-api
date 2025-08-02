@@ -23,7 +23,7 @@ data class MatchDetails(
                 matchResponse.fixture.id,
                 matchResponse.fixture.date,
                 matchResponse.league,
-                matchResponse.venue ?: Venue(),
+                matchResponse.fixture.venue ?: Venue(),
                 matchResponse.teams.home ?: Team(),
                 matchResponse.teams.away ?: Team(),
                 matchResponse.goals ?: Goal(),
