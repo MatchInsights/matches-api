@@ -1,36 +1,44 @@
 package com.beforeyoubet.client
 
+import com.beforeyoubet.clientData.MatchResponse
+import com.beforeyoubet.clientData.ApiResponse
+import com.beforeyoubet.clientData.Standing
+import com.beforeyoubet.clientData.StandingResponse
+import com.beforeyoubet.errors.ApiFailedException
+import com.beforeyoubet.errors.ErrorMessage
+import org.springframework.core.ParameterizedTypeReference
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestClient
 
 @Component
 class ApiSportsClient(private val restClient: RestClient) {
 
-    fun fetchTodayMatches(uri: String): List<Map<String, Any>> {
-
-        val response = restClient.get()
-            .uri(uri)
-            .retrieve()
-            .body(Map::class.java) as Map<*, *>
-
-        val responseData = response["response"] as? List<*> ?: return emptyList()
-        return responseData.filterIsInstance<Map<String, Any>>()
+    fun fetchTodayMatches(uri: String): List<MatchResponse> {
+        val response = fetch<ApiResponse<List<MatchResponse>>>(uri)
+        return response.response
     }
 
-    fun fetchLeagueStandings(uri: String): List<Map<String, Any>> {
+    fun fetchLeagueStandings(uri: String): List<Standing> {
+        val response = fetch<ApiResponse<List<StandingResponse>>>(uri)
+        return response.response
+            .firstOrNull()
+            ?.league
+            ?.standings
+            ?.firstOrNull()
+            ?: emptyList()
+    }
 
-        val response = restClient.get()
+    fun fetchMatchDetails(uri: String): MatchResponse {
+        val response = fetch<ApiResponse<List<MatchResponse>>>(uri)
+        return response.response.firstOrNull() ?: throw ApiFailedException(ErrorMessage.CLIENT_FAILED)
+    }
+
+
+    private inline fun <reified T> fetch(uri: String): T {
+        return restClient.get()
             .uri(uri)
             .retrieve()
-            .body(Map::class.java) as Map<*, *>
-
-        val data = response["response"] as List<*>
-
-        if(data.isEmpty())
-            return emptyList()
-
-        val league = (data[0] as Map<String, Any>)["league"] as Map<String, Any>
-        return (league["standings"] as List<*>)[0] as List<Map<String, Any>>
-
+            .body(object : ParameterizedTypeReference<T>() {})
+            ?: throw ApiFailedException(ErrorMessage.CLIENT_FAILED)
     }
 }

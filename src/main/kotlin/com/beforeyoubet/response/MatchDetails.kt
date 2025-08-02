@@ -1,32 +1,34 @@
 package com.beforeyoubet.response
 
+import com.beforeyoubet.clientData.Goal
 import com.beforeyoubet.clientData.League
 import com.beforeyoubet.clientData.MatchResponse
-import com.beforeyoubet.clientData.MatchStatus
+import com.beforeyoubet.clientData.Score
 import com.beforeyoubet.clientData.Team
 import com.beforeyoubet.clientData.Venue
 
-data class TodayMatch(
+data class MatchDetails(
     val id: Int,
     val date: String,
-    val venue: Venue,
-    val matchStatus: MatchStatus,
     val league: League,
+    val venue: Venue,
     val homeTeam: Team,
-    val awayTeam: Team
+    val awayTeam: Team,
+    val goals: Goal,
+    val score: Score
 ) {
     companion object {
-
-        fun fromResponseData(matchResponse: MatchResponse): TodayMatch {
-
-            return TodayMatch(
+        fun fromResponseData(matchResponse: MatchResponse): MatchDetails {
+            return MatchDetails(
                 matchResponse.fixture.id,
                 matchResponse.fixture.date,
-                matchResponse.venue ?: Venue(),
-                matchResponse.fixture.status ?: MatchStatus(),
                 matchResponse.league,
+                matchResponse.venue ?: Venue(),
                 matchResponse.teams.home ?: Team(),
-                matchResponse.teams.away ?: Team()
+                matchResponse.teams.away ?: Team(),
+                matchResponse.goals ?: Goal(),
+                matchResponse.score ?: Score()
+
             )
         }
     }
