@@ -30,29 +30,11 @@ class LeagueStandingControllerTest {
     @MockkBean
     private lateinit var leagueStandingService: LeagueStandingService
 
-    val rawData = listOf(
-        mapOf(
-            "rank" to 1,
-            "team" to mapOf("name" to "Arsenal", "logo" to "arsenal.png"),
-            "points" to 87,
-            "form" to "W,W,D,W,W",
-            "all" to mapOf(
-                "played" to 38,
-                "win" to 27,
-                "draw" to 6,
-                "lose" to 5,
-                "goals" to mapOf(
-                    "for" to 88,
-                    "against" to 34
-                )
-            )
-        )
-    )
 
     @Test
     fun shouldGetLeagueInfo() {
         every { leagueStandingService.fetchStandings(any()) } returns
-                LeagueStandingInfo.fromRawData(rawData)
+                LeagueStandingInfo.fromApiResponse(listOf())
 
         val response = mvc.perform(
             get("/api/league/standing/39")

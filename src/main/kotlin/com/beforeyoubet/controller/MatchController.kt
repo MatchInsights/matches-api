@@ -1,6 +1,7 @@
 package com.beforeyoubet.controller
 
 import com.beforeyoubet.model.MatchStatus
+import com.beforeyoubet.response.MatchDetails
 import com.beforeyoubet.response.TodayMatch
 import com.beforeyoubet.service.MatchService
 import org.springframework.web.bind.annotation.PathVariable
@@ -13,7 +14,11 @@ import org.springframework.web.bind.annotation.RestController
 class MatchController(private val matchService: MatchService) {
 
     @GetMapping("/today/{status}")
-    fun getMatches(@PathVariable status: MatchStatus): List<TodayMatch> =
-        matchService.getTodayMatches(status)
+    fun getMatches(@PathVariable status: MatchStatus?): List<TodayMatch> =
+        matchService.getTodayMatches(status ?: MatchStatus.NOT_STARTED)
+
+    @GetMapping("/{matchId}/details")
+    fun getMatches(@PathVariable matchId: Int): MatchDetails =
+        matchService.getMatchDetails(matchId)
 
 }

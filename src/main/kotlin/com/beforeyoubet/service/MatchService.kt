@@ -2,6 +2,7 @@ package com.beforeyoubet.service
 
 import com.beforeyoubet.client.ApiSportsClient
 import com.beforeyoubet.model.MatchStatus
+import com.beforeyoubet.response.MatchDetails
 import com.beforeyoubet.response.TodayMatch
 
 import org.springframework.stereotype.Service
@@ -18,7 +19,14 @@ class MatchService(private val apiSportsClient: ApiSportsClient) {
 
         val response = apiSportsClient.fetchTodayMatches("/fixtures?date=$today&status=${status.code}")
 
-        return response.map { TodayMatch.fromMapData(it) }
+        return response.map { TodayMatch.fromResponseData(it) }
             .sortedByDescending { ZonedDateTime.parse(it.date) }
+    }
+
+    fun getMatchDetails(matchId: Int): MatchDetails {
+
+        val response = apiSportsClient.fetchMatchDetails("/fixtures?id=${matchId}")
+
+        return MatchDetails.fromResponseData(response)
     }
 }

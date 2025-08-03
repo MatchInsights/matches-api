@@ -13,6 +13,6 @@ class LeagueStandingService(private val apiSportsClient: ApiSportsClient, privat
 
         val response = apiSportsClient.fetchLeagueStandings("/standings?league=$leagueId&season=${seasonProps.year}")
 
-        return LeagueStandingInfo.fromRawData(response)
+        return LeagueStandingInfo.fromApiResponse(response)
     }
 }

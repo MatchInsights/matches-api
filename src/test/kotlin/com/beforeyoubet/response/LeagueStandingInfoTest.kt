@@ -1,49 +1,28 @@
 package com.beforeyoubet.response
 
+import com.beforeyoubet.data.StandingData
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 class LeagueStandingInfoTest {
 
     @Test
-    fun `should correctly parse raw data into LeagueStandingInfo list`() {
-        val rawData = listOf(
-            mapOf(
-                "rank" to 1,
-                "team" to mapOf(
-                    "name" to "Manchester City",
-                    "logo" to "https://logo.com/mancity.png"
-                ),
-                "points" to 89,
-                "form" to "W,W,D,W,L",
-                "all" to mapOf(
-                    "played" to 38,
-                    "win" to 28,
-                    "draw" to 5,
-                    "lose" to 5,
-                    "goals" to mapOf(
-                        "for" to 94,
-                        "against" to 33
-                    )
-                )
-            )
-        )
-
-        val result = LeagueStandingInfo.fromRawData(rawData)
+    fun `should correctly parse data into LeagueStandingInfo`() {
+        val result = LeagueStandingInfo.fromApiResponse(listOf(StandingData.standing))
 
         assertThat(result).hasSize(1)
         val info = result[0]
 
-        assertThat(info.rank).isEqualTo(1)
-        assertThat(info.teamName).isEqualTo("Manchester City")
-        assertThat(info.logo).isEqualTo("https://logo.com/mancity.png")
-        assertThat(info.points).isEqualTo(89)
-        assertThat(info.played).isEqualTo(38)
-        assertThat(info.won).isEqualTo(28)
-        assertThat(info.draw).isEqualTo(5)
-        assertThat(info.lost).isEqualTo(5)
-        assertThat(info.goalsFor).isEqualTo(94)
-        assertThat(info.goalsAgainst).isEqualTo(33)
-        assertThat(info.form).isEqualTo("W,W,D,W,L")
+        assertThat(info.rank).isEqualTo(StandingData.standing.rank)
+        assertThat(info.teamName).isEqualTo(StandingData.standing.team.name)
+        assertThat(info.logo).isEqualTo(StandingData.standing.team.logo)
+        assertThat(info.points).isEqualTo(StandingData.standing.points)
+        assertThat(info.played).isEqualTo(StandingData.standing.all?.played)
+        assertThat(info.won).isEqualTo(StandingData.standing.all?.win)
+        assertThat(info.draw).isEqualTo(StandingData.standing.all?.draw)
+        assertThat(info.lost).isEqualTo(StandingData.standing.all?.lose)
+        assertThat(info.goalsFor).isEqualTo(StandingData.standing.all?.goals?.`for`)
+        assertThat(info.goalsAgainst).isEqualTo(StandingData.standing.all?.goals?.against)
+        assertThat(info.form).isEqualTo(StandingData.standing.form)
     }
 }

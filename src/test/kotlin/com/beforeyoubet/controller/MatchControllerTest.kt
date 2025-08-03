@@ -1,7 +1,9 @@
 package com.beforeyoubet.controller
 
 import com.beforeyoubet.TestCorsPropsConfig
-import com.beforeyoubet.response.TodayMatch
+import com.beforeyoubet.clientData.MatchResponse
+import com.beforeyoubet.data.MatchResponseData
+import com.beforeyoubet.response.MatchDetails
 import com.beforeyoubet.service.MatchService
 import com.ninjasquad.springmockk.MockkBean
 
@@ -22,7 +24,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 
 @Import(TestCorsPropsConfig::class)
 @WebMvcTest(MatchController::class)
-class MatchControllerTest{
+class MatchControllerTest {
 
     @Autowired
     private lateinit var mvc: MockMvc
@@ -32,9 +34,7 @@ class MatchControllerTest{
 
     @Test
     fun shouldGetMatches() {
-        every { matchService.getTodayMatches(any()) } returns listOf(
-            TodayMatch()
-        )
+        every { matchService.getTodayMatches(any()) } returns listOf()
 
         val response = mvc.perform(
             get("/api/matches/today/LIVE")
@@ -44,5 +44,22 @@ class MatchControllerTest{
         assertThat(response.status).isEqualTo(HttpStatus.OK.value())
 
         verify { matchService.getTodayMatches(any()) }
+    }
+
+    @Test
+    fun shouldGetMatcheDetails() {
+        every { matchService.getMatchDetails(any()) } returns
+                MatchDetails.fromResponseData(
+                    MatchResponseData.matchResponse
+                )
+
+        val response = mvc.perform(
+            get("/api/matches/1234/details")
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andReturn().response
+
+        assertThat(response.status).isEqualTo(HttpStatus.OK.value())
+
+        verify { matchService.getMatchDetails(any()) }
     }
 }
