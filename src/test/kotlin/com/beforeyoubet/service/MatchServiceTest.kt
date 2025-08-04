@@ -16,13 +16,13 @@ class MatchServiceTest {
 
     @Test
     fun shouldGetTodayMatches() {
-        every { apiSportsClient.fetchTodayMatches(any()) } returns listOf(MatchResponseData.matchResponse)
+        every { apiSportsClient.fetchMatches(any()) } returns listOf(MatchResponseData.matchResponse)
 
         val matches = underTest.getTodayMatches(MatchStatus.LIVE)
 
         assertThat(matches).hasSize(1)
 
-        verify { apiSportsClient.fetchTodayMatches(any()) }
+        verify { apiSportsClient.fetchMatches(any()) }
 
     }
 

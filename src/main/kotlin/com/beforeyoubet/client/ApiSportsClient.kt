@@ -13,7 +13,7 @@ import org.springframework.web.client.RestClient
 @Component
 class ApiSportsClient(private val restClient: RestClient) {
 
-    fun fetchTodayMatches(uri: String): List<MatchResponse> {
+    fun fetchMatches(uri: String): List<MatchResponse> {
         val response = fetch<ApiResponse<List<MatchResponse>>>(uri)
         return response.response
     }

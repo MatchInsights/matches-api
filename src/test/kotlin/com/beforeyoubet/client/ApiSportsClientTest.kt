@@ -46,7 +46,7 @@ class ApiSportsClientTest {
                 .addHeader("Content-Type", "application/json")
         )
 
-        val result = underTest.fetchTodayMatches("/fixtures?date=2025-07-27")
+        val result = underTest.fetchMatches("/fixtures?date=2025-07-27")
 
         assertThat(result.first().teams).isNotNull
         assertThat(result.first().fixture).isNotNull
