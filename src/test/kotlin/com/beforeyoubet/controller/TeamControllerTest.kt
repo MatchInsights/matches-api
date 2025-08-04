@@ -1,10 +1,7 @@
 package com.beforeyoubet.controller
 
 import com.beforeyoubet.TestCorsPropsConfig
-import com.beforeyoubet.data.MatchResponseData
 import com.beforeyoubet.response.HomeAwayTeamLastFive
-import com.beforeyoubet.response.MatchDetails
-import com.beforeyoubet.service.MatchService
 import com.beforeyoubet.service.TeamsService
 import com.ninjasquad.springmockk.MockkBean
 
@@ -48,6 +45,5 @@ class TeamControllerTest {
 
         verify { teamsService.getLast5Matches(any(), any()) }
     }
-
 
 }

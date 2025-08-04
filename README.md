@@ -1,40 +1,49 @@
-# 🏆 Sports Matches API
+# 🏆 BeforeYouBet: Sports Matches API
 
-This is a RESTful API built with **Spring Boot** and **Kotlin** designed to provide match data, betting odds, and analytical insights for sports events.
+BeforeYouBet is a RESTful API built with **Spring Boot** and **Kotlin**, designed to provide reliable sports match data, betting odds, and analytical insights. 
+
+It's open source and easy to run locally or deploy.
+
+Join the community, contribute, and build smarter sports tools.
+
+
+## 💬 Community & Support
+
+Stay up to date, ask questions, or contribute:
+
+- [Discord](https://discord.gg/7nJ8E75YjD) 👥
+- [Twitter/X](https://x.com/BeforeYouBetApp) 🐦
+
+
+## 🚀 Features
+
+- 📅 Get **today's matches**
+- 📊 Access **match odds** (live & pre-match)
+- 🔍 Retrieve **match insights** (form, history)
+- 🏆 Browse **available leagues**
+- 📈 Historical data support
 
 ---
 
-## ✅ 1. Features
+## ⚙️ Tech Stack
 
-- 📅 Get today's matches
-- 📊 Access match odds 
-- 🔍 Retrieve match insights
-- 🏆 Browse available leagues
-
----
-
-## ✅ 2. Tech Stack
-
-- **Kotlin** (JVM)
-- **Spring Boot** (Web, Actuator)
-- **Gradle**
-- **Docker** (optional)
+- 💻 Kotlin (JVM)
+- 🌐 Spring Boot (Web, Actuator)
+- 🛠 Gradle
+- 🐳 Docker (optional for deployment)
 
 ---
 
-## ✅ 3. Getting Started
+## 🧪 Getting Started
 
 ### Prerequisites
 
 - Java 
-- Gradle 
-- Docker 
+- Gradle
+- Docker (optional)
 
-## Backend Endpoints
-| Endpoint                 | Method | Description            |
-| ------------------------ | ------ | ---------------------- |
-| `/matches/today`         | GET    | Get today's matches    |
-| `/matches/{id}`          | GET    | Get match metadata     |
-| `/matches/{id}/odds`     | GET    | Get 1X2 and O/U odds   |
-| `/matches/{id}/insights` | GET    | Get all 20 insights    |
-| `/leagues`               | GET    | List available leagues |
+### Running Locally
+
+```bash
+./gradlew bootRun
+```
