@@ -46,4 +46,17 @@ class TeamControllerTest {
         verify { teamsService.getLast5Matches(any(), any()) }
     }
 
+    @Test
+    fun shouldGetH2H() {
+        every { teamsService.getHeadToHead(any(), any()) } returns listOf()
+
+        val response = mvc.perform(
+            get("/api/teams/h2h/45/23")
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andReturn().response
+
+        assertThat(response.status).isEqualTo(HttpStatus.OK.value())
+
+        verify { teamsService.getHeadToHead(any(), any()) }
+    }
 }

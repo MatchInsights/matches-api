@@ -50,7 +50,9 @@ data class Goal(
 
 data class Score(
     val halftime: Goal? = Goal(),
-    val fulltime: Goal? = Goal()
+    val fulltime: Goal? = Goal(),
+    val extratime: Goal? = Goal(),
+    val penalty: Goal? = Goal()
 )
 
 data class LeagueWithStandings(
