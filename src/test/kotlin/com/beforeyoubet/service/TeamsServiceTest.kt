@@ -27,4 +27,17 @@ class TeamsServiceTest {
         verify { apiSportsClient.fetchMatches(any()) }
 
     }
+
+    @Test
+    fun shouldGetHead2HeadInfo() {
+        every { apiSportsClient.fetchMatches(any()) } returns listOf(MatchResponseData.matchResponse)
+
+        val h2hs = underTest.getHeadToHead(34, 44)
+
+        assertThat(h2hs[0].winner).isNotNull
+        assertThat(h2hs[0].date).isNotNull
+
+        verify { apiSportsClient.fetchMatches(any()) }
+
+    }
 }

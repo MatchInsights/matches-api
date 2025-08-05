@@ -3,6 +3,7 @@ package com.beforeyoubet.service
 import com.beforeyoubet.client.ApiSportsClient
 import com.beforeyoubet.clientData.MatchResponse
 import com.beforeyoubet.props.SeasonProps
+import com.beforeyoubet.response.H2HDetails
 import com.beforeyoubet.response.HomeAwayTeamLastFive
 import org.springframework.stereotype.Service
 import java.time.ZonedDateTime
@@ -13,7 +14,6 @@ import java.time.format.DateTimeFormatter
 class TeamsService(private val apiSportsClient: ApiSportsClient, private val seasonProps: SeasonProps) {
 
     fun getLast5Matches(homeTeamId: Int, awayTeamId: Int): HomeAwayTeamLastFive {
-
         val homeTeamMatches = lastFiveMatches(homeTeamId)
         val awayTeamMatches = lastFiveMatches(awayTeamId)
 
@@ -22,6 +22,11 @@ class TeamsService(private val apiSportsClient: ApiSportsClient, private val sea
             awayTeamLastFive = lastFiveResults(awayTeamId, awayTeamMatches)
         )
     }
+
+    fun getHeadToHead(homeTeamId: Int, awayTeamId: Int): List<H2HDetails> =
+        apiSportsClient.fetchMatches("/fixtures/headtohead?h2h=${homeTeamId}-${awayTeamId}")
+               .take(5).map { H2HDetails.fromResponseData(it) }
+
 
     private fun lastFiveMatches(teamId: Int): List<MatchResponse> =
         apiSportsClient.fetchMatches("/fixtures?team=${teamId}&season=${seasonProps.year}")

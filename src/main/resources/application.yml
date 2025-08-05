@@ -5,7 +5,7 @@ spring:
 
 api-data:
   url: https://v3.football.api-sports.io
-  key: 
+  key: a101d3af7861d9f45070012450bc5247
 
 season:
   year: 2022
