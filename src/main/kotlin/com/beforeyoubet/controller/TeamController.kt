@@ -3,6 +3,7 @@ package com.beforeyoubet.controller
 import com.beforeyoubet.response.H2HDetails
 import com.beforeyoubet.response.HomeAwayTeamLastFive
 import com.beforeyoubet.service.TeamsService
+import com.beforeyoubet.response.TwoTeamStats
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -19,5 +20,16 @@ class TeamController(private val teamsService: TeamsService) {
     @GetMapping("/h2h/{homeTeamId}/{awayTeamId}")
     fun getH2H(@PathVariable homeTeamId: Int, @PathVariable awayTeamId: Int): List<H2HDetails> =
         teamsService.getHeadToHead(homeTeamId, awayTeamId)
+
+    @GetMapping("/h2h/stats/{homeTeamId}/{awayTeamId}")
+    fun getH2HStats(@PathVariable homeTeamId: Int, @PathVariable awayTeamId: Int): TwoTeamStats =
+        teamsService.getH2HStats(homeTeamId, awayTeamId)
+
+    @GetMapping("/season/stats/{homeTeamId}/{awayTeamId}/{leagueId}")
+    fun getH2HStats(
+        @PathVariable homeTeamId: Int,
+        @PathVariable awayTeamId: Int,
+        @PathVariable leagueId: Int
+    ): TwoTeamStats = teamsService.getTeamsStats(homeTeamId, awayTeamId, leagueId)
 
 }
