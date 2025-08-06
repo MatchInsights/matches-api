@@ -3,6 +3,7 @@ package com.beforeyoubet.controller
 import com.beforeyoubet.TestCorsPropsConfig
 import com.beforeyoubet.model.TeamStats
 import com.beforeyoubet.response.HomeAwayTeamLastFive
+import com.beforeyoubet.response.TeamPositionsAndPoints
 import com.beforeyoubet.service.TeamsService
 import com.beforeyoubet.response.TwoTeamStats
 import com.ninjasquad.springmockk.MockkBean
@@ -94,5 +95,22 @@ class TeamControllerTest {
         assertThat(response.status).isEqualTo(HttpStatus.OK.value())
 
         verify { teamsService.getTeamsStats(any(), any(), any()) }
+    }
+
+    @Test
+    fun shouldGetLeagueStats() {
+        every { teamsService.getTeamsPositionsAndPoints(any(), any(), any()) } returns
+                TeamPositionsAndPoints(
+                    1, 3, 88, 73
+                )
+
+        val response = mvc.perform(
+            get("/api/teams/league/stats/45/23/1")
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andReturn().response
+
+        assertThat(response.status).isEqualTo(HttpStatus.OK.value())
+
+        verify { teamsService.getTeamsPositionsAndPoints(any(), any(), any()) }
     }
 }
