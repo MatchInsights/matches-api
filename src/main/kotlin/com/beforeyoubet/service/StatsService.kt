@@ -36,16 +36,13 @@ class StatsService {
         }
 
         return TeamStats(
-            (totalGoalsFor.toFloat() / played).roundTo(2),
-            (totalGoalsAgainst.toFloat() / played).roundTo(2),
-            ((100f * cleanSheets / played)).roundTo(1),
-            ((100f * scoredIn / played)).roundTo(1),
-            ((100f * concededIn / played)).roundTo(1)
+            if (played > 0) ((totalGoalsFor.toFloat() / played) * 100).roundToInt() / 100f else 0f,
+            if (played > 0) ((totalGoalsAgainst.toFloat() / played) * 100).roundToInt() / 100f else 0f,
+            if (played > 0) ((100f * cleanSheets / played) * 10).roundToInt() / 10f else 0f,
+            if (played > 0) ((100f * scoredIn / played) * 10).roundToInt() / 10f else 0f,
+            if (played > 0) ((100f * concededIn / played) * 10).roundToInt() / 10f else 0f
         )
+
     }
 }
 
-private fun Float.roundTo(decimals: Int): Float {
-    val factor = 10.0.pow(decimals).toFloat()
-    return (this * factor).roundToInt() / factor
-}
