@@ -66,5 +66,36 @@ class MatchResponseData {
             )
         )
 
+
+        val matchResponseList = listOf(matchResponse, matchResponse.copy(teams = matchResponse.teams.copy(home =
+            Team(
+                id = 33,
+                name = "Manchester United",
+                logo = "https://media.api-sports.io/football/teams/33.png",
+                winner = true,
+                goals = 5
+            )),
+            goals = matchResponse.goals?.copy(home = 5, away = 1),
+            ),
+
+            matchResponse.copy(teams = matchResponse.teams.copy(
+                home = Team(
+                    id = 40,
+                    name = "Liverpool",
+                    logo = "https://media.api-sports.io/football/teams/40.png",
+                    winner = false,
+                    goals = 4
+                ),
+                away = Team(
+                    id = 33,
+                    name = "Manchester United",
+                    logo = "https://media.api-sports.io/football/teams/33.png",
+                    winner = true,
+                    goals = 2
+                )),
+                goals = matchResponse.goals?.copy(home =4, away = 2)
+                )
+            )
+
     }
 }

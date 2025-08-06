@@ -1,8 +1,10 @@
 package com.beforeyoubet.controller
 
 import com.beforeyoubet.TestCorsPropsConfig
+import com.beforeyoubet.model.TeamStats
 import com.beforeyoubet.response.HomeAwayTeamLastFive
 import com.beforeyoubet.service.TeamsService
+import com.beforeyoubet.response.TwoTeamStats
 import com.ninjasquad.springmockk.MockkBean
 
 import io.mockk.every
@@ -58,5 +60,39 @@ class TeamControllerTest {
         assertThat(response.status).isEqualTo(HttpStatus.OK.value())
 
         verify { teamsService.getHeadToHead(any(), any()) }
+    }
+
+    @Test
+    fun shouldGetH2HStats() {
+        every { teamsService.getH2HStats(any(), any()) } returns TwoTeamStats(
+            team0 = TeamStats(34.0f, 12.0f, 8.0f, 14.0f, 1.0f),
+            team1 = TeamStats(34.0f, 12.0f, 8.0f, 14.0f, 1.0f),
+        )
+
+        val response = mvc.perform(
+            get("/api/teams/h2h/stats/45/23")
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andReturn().response
+
+        assertThat(response.status).isEqualTo(HttpStatus.OK.value())
+
+        verify { teamsService.getH2HStats(any(), any()) }
+    }
+
+    @Test
+    fun shouldGetSeasonStats() {
+        every { teamsService.getTeamsStats(any(), any(), any()) } returns TwoTeamStats(
+            team0 = TeamStats(34.0f, 12.0f, 8.0f, 14.0f, 1.0f),
+            team1 = TeamStats(34.0f, 12.0f, 8.0f, 14.0f, 1.0f),
+        )
+
+        val response = mvc.perform(
+            get("/api/teams/season/stats/45/23/1")
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andReturn().response
+
+        assertThat(response.status).isEqualTo(HttpStatus.OK.value())
+
+        verify { teamsService.getTeamsStats(any(), any(), any()) }
     }
 }
