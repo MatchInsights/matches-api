@@ -2,6 +2,7 @@ package com.beforeyoubet.service
 
 import com.beforeyoubet.client.ApiSportsClient
 import com.beforeyoubet.data.MatchResponseData
+import com.beforeyoubet.data.StandingData
 import com.beforeyoubet.model.TeamStats
 
 import com.beforeyoubet.props.SeasonProps
@@ -68,5 +69,20 @@ class TeamsServiceTest {
 
         verify { apiSportsClient.fetchMatches(any()) }
         verify { statsService.seasonTeamStats(any(), any()) }
+    }
+
+    @Test
+    fun shouldGetTeamsPositionsAndPoints() {
+        every { apiSportsClient.fetchLeagueStandings(any()) } returns listOf(StandingData.standing)
+
+
+        val result = underTest.getTeamsPositionsAndPoints(33, 44, 1)
+
+        assertThat(result.awayTeamPoints).isNull()
+        assertThat(result.homeTeamPoints).isEqualTo(89)
+        assertThat(result.awayTeamPosition).isNull()
+        assertThat(result.homeTeamPosition).isEqualTo(1)
+
+        verify { apiSportsClient.fetchLeagueStandings(any()) }
     }
 }

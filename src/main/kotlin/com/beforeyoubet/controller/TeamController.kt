@@ -2,6 +2,7 @@ package com.beforeyoubet.controller
 
 import com.beforeyoubet.response.H2HDetails
 import com.beforeyoubet.response.HomeAwayTeamLastFive
+import com.beforeyoubet.response.TeamPositionsAndPoints
 import com.beforeyoubet.service.TeamsService
 import com.beforeyoubet.response.TwoTeamStats
 import org.springframework.web.bind.annotation.PathVariable
@@ -31,5 +32,12 @@ class TeamController(private val teamsService: TeamsService) {
         @PathVariable awayTeamId: Int,
         @PathVariable leagueId: Int
     ): TwoTeamStats = teamsService.getTeamsStats(homeTeamId, awayTeamId, leagueId)
+
+    @GetMapping("/league/stats/{homeTeamId}/{awayTeamId}/{leagueId}")
+    fun getTeamsLeagueStats(
+        @PathVariable homeTeamId: Int,
+        @PathVariable awayTeamId: Int,
+        @PathVariable leagueId: Int
+    ): TeamPositionsAndPoints = teamsService.getTeamsPositionsAndPoints(homeTeamId, awayTeamId, leagueId)
 
 }

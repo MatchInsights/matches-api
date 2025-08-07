@@ -2,9 +2,11 @@ package com.beforeyoubet.service
 
 import com.beforeyoubet.client.ApiSportsClient
 import com.beforeyoubet.clientData.MatchResponse
+import com.beforeyoubet.clientData.Standing
 import com.beforeyoubet.props.SeasonProps
 import com.beforeyoubet.response.H2HDetails
 import com.beforeyoubet.response.HomeAwayTeamLastFive
+import com.beforeyoubet.response.TeamPositionsAndPoints
 import com.beforeyoubet.response.TwoTeamStats
 import org.springframework.stereotype.Service
 import java.time.ZonedDateTime
@@ -42,8 +44,6 @@ class TeamsService(
             team0 = statsService.seasonTeamStats(homeTeamId, homeTeamMatches),
             team1 = statsService.seasonTeamStats(awayTeamId, awayTeamMatches)
         )
-
-
     }
 
     fun getH2HStats(homeTeamId: Int, awayTeamId: Int): TwoTeamStats {
@@ -55,6 +55,15 @@ class TeamsService(
         )
     }
 
+    fun getTeamsPositionsAndPoints(homeTeamId: Int, awayTeamId: Int, leagueId: Int): TeamPositionsAndPoints {
+        val response: List<Standing> =
+            apiSportsClient.fetchLeagueStandings("/standings?league=$leagueId&season=${seasonProps.year}")
+
+        val homeTeamStanding = response.firstOrNull { standing -> standing.team.id == homeTeamId }
+        val awayTeamStanding = response.firstOrNull { standing -> standing.team.id == awayTeamId }
+
+        return TeamPositionsAndPoints.fromApiResponse(homeTeamStanding, awayTeamStanding)
+    }
 
     private fun lastFiveMatches(teamId: Int): List<MatchResponse> =
         apiSportsClient.fetchMatches("/fixtures?team=${teamId}&season=${seasonProps.year}")
