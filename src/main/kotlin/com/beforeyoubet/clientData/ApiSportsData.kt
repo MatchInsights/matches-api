@@ -93,3 +93,8 @@ data class Standing(
     val away: RecordStats? = RecordStats(),
     val update: String? = ""
 )
+
+data class FixtureOdds(val bookmakers: List<Bookmaker>)
+data class Bookmaker(val name: String, val bets: List<Bet>)
+data class Bet(val name: String, val values: List<OddValue>)
+data class OddValue(val value: String, val odd: String)

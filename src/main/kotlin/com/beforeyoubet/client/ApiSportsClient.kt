@@ -1,9 +1,6 @@
 package com.beforeyoubet.client
 
-import com.beforeyoubet.clientData.MatchResponse
-import com.beforeyoubet.clientData.ApiResponse
-import com.beforeyoubet.clientData.Standing
-import com.beforeyoubet.clientData.StandingResponse
+import com.beforeyoubet.clientData.*
 import com.beforeyoubet.errors.ApiFailedException
 import com.beforeyoubet.errors.ErrorMessage
 import org.springframework.core.ParameterizedTypeReference
@@ -26,6 +23,11 @@ class ApiSportsClient(private val restClient: RestClient) {
             ?.standings
             ?.firstOrNull()
             ?: emptyList()
+    }
+
+    fun fetchFixtureOdds(uri: String): List<FixtureOdds> {
+        val response = fetch<ApiResponse<List<FixtureOdds>>>(uri)
+        return response.response
     }
 
     fun fetchMatchDetails(uri: String): MatchResponse {

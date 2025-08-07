@@ -8,7 +8,6 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.web.client.RestClient
-import kotlin.collections.first
 
 class ApiSportsClientTest {
 
@@ -22,9 +21,7 @@ class ApiSportsClientTest {
 
         val baseUrl = mockWebServer.url("/").toString()
 
-        val restClient = RestClient.builder()
-            .baseUrl(baseUrl)
-            .build()
+        val restClient = RestClient.builder().baseUrl(baseUrl).build()
 
         underTest = ApiSportsClient(restClient)
     }
@@ -40,10 +37,7 @@ class ApiSportsClientTest {
         val mockJson = RawData.todayMatches
 
         mockWebServer.enqueue(
-            MockResponse()
-                .setResponseCode(200)
-                .setBody(mockJson)
-                .addHeader("Content-Type", "application/json")
+            MockResponse().setResponseCode(200).setBody(mockJson).addHeader("Content-Type", "application/json")
         )
 
         val result = underTest.fetchMatches("/fixtures?date=2025-07-27")
@@ -62,10 +56,7 @@ class ApiSportsClientTest {
         val mockJson = RawData.leagueStandings
 
         mockWebServer.enqueue(
-            MockResponse()
-                .setResponseCode(200)
-                .setBody(mockJson)
-                .addHeader("Content-Type", "application/json")
+            MockResponse().setResponseCode(200).setBody(mockJson).addHeader("Content-Type", "application/json")
         )
 
         val result = underTest.fetchLeagueStandings("/standings?league=39&season=2025")
@@ -81,10 +72,7 @@ class ApiSportsClientTest {
         val mockJson = RawData.matchDetails
 
         mockWebServer.enqueue(
-            MockResponse()
-                .setResponseCode(200)
-                .setBody(mockJson)
-                .addHeader("Content-Type", "application/json")
+            MockResponse().setResponseCode(200).setBody(mockJson).addHeader("Content-Type", "application/json")
         )
 
         val result = underTest.fetchMatchDetails("/fixture?id=2025")
@@ -95,4 +83,20 @@ class ApiSportsClientTest {
         assertThat(result.venue).isNotNull
     }
 
+
+    @Test
+    fun `should fetch the odds`() {
+        val mockJson = RawData.oddsResponse
+
+        mockWebServer.enqueue(
+            MockResponse().setResponseCode(200).setBody(mockJson).addHeader("Content-Type", "application/json")
+        )
+
+        val result = underTest.fetchFixtureOdds("/odds?fixture=1326874")
+
+        assertThat(result[0].bookmakers[0].bets[0].name).isEqualTo("Match Winner")
+        assertThat(result[0].bookmakers[0].bets[0].values).isNotEmpty
+        assertThat(result[0].bookmakers[0].bets[1].name).isEqualTo("Odd/Even - First Half")
+        assertThat(result[0].bookmakers[0].bets[1].values).isNotEmpty
+    }
 }

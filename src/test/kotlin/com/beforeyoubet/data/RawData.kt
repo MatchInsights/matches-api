@@ -67,8 +67,38 @@ class RawData {
       }
     }
   ]
-}
+}""".trimIndent()
 
-    """.trimIndent()
+        val oddsResponse = """
+            {
+              "response": [
+                {
+                  "bookmakers": [
+                    {
+                      "name": "Bet365",
+                      "bets": [
+                        {
+                          "name": "Match Winner",
+                          "values": [
+                            { "value": "Home", "odd": "1.85" },
+                            { "value": "Draw", "odd": "3.50" },
+                            { "value": "Away", "odd": "4.20" }
+                          ]
+                        },
+                        {
+                          "name": "Odd/Even - First Half",
+                          "values": [
+                            { "value": "Odd", "odd": "2.00" },
+                            { "value": "Even", "odd": "1.85" }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+
+        """.trimIndent()
     }
 }
