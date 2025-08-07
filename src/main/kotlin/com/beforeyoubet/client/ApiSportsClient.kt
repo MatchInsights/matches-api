@@ -1,6 +1,10 @@
 package com.beforeyoubet.client
 
-import com.beforeyoubet.clientData.*
+import com.beforeyoubet.clientData.MatchResponse
+import com.beforeyoubet.clientData.ApiResponse
+import com.beforeyoubet.clientData.Standing
+import com.beforeyoubet.clientData.StandingResponse
+import com.beforeyoubet.clientData.FixtureOdds
 import com.beforeyoubet.errors.ApiFailedException
 import com.beforeyoubet.errors.ErrorMessage
 import org.springframework.core.ParameterizedTypeReference
