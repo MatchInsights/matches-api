@@ -1,18 +1,18 @@
-package com.beforeyoubet.service
+package com.beforeyoubet.component
 
 import com.beforeyoubet.data.MatchResponseData
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class StatsServiceTest {
-    val underTest = StatsService()
+class DataManipulationTest {
+    val underTest = DataManipulation()
 
     @Test
     fun shouldCalculateSeasonStats() {
 
         val result = underTest.seasonTeamStats(
             teamId = 33,
-            MatchResponseData.matchResponseList
+            MatchResponseData.Companion.matchResponseList
         )
 
         assertThat(result.avgGoalsFor).isEqualTo(3.33f)

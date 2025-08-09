@@ -1,0 +1,67 @@
+package com.beforeyoubet.component
+
+import com.beforeyoubet.client.ApiSportsClient
+import com.beforeyoubet.clientData.FixtureOdds
+import com.beforeyoubet.clientData.MatchResponse
+import com.beforeyoubet.clientData.Standing
+import com.beforeyoubet.props.SeasonProps
+import kotlinx.coroutines.async
+import kotlinx.coroutines.runBlocking
+import org.springframework.stereotype.Component
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
+
+@Component
+class Apidata(
+    private val apiSportsClient: ApiSportsClient,
+    private val seasonProps: SeasonProps
+) {
+
+    fun todayMatches(day: String, statusCode: String): List<MatchResponse> =
+        apiSportsClient.fetchMatches("/fixtures?date=$day&status=${statusCode}")
+
+    fun matchDetails(matchId: Int): MatchResponse =
+        apiSportsClient.fetchMatchDetails("/fixtures?id=${matchId}")
+
+    fun headToHead(homeTeamId: Int, awayTeamId: Int): List<MatchResponse> =
+        apiSportsClient.fetchMatches("/fixtures/headtohead?h2h=${homeTeamId}-${awayTeamId}")
+
+
+    fun lastFiveMatchesResults(homeTeamId: Int, awayTeamId: Int): Map<Int, List<MatchResponse>> = runBlocking {
+        val jobs = mapOf(
+            homeTeamId to async { lastFiveMatches(homeTeamId) },
+            awayTeamId to async { lastFiveMatches(awayTeamId) }
+        )
+
+        jobs.mapValues { (_, job) -> job.await() }
+
+    }
+
+    fun getTeamsLeagueMatches(homeTeamId: Int, awayTeamId: Int, leagueId: Int) = runBlocking {
+        val jobs = mapOf(
+            homeTeamId to async { teamOnLeagueMatches(homeTeamId, leagueId) },
+            awayTeamId to async { teamOnLeagueMatches(awayTeamId, leagueId) }
+        )
+        jobs.mapValues { (_, job) -> job.await() }
+    }
+
+    fun leagueStandings(leagueId: Int): List<Standing> =
+        apiSportsClient.fetchLeagueStandings("/standings?league=$leagueId&season=${seasonProps.year}")
+
+    fun fetchAllOdds(fixtureId: Int): List<FixtureOdds> =
+        apiSportsClient.fetchFixtureOdds("/odds?fixture=$fixtureId")
+
+
+    private fun lastFiveMatches(teamId: Int): List<MatchResponse> =
+        apiSportsClient.fetchMatches("/fixtures?team=${teamId}&season=${seasonProps.year}")
+            .filter { it.fixture.status?.short == "FT" }
+            .sortedByDescending {
+                val formatter = DateTimeFormatter.ISO_DATE_TIME
+                runCatching { ZonedDateTime.parse(it.fixture.date, formatter) }.getOrNull()
+            }
+            .take(5)
+
+    private fun teamOnLeagueMatches(teamId: Int, leagueId: Int): List<MatchResponse> =
+        apiSportsClient.fetchMatches("/fixtures/?team=${teamId}&season=${seasonProps.year}&league=${leagueId}")
+
+}

@@ -35,7 +35,7 @@ class TeamControllerTest {
 
     @Test
     fun shouldGetLast5Matches() {
-        every { teamsService.getLast5Matches(any(), any()) } returns HomeAwayTeamLastFive(
+        every { teamsService.getLast5MatchesResults(any(), any()) } returns HomeAwayTeamLastFive(
             listOf(), listOf()
         )
 
@@ -46,7 +46,7 @@ class TeamControllerTest {
 
         assertThat(response.status).isEqualTo(HttpStatus.OK.value())
 
-        verify { teamsService.getLast5Matches(any(), any()) }
+        verify { teamsService.getLast5MatchesResults(any(), any()) }
     }
 
     @Test

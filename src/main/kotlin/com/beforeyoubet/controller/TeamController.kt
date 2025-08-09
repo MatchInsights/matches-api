@@ -16,7 +16,7 @@ class TeamController(private val teamsService: TeamsService) {
 
     @GetMapping("/lastfive/{homeTeamId}/{awayTeamId}")
     fun getMatches(@PathVariable homeTeamId: Int, @PathVariable awayTeamId: Int): HomeAwayTeamLastFive =
-        teamsService.getLast5Matches(homeTeamId, awayTeamId)
+        teamsService.getLast5MatchesResults(homeTeamId, awayTeamId)
 
     @GetMapping("/h2h/{homeTeamId}/{awayTeamId}")
     fun getH2H(@PathVariable homeTeamId: Int, @PathVariable awayTeamId: Int): List<H2HDetails> =
