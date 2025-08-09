@@ -2,7 +2,7 @@ package com.beforeyoubet.service
 
 import com.beforeyoubet.component.Apidata
 import com.beforeyoubet.component.DataManipulation
-import com.beforeyoubet.data.MatchResponseData
+import com.beforeyoubet.data.MatchClientResponseData
 import com.beforeyoubet.data.StandingData
 import com.beforeyoubet.model.TeamStats
 
@@ -23,7 +23,7 @@ class TeamsServiceTest {
     @Test
     fun shouldGetLastFiveMatches() {
         every { apidata.lastFiveMatchesResults(34, 44) } returns mapOf(
-            34 to listOf(MatchResponseData.matchResponse), 44 to listOf(MatchResponseData.matchResponse)
+            34 to listOf(MatchClientResponseData.matchResponse), 44 to listOf(MatchClientResponseData.matchResponse)
         )
 
         every { dataManitupulation.lastFiveResults(any(), any()) } returns listOf("W", "L", "D", "W", "L")
@@ -42,7 +42,7 @@ class TeamsServiceTest {
 
     @Test
     fun shouldGetHead2HeadInfo() {
-        every { apidata.headToHead(34, 44) } returns listOf(MatchResponseData.matchResponse)
+        every { apidata.headToHead(34, 44) } returns listOf(MatchClientResponseData.matchResponse)
 
         val h2hs = underTest.getHeadToHead(34, 44)
 
@@ -56,7 +56,7 @@ class TeamsServiceTest {
     @Test
     fun shouldGetTeamsStats() {
         every { apidata.getTeamsLeagueMatches(34, 44, 1) } returns mapOf(
-            34 to listOf(MatchResponseData.matchResponse), 44 to listOf(MatchResponseData.matchResponse)
+            34 to listOf(MatchClientResponseData.matchResponse), 44 to listOf(MatchClientResponseData.matchResponse)
         )
 
         every { dataManitupulation.seasonTeamStats(any(), any()) } returns TeamStats(2.0f, 1.5f, 50.0f, 60.0f, 40.0f)
@@ -71,7 +71,7 @@ class TeamsServiceTest {
 
     @Test
     fun shouldH2HTeamsStats() {
-        every { apidata.headToHead(34, 44) } returns listOf(MatchResponseData.matchResponse)
+        every { apidata.headToHead(34, 44) } returns listOf(MatchClientResponseData.matchResponse)
         every { dataManitupulation.seasonTeamStats(any(), any()) } returns TeamStats(2.0f, 1.5f, 50.0f, 60.0f, 40.0f)
 
         val result = underTest.getH2HStats(34, 44)

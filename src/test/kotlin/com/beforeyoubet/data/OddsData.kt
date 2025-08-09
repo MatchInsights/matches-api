@@ -27,17 +27,6 @@ class OddsData {
             )
         )
 
-        val bets = listOf<Bet>(
-            Bet(
-                name = "Match Winner", values = listOf(
-                    OddValue("Home Team", "1.95"), OddValue("Draw", "3.2"), OddValue("Away Team", "3.8")
-                )
-            ), Bet(
-                name = "Odd/Even - First Half", values = listOf(
-                    OddValue("Odd", "2.05"), OddValue("Even", "1.8")
-                )
-            )
-        )
 
     }
 }
