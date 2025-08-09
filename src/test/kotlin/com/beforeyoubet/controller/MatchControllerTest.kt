@@ -1,8 +1,7 @@
 package com.beforeyoubet.controller
 
 import com.beforeyoubet.TestCorsPropsConfig
-import com.beforeyoubet.clientData.MatchResponse
-import com.beforeyoubet.data.MatchResponseData
+import com.beforeyoubet.data.MatchClientResponseData
 import com.beforeyoubet.response.MatchDetails
 import com.beforeyoubet.service.MatchService
 import com.ninjasquad.springmockk.MockkBean
@@ -50,7 +49,7 @@ class MatchControllerTest {
     fun shouldGetMatcheDetails() {
         every { matchService.getMatchDetails(any()) } returns
                 MatchDetails.fromResponseData(
-                    MatchResponseData.matchResponse
+                    MatchClientResponseData.matchResponse
                 )
 
         val response = mvc.perform(

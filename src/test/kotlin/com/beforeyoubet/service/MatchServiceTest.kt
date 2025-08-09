@@ -1,7 +1,7 @@
 package com.beforeyoubet.service
 
-import com.beforeyoubet.client.ApiSportsClient
-import com.beforeyoubet.data.MatchResponseData
+import com.beforeyoubet.component.Apidata
+import com.beforeyoubet.data.MatchClientResponseData
 import com.beforeyoubet.model.MatchStatus
 import io.mockk.every
 import io.mockk.mockk
@@ -11,24 +11,24 @@ import org.junit.jupiter.api.Test
 
 class MatchServiceTest {
 
-    val apiSportsClient: ApiSportsClient = mockk()
-    val underTest = MatchService(apiSportsClient)
+    val apidata: Apidata = mockk()
+    val underTest = MatchService(apidata)
 
     @Test
     fun shouldGetTodayMatches() {
-        every { apiSportsClient.fetchMatches(any()) } returns listOf(MatchResponseData.matchResponse)
+        every { apidata.todayMatches(any(), any()) } returns listOf(MatchClientResponseData.matchResponse)
 
         val matches = underTest.getTodayMatches(MatchStatus.LIVE)
 
         assertThat(matches).hasSize(1)
 
-        verify { apiSportsClient.fetchMatches(any()) }
+        verify { apidata.todayMatches(any(), any()) }
 
     }
 
     @Test
     fun shouldGetMatchDetails() {
-        every { apiSportsClient.fetchMatchDetails(any()) } returns MatchResponseData.matchResponse
+        every { apidata.matchDetails(any()) } returns MatchClientResponseData.matchResponse
 
         val match = underTest.getMatchDetails(1234)
 
@@ -36,7 +36,7 @@ class MatchServiceTest {
         assertThat(match.score).isNotNull
         assertThat(match.goals).isNotNull
 
-        verify { apiSportsClient.fetchMatchDetails(any()) }
+        verify { apidata.matchDetails(any()) }
 
     }
 

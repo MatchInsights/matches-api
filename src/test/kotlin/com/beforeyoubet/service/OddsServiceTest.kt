@@ -1,7 +1,9 @@
 package com.beforeyoubet.service
 
-import com.beforeyoubet.client.ApiSportsClient
+import com.beforeyoubet.component.Apidata
+import com.beforeyoubet.component.DataManipulation
 import com.beforeyoubet.data.OddsData
+import com.beforeyoubet.data.OddsResponseData
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -9,22 +11,26 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 class OddsServiceTest {
-    val apiSportsClient: ApiSportsClient = mockk()
-    val underTest = OddsService(apiSportsClient)
+    val apidata: Apidata = mockk()
+    val dataManipulation: DataManipulation = mockk()
+    val underTest = OddsService(apidata, dataManipulation)
 
     @Test
     fun shouldGetTheBets() {
 
-        every { apiSportsClient.fetchFixtureOdds(any()) } returns OddsData.mockResponse
+        every { apidata.fetchAllOdds(any()) } returns OddsData.mockResponse
+        every { dataManipulation.extractBets(any()) } returns OddsResponseData.bets
+
         val result = underTest.fetchAllOdds(12345)
 
         assertThat(result).isNotEmpty
         assertThat(result[0].betName).isEqualTo("Match Winner")
-        assertThat(result[0].values).hasSize(3)
+        assertThat(result[0].values[0].odd).isEqualTo(1.95)
         assertThat(result[1].betName).isEqualTo("Odd/Even - First Half")
-        assertThat(result[1].values).hasSize(2)
+        assertThat(result[1].values[0].odd).isEqualTo(2.05)
 
-        verify { apiSportsClient.fetchFixtureOdds(any()) }
+        verify { apidata.fetchAllOdds(any()) }
+        verify { dataManipulation.extractBets(any()) }
 
     }
 }

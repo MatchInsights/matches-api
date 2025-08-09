@@ -1,13 +1,15 @@
-package com.beforeyoubet.service
+package com.beforeyoubet.component
 
+import com.beforeyoubet.clientData.FixtureOdds
 import com.beforeyoubet.clientData.MatchResponse
 import com.beforeyoubet.model.TeamStats
-import org.springframework.stereotype.Service
-import kotlin.math.pow
+import com.beforeyoubet.response.Bet
+import com.beforeyoubet.response.SingleOdd
+import org.springframework.stereotype.Component
 import kotlin.math.roundToInt
 
-@Service
-class StatsService {
+@Component
+class DataManipulation {
     fun seasonTeamStats(teamId: Int, matches: List<MatchResponse>): TeamStats {
         var totalGoalsFor = 0
         var totalGoalsAgainst = 0
@@ -44,5 +46,44 @@ class StatsService {
         )
 
     }
-}
 
+    fun lastFiveResults(teamId: Int, matches: List<MatchResponse>): List<String> {
+        return matches.map { match ->
+            val homeGoals = match.goals?.home ?: 0
+            val awayGoals = match.goals?.away ?: 0
+
+            when {
+                match.teams.home?.id == teamId && homeGoals > awayGoals -> "W"
+                match.teams.home?.id == teamId && homeGoals < awayGoals -> "L"
+                else -> "D"
+            }
+        }
+    }
+
+    fun extractBets(data: List<FixtureOdds>): List<Bet> {
+        val allBets = mutableListOf<Bet>()
+
+        data
+            .flatMap { it.bookmakers }
+            .firstOrNull()
+            ?.bets
+            ?.forEach { bet ->
+                val odds = bet.values.mapNotNull { value ->
+                    val oddDouble = value.odd.toDoubleOrNull()
+                    if (oddDouble != null) SingleOdd(label = value.value, odd = oddDouble) else null
+                }
+
+                if (odds.isNotEmpty()) {
+                    allBets.add(
+                        Bet(
+                            betName = bet.name,
+                            values = odds
+                        )
+                    )
+                }
+            }
+
+        return allBets
+    }
+
+}

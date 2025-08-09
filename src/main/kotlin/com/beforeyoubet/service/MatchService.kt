@@ -1,6 +1,6 @@
 package com.beforeyoubet.service
 
-import com.beforeyoubet.client.ApiSportsClient
+import com.beforeyoubet.component.Apidata
 import com.beforeyoubet.model.MatchStatus
 import com.beforeyoubet.response.MatchDetails
 import com.beforeyoubet.response.TodayMatch
@@ -12,21 +12,17 @@ import java.time.ZonedDateTime
 
 
 @Service
-class MatchService(private val apiSportsClient: ApiSportsClient) {
+class MatchService(
+    private val apidata: Apidata
+) {
 
     fun getTodayMatches(status: MatchStatus): List<TodayMatch> {
         val today = LocalDate.now().toString()
-
-        val response = apiSportsClient.fetchMatches("/fixtures?date=$today&status=${status.code}")
-
-        return response.map { TodayMatch.fromResponseData(it) }
-            .sortedByDescending { ZonedDateTime.parse(it.date) }
+        val response = apidata.todayMatches(today, status.code)
+        return response.map { TodayMatch.fromResponseData(it) }.sortedByDescending { ZonedDateTime.parse(it.date) }
     }
 
-    fun getMatchDetails(matchId: Int): MatchDetails {
-
-        val response = apiSportsClient.fetchMatchDetails("/fixtures?id=${matchId}")
-
-        return MatchDetails.fromResponseData(response)
+    fun getMatchDetails(matchId: Int): MatchDetails = apidata.matchDetails(matchId).let {
+        MatchDetails.fromResponseData(it)
     }
 }

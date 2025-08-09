@@ -18,7 +18,10 @@ data class MatchDetails(
     val score: Score
 ) {
     companion object {
-        fun fromResponseData(matchResponse: MatchResponse): MatchDetails {
+        fun fromResponseData(
+            matchResponse: MatchResponse,
+
+            ): MatchDetails {
             return MatchDetails(
                 matchResponse.fixture.id,
                 matchResponse.fixture.date,
@@ -27,9 +30,9 @@ data class MatchDetails(
                 matchResponse.teams.home ?: Team(),
                 matchResponse.teams.away ?: Team(),
                 matchResponse.goals ?: Goal(),
-                matchResponse.score ?: Score()
+                matchResponse.score ?: Score(),
 
-            )
+                )
         }
     }
 }

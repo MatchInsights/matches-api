@@ -1,63 +1,54 @@
 package com.beforeyoubet.service
 
-import com.beforeyoubet.client.ApiSportsClient
-import com.beforeyoubet.clientData.MatchResponse
 import com.beforeyoubet.clientData.Standing
-import com.beforeyoubet.props.SeasonProps
+import com.beforeyoubet.component.Apidata
+import com.beforeyoubet.component.DataManipulation
 import com.beforeyoubet.response.H2HDetails
 import com.beforeyoubet.response.HomeAwayTeamLastFive
 import com.beforeyoubet.response.TeamPositionsAndPoints
 import com.beforeyoubet.response.TwoTeamStats
 import org.springframework.stereotype.Service
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
+import kotlin.collections.map
 
 
 @Service
 class TeamsService(
-    private val apiSportsClient: ApiSportsClient,
-    private val statsService: StatsService,
-    private val seasonProps: SeasonProps
+    private val apiData: Apidata,
+    private val dataManipulation: DataManipulation,
 ) {
 
-    fun getLast5Matches(homeTeamId: Int, awayTeamId: Int): HomeAwayTeamLastFive {
-        val homeTeamMatches = lastFiveMatches(homeTeamId)
-        val awayTeamMatches = lastFiveMatches(awayTeamId)
+    fun getLast5MatchesResults(homeTeamId: Int, awayTeamId: Int): HomeAwayTeamLastFive {
+        val data = apiData.lastFiveMatchesResults(homeTeamId, awayTeamId)
 
         return HomeAwayTeamLastFive(
-            homeTeamLastFive = lastFiveResults(homeTeamId, homeTeamMatches),
-            awayTeamLastFive = lastFiveResults(awayTeamId, awayTeamMatches)
+            homeTeamLastFive = dataManipulation.lastFiveResults(homeTeamId, data[homeTeamId] ?: emptyList()),
+            awayTeamLastFive = dataManipulation.lastFiveResults(awayTeamId, data[awayTeamId] ?: emptyList())
         )
     }
 
-    fun getHeadToHead(homeTeamId: Int, awayTeamId: Int): List<H2HDetails> =
-        apiSportsClient.fetchMatches("/fixtures/headtohead?h2h=${homeTeamId}-${awayTeamId}")
-            .take(5).map { H2HDetails.fromResponseData(it) }
-
-    fun getTeamsStats(homeTeamId: Int, awayTeamId: Int, leagueId: Int): TwoTeamStats {
-        val homeTeamMatches =
-            apiSportsClient.fetchMatches("/fixtures/fixtures?team=${homeTeamId}&season=${seasonProps.year}&league=${leagueId}")
-        val awayTeamMatches =
-            apiSportsClient.fetchMatches("/fixtures/fixtures?team=${awayTeamId}&season=${seasonProps.year}&league=${leagueId}")
-
-        return TwoTeamStats(
-            team0 = statsService.seasonTeamStats(homeTeamId, homeTeamMatches),
-            team1 = statsService.seasonTeamStats(awayTeamId, awayTeamMatches)
-        )
-    }
+    fun getHeadToHead(homeTeamId: Int, awayTeamId: Int): List<H2HDetails> = apiData
+        .headToHead(homeTeamId, awayTeamId).take(5).map { H2HDetails.fromResponseData(it) }
 
     fun getH2HStats(homeTeamId: Int, awayTeamId: Int): TwoTeamStats {
-        val h2hMatches = apiSportsClient.fetchMatches("/fixtures/headtohead?h2h=${homeTeamId}-${awayTeamId}")
-
+        val h2hMatches = apiData.headToHead(homeTeamId, awayTeamId)
         return TwoTeamStats(
-            team0 = statsService.seasonTeamStats(homeTeamId, h2hMatches),
-            team1 = statsService.seasonTeamStats(awayTeamId, h2hMatches)
+            team0 = dataManipulation.seasonTeamStats(homeTeamId, h2hMatches),
+            team1 = dataManipulation.seasonTeamStats(awayTeamId, h2hMatches)
         )
     }
 
+
+    fun getTeamsStats(homeTeamId: Int, awayTeamId: Int, leagueId: Int): TwoTeamStats {
+        val data = apiData.getTeamsLeagueMatches(homeTeamId, awayTeamId, leagueId)
+        return TwoTeamStats(
+            team0 = dataManipulation.seasonTeamStats(homeTeamId, data[homeTeamId] ?: emptyList()),
+            team1 = dataManipulation.seasonTeamStats(awayTeamId, data[awayTeamId] ?: emptyList())
+        )
+    }
+
+
     fun getTeamsPositionsAndPoints(homeTeamId: Int, awayTeamId: Int, leagueId: Int): TeamPositionsAndPoints {
-        val response: List<Standing> =
-            apiSportsClient.fetchLeagueStandings("/standings?league=$leagueId&season=${seasonProps.year}")
+        val response: List<Standing> = apiData.leagueStandings(leagueId)
 
         val homeTeamStanding = response.firstOrNull { standing -> standing.team.id == homeTeamId }
         val awayTeamStanding = response.firstOrNull { standing -> standing.team.id == awayTeamId }
@@ -65,27 +56,5 @@ class TeamsService(
         return TeamPositionsAndPoints.fromApiResponse(homeTeamStanding, awayTeamStanding)
     }
 
-    private fun lastFiveMatches(teamId: Int): List<MatchResponse> =
-        apiSportsClient.fetchMatches("/fixtures?team=${teamId}&season=${seasonProps.year}")
-            .filter { it.fixture.status?.short == "FT" }
-            .sortedByDescending {
-                val formatter = DateTimeFormatter.ISO_DATE_TIME
-                runCatching { ZonedDateTime.parse(it.fixture.date, formatter) }.getOrNull()
-            }
-            .take(5)
-
-
-    private fun lastFiveResults(teamId: Int, matches: List<MatchResponse>): List<String> {
-        return matches.map { match ->
-            val homeGoals = match.goals?.home ?: 0
-            val awayGoals = match.goals?.away ?: 0
-
-            when {
-                match.teams.home?.id == teamId && homeGoals > awayGoals -> "W"
-                match.teams.home?.id == teamId && homeGoals < awayGoals -> "L"
-                else -> "D"
-            }
-        }
-    }
 }
 
