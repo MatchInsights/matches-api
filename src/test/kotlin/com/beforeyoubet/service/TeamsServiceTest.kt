@@ -23,14 +23,18 @@ class TeamsServiceTest {
     @Test
     fun shouldGetLastFiveMatches() {
         every { apidata.lastFiveMatchesResults(34, 44) } returns mapOf(
-            34 to listOf(MatchResponseData.matchResponse),
-            44 to listOf(MatchResponseData.matchResponse)
+            34 to listOf(MatchResponseData.matchResponse), 44 to listOf(MatchResponseData.matchResponse)
         )
+
+        every { dataManitupulation.lastFiveResults(any(), any()) } returns listOf("W", "L", "D", "W", "L")
 
         val matches = underTest.getLast5MatchesResults(34, 44)
 
-        assertThat(matches.awayTeamLastFive).hasSize(1)
-        assertThat(matches.homeTeamLastFive).hasSize(1)
+        assertThat(matches.awayTeamLastFive[0]).isEqualTo("W")
+        assertThat(matches.awayTeamLastFive[1]).isEqualTo("L")
+        assertThat(matches.awayTeamLastFive[2]).isEqualTo("D")
+        assertThat(matches.awayTeamLastFive[3]).isEqualTo("W")
+        assertThat(matches.awayTeamLastFive[4]).isEqualTo("L")
 
         verify { apidata.lastFiveMatchesResults(34, 44) }
 
@@ -52,8 +56,7 @@ class TeamsServiceTest {
     @Test
     fun shouldGetTeamsStats() {
         every { apidata.getTeamsLeagueMatches(34, 44, 1) } returns mapOf(
-            34 to listOf(MatchResponseData.matchResponse),
-            44 to listOf(MatchResponseData.matchResponse)
+            34 to listOf(MatchResponseData.matchResponse), 44 to listOf(MatchResponseData.matchResponse)
         )
 
         every { dataManitupulation.seasonTeamStats(any(), any()) } returns TeamStats(2.0f, 1.5f, 50.0f, 60.0f, 40.0f)
