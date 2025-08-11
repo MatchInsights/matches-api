@@ -65,7 +65,6 @@ data class LeagueWithStandings(
     val standings: List<List<Standing>>
 )
 
-
 data class RecordStats(
     val played: Int? = 0,
     val win: Int? = 0,
@@ -98,3 +97,34 @@ data class FixtureOdds(val bookmakers: List<Bookmaker>)
 data class Bookmaker(val name: String, val bets: List<Bet>)
 data class Bet(val name: String, val values: List<OddValue>)
 data class OddValue(val value: String, val odd: String)
+
+data class Event(
+    val time: Time,
+    val team: Team,
+    val player: Player,
+    val type: String,       // e.g. "Card", "Goal", "Penalty", etc.
+    val detail: String,     // e.g. "Yellow Card", "Red Card", "Penalty"
+    val comments: String? = null
+)
+
+data class Time(
+    val elapsed: Int,
+    val extra: Int? = null
+)
+
+data class Player(
+    val id: Int,
+    val name: String
+)
+
+enum class EventTypes(val typeName: String) {
+    GOAL("Goal"),
+    CARD("Card"),
+    PENALTY("Penalty");
+}
+
+enum class EventTypesDetail(val detail: String) {
+    YELLOW_CARD("Yellow Card"),
+    RED_CARD("Red Card"),
+    PENALTY("Penalty");
+}

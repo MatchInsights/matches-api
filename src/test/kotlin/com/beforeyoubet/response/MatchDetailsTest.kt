@@ -1,6 +1,6 @@
 package com.beforeyoubet.response
 
-import com.beforeyoubet.data.MatchClientResponseData
+import com.beforeyoubet.data.client.ClientMatchResponseData
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -8,14 +8,14 @@ class MatchDetailsTest {
 
     @Test
     fun shouldMapFromMatchResponse() {
-        val response = MatchDetails.fromResponseData(MatchClientResponseData.matchResponse)
+        val response = MatchDetails.fromResponseData(ClientMatchResponseData.matchResponse)
 
-        assertThat(response.date).isEqualTo(MatchClientResponseData.matchResponse.fixture.date)
-        assertThat(response.venue).isEqualTo(MatchClientResponseData.matchResponse.venue)
-        assertThat(response.league).isEqualTo(MatchClientResponseData.matchResponse.league)
-        assertThat(response.homeTeam).isEqualTo(MatchClientResponseData.matchResponse.teams.home)
-        assertThat(response.awayTeam).isEqualTo(MatchClientResponseData.matchResponse.teams.away)
-        assertThat(response.goals).isEqualTo(MatchClientResponseData.matchResponse.goals)
-        assertThat(response.score).isEqualTo(MatchClientResponseData.matchResponse.score)
+        assertThat(response.date).isEqualTo(ClientMatchResponseData.matchResponse.fixture.date)
+        assertThat(response.venue).isEqualTo(ClientMatchResponseData.matchResponse.venue)
+        assertThat(response.league).isEqualTo(ClientMatchResponseData.matchResponse.league)
+        assertThat(response.homeTeam).isEqualTo(ClientMatchResponseData.matchResponse.teams.home)
+        assertThat(response.awayTeam).isEqualTo(ClientMatchResponseData.matchResponse.teams.away)
+        assertThat(response.goals).isEqualTo(ClientMatchResponseData.matchResponse.goals)
+        assertThat(response.score).isEqualTo(ClientMatchResponseData.matchResponse.score)
     }
 }

@@ -1,11 +1,11 @@
-package com.beforeyoubet.data
+package com.beforeyoubet.data.client
 
 import com.beforeyoubet.clientData.Goals
 import com.beforeyoubet.clientData.RecordStats
 import com.beforeyoubet.clientData.Standing
 import com.beforeyoubet.clientData.Team
 
-class StandingData {
+class ClientStandingData {
     companion object {
 
         val standing = Standing(

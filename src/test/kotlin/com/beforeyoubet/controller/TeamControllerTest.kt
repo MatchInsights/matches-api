@@ -3,6 +3,7 @@ package com.beforeyoubet.controller
 import com.beforeyoubet.TestCorsPropsConfig
 import com.beforeyoubet.model.TeamStats
 import com.beforeyoubet.response.HomeAwayTeamLastFive
+import com.beforeyoubet.response.LastFiveMatchesEvents
 import com.beforeyoubet.response.TeamPositionsAndPoints
 import com.beforeyoubet.service.TeamsService
 import com.beforeyoubet.response.TwoTeamStats
@@ -40,8 +41,7 @@ class TeamControllerTest {
         )
 
         val response = mvc.perform(
-            get("/api/teams/lastfive/45/23")
-                .contentType(MediaType.APPLICATION_JSON)
+            get("/api/teams/lastfive/45/23").contentType(MediaType.APPLICATION_JSON)
         ).andReturn().response
 
         assertThat(response.status).isEqualTo(HttpStatus.OK.value())
@@ -54,8 +54,7 @@ class TeamControllerTest {
         every { teamsService.getHeadToHead(any(), any()) } returns listOf()
 
         val response = mvc.perform(
-            get("/api/teams/h2h/45/23")
-                .contentType(MediaType.APPLICATION_JSON)
+            get("/api/teams/h2h/45/23").contentType(MediaType.APPLICATION_JSON)
         ).andReturn().response
 
         assertThat(response.status).isEqualTo(HttpStatus.OK.value())
@@ -71,8 +70,7 @@ class TeamControllerTest {
         )
 
         val response = mvc.perform(
-            get("/api/teams/h2h/stats/45/23")
-                .contentType(MediaType.APPLICATION_JSON)
+            get("/api/teams/h2h/stats/45/23").contentType(MediaType.APPLICATION_JSON)
         ).andReturn().response
 
         assertThat(response.status).isEqualTo(HttpStatus.OK.value())
@@ -88,8 +86,7 @@ class TeamControllerTest {
         )
 
         val response = mvc.perform(
-            get("/api/teams/season/stats/45/23/1")
-                .contentType(MediaType.APPLICATION_JSON)
+            get("/api/teams/season/stats/45/23/1").contentType(MediaType.APPLICATION_JSON)
         ).andReturn().response
 
         assertThat(response.status).isEqualTo(HttpStatus.OK.value())
@@ -99,18 +96,31 @@ class TeamControllerTest {
 
     @Test
     fun shouldGetLeagueStats() {
-        every { teamsService.getTeamsPositionsAndPoints(any(), any(), any()) } returns
-                TeamPositionsAndPoints(
-                    1, 3, 88, 73
-                )
+        every { teamsService.getTeamsPositionsAndPoints(any(), any(), any()) } returns TeamPositionsAndPoints(
+            1, 3, 88, 73
+        )
 
         val response = mvc.perform(
-            get("/api/teams/league/stats/45/23/1")
-                .contentType(MediaType.APPLICATION_JSON)
+            get("/api/teams/league/stats/45/23/1").contentType(MediaType.APPLICATION_JSON)
         ).andReturn().response
 
         assertThat(response.status).isEqualTo(HttpStatus.OK.value())
 
         verify { teamsService.getTeamsPositionsAndPoints(any(), any(), any()) }
+    }
+
+    @Test
+    fun shouldLastFiveEventsSums() {
+        val info = LastFiveMatchesEvents(1, 2, 3, 4, 5, 0, 0, 0, 0, 0)
+        every { teamsService.getLast5MatchesEvents(any()) } returns info
+
+
+        val response = mvc.perform(
+            get("/api/teams/matches/events/sum/1234").contentType(MediaType.APPLICATION_JSON)
+        ).andReturn().response
+
+        assertThat(response.status).isEqualTo(HttpStatus.OK.value())
+
+        verify { teamsService.getLast5MatchesEvents(any()) }
     }
 }

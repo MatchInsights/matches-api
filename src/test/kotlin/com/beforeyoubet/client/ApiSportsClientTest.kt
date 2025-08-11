@@ -1,6 +1,6 @@
 package com.beforeyoubet.client
 
-import com.beforeyoubet.data.RawData
+import com.beforeyoubet.data.client.raw.ClientRawData
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.assertj.core.api.Assertions.assertThat
@@ -34,7 +34,7 @@ class ApiSportsClientTest {
     @Test
     fun `should fetch Today Matches`() {
 
-        val mockJson = RawData.todayMatches
+        val mockJson = ClientRawData.todayMatches
 
         mockWebServer.enqueue(
             MockResponse().setResponseCode(200).setBody(mockJson).addHeader("Content-Type", "application/json")
@@ -53,7 +53,7 @@ class ApiSportsClientTest {
 
     @Test
     fun `should fetch league standings`() {
-        val mockJson = RawData.leagueStandings
+        val mockJson = ClientRawData.leagueStandings
 
         mockWebServer.enqueue(
             MockResponse().setResponseCode(200).setBody(mockJson).addHeader("Content-Type", "application/json")
@@ -69,7 +69,7 @@ class ApiSportsClientTest {
 
     @Test
     fun `should fetch match details`() {
-        val mockJson = RawData.matchDetails
+        val mockJson = ClientRawData.matchDetails
 
         mockWebServer.enqueue(
             MockResponse().setResponseCode(200).setBody(mockJson).addHeader("Content-Type", "application/json")
@@ -86,7 +86,7 @@ class ApiSportsClientTest {
 
     @Test
     fun `should fetch the odds`() {
-        val mockJson = RawData.oddsResponse
+        val mockJson = ClientRawData.oddsResponse
 
         mockWebServer.enqueue(
             MockResponse().setResponseCode(200).setBody(mockJson).addHeader("Content-Type", "application/json")
@@ -98,5 +98,19 @@ class ApiSportsClientTest {
         assertThat(result[0].bookmakers[0].bets[0].values).isNotEmpty
         assertThat(result[0].bookmakers[0].bets[1].name).isEqualTo("Odd/Even - First Half")
         assertThat(result[0].bookmakers[0].bets[1].values).isNotEmpty
+    }
+
+    @Test
+    fun `should fetch match Events`() {
+        val mockJson = ClientRawData.matchEvents
+
+        mockWebServer.enqueue(
+            MockResponse().setResponseCode(200).setBody(mockJson).addHeader("Content-Type", "application/json")
+        )
+
+        val result = underTest.fetchMatchEvents("/fixtures/events?fixture=${12124}")
+
+        assertThat(result).isNotEmpty
+
     }
 }

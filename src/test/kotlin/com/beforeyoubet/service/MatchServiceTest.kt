@@ -1,7 +1,7 @@
 package com.beforeyoubet.service
 
 import com.beforeyoubet.component.Apidata
-import com.beforeyoubet.data.MatchClientResponseData
+import com.beforeyoubet.data.client.ClientMatchResponseData
 import com.beforeyoubet.model.MatchStatus
 import io.mockk.every
 import io.mockk.mockk
@@ -16,7 +16,7 @@ class MatchServiceTest {
 
     @Test
     fun shouldGetTodayMatches() {
-        every { apidata.todayMatches(any(), any()) } returns listOf(MatchClientResponseData.matchResponse)
+        every { apidata.todayMatches(any(), any()) } returns listOf(ClientMatchResponseData.matchResponse)
 
         val matches = underTest.getTodayMatches(MatchStatus.LIVE)
 
@@ -28,7 +28,7 @@ class MatchServiceTest {
 
     @Test
     fun shouldGetMatchDetails() {
-        every { apidata.matchDetails(any()) } returns MatchClientResponseData.matchResponse
+        every { apidata.matchDetails(any()) } returns ClientMatchResponseData.matchResponse
 
         val match = underTest.getMatchDetails(1234)
 

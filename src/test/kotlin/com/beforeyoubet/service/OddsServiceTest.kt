@@ -2,8 +2,8 @@ package com.beforeyoubet.service
 
 import com.beforeyoubet.component.Apidata
 import com.beforeyoubet.component.DataManipulation
-import com.beforeyoubet.data.OddsData
-import com.beforeyoubet.data.OddsResponseData
+import com.beforeyoubet.data.client.ClientOddsData
+import com.beforeyoubet.data.response.OddsResponseData
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -18,7 +18,7 @@ class OddsServiceTest {
     @Test
     fun shouldGetTheBets() {
 
-        every { apidata.fetchAllOdds(any()) } returns OddsData.mockResponse
+        every { apidata.fetchAllOdds(any()) } returns ClientOddsData.mockResponse
         every { dataManipulation.extractBets(any()) } returns OddsResponseData.bets
 
         val result = underTest.fetchAllOdds(12345)

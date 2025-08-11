@@ -1,7 +1,7 @@
 package com.beforeyoubet.service
 
 import com.beforeyoubet.component.Apidata
-import com.beforeyoubet.data.StandingData
+import com.beforeyoubet.data.client.ClientStandingData
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -16,7 +16,7 @@ class LeagueStandingServiceTest {
 
     @Test
     fun shouldLeagueStanding() {
-        every { apidata.leagueStandings(any()) } returns listOf(StandingData.standing)
+        every { apidata.leagueStandings(any()) } returns listOf(ClientStandingData.standing)
 
         val matches = underTest.fetchStandings(39)
 

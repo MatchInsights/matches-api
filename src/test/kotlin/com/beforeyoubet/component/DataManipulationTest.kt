@@ -1,8 +1,8 @@
 package com.beforeyoubet.component
 
-import com.beforeyoubet.data.MatchClientResponseData
-import com.beforeyoubet.data.OddsData
-import com.beforeyoubet.data.OddsResponseData
+import com.beforeyoubet.data.client.ClientMatchResponseData
+import com.beforeyoubet.data.client.ClientOddsData
+import com.beforeyoubet.data.response.OddsResponseData
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -14,7 +14,7 @@ class DataManipulationTest {
 
         val result = underTest.seasonTeamStats(
             teamId = 33,
-            MatchClientResponseData.matchResponseList
+            ClientMatchResponseData.matchResponseList
         )
 
         assertThat(result.avgGoalsFor).isEqualTo(3.33f)
@@ -28,7 +28,7 @@ class DataManipulationTest {
     fun willReturnLastFiveResults() {
         val result = underTest.lastFiveResults(
             teamId = 33,
-            MatchClientResponseData.matchResponseList
+            ClientMatchResponseData.matchResponseList
         )
 
         assertThat(result).containsExactly("W", "W", "D")
@@ -36,7 +36,7 @@ class DataManipulationTest {
 
     @Test
     fun willExtractFixtureOdds() {
-        val odds = OddsData.mockResponse
+        val odds = ClientOddsData.mockResponse
         val result = underTest.extractBets(odds)
 
         assertThat(result).isNotNull

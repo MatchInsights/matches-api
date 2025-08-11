@@ -1,4 +1,4 @@
-package com.beforeyoubet.data
+package com.beforeyoubet.data.client
 
 import com.beforeyoubet.clientData.Fixture
 import com.beforeyoubet.clientData.Goal
@@ -10,7 +10,7 @@ import com.beforeyoubet.clientData.Team
 import com.beforeyoubet.clientData.Teams
 import com.beforeyoubet.clientData.Venue
 
-class MatchClientResponseData {
+class ClientMatchResponseData {
     companion object {
         val matchResponse = MatchResponse(
             fixture = Fixture(

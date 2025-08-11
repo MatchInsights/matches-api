@@ -3,6 +3,7 @@ package com.beforeyoubet.service
 import com.beforeyoubet.clientData.Standing
 import com.beforeyoubet.component.Apidata
 import com.beforeyoubet.component.DataManipulation
+import com.beforeyoubet.component.EventsDataManipulation
 import com.beforeyoubet.response.H2HDetails
 import com.beforeyoubet.response.HomeAwayTeamLastFive
 import com.beforeyoubet.response.TeamPositionsAndPoints
@@ -15,6 +16,7 @@ import kotlin.collections.map
 class TeamsService(
     private val apiData: Apidata,
     private val dataManipulation: DataManipulation,
+    private val eventsDataManipulation: EventsDataManipulation
 ) {
 
     fun getLast5MatchesResults(homeTeamId: Int, awayTeamId: Int): HomeAwayTeamLastFive {
@@ -55,6 +57,10 @@ class TeamsService(
 
         return TeamPositionsAndPoints.fromApiResponse(homeTeamStanding, awayTeamStanding)
     }
+
+    fun getLast5MatchesEvents(teamId: Int) =
+        eventsDataManipulation.fiveMachesEventsSum(apiData.lastFiveMatchesEvents(teamId))
+
 
 }
 

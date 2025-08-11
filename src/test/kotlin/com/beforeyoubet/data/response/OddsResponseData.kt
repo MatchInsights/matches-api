@@ -1,5 +1,4 @@
-package com.beforeyoubet.data
-
+package com.beforeyoubet.data.response
 
 import com.beforeyoubet.response.Bet
 import com.beforeyoubet.response.SingleOdd

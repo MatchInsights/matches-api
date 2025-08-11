@@ -1,7 +1,9 @@
 package com.beforeyoubet.component
 
+
 import com.beforeyoubet.clientData.FixtureOdds
 import com.beforeyoubet.clientData.MatchResponse
+
 import com.beforeyoubet.model.TeamStats
 import com.beforeyoubet.response.Bet
 import com.beforeyoubet.response.SingleOdd
@@ -85,5 +87,4 @@ class DataManipulation {
 
         return allBets
     }
-
 }
