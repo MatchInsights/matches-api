@@ -64,27 +64,27 @@ class TeamsServiceTest {
             34 to listOf(ClientMatchResponseData.matchResponse), 44 to listOf(ClientMatchResponseData.matchResponse)
         )
 
-        every { dataManitupulation.seasonTeamStats(any(), any()) } returns TeamStats(2.0f, 1.5f, 50.0f, 60.0f, 40.0f)
+        every { dataManitupulation.teamStats(any(), any()) } returns TeamStats(2, 1, 50, 60, 40)
 
         val result = underTest.getTeamsStats(34, 44, 1)
 
         assertThat(result).isInstanceOfAny(TwoTeamStats::class.java)
 
         verify { apidata.getTeamsLeagueMatches(34, 44, 1) }
-        verify { dataManitupulation.seasonTeamStats(any(), any()) }
+        verify { dataManitupulation.teamStats(any(), any()) }
     }
 
     @Test
     fun shouldH2HTeamsStats() {
         every { apidata.headToHead(34, 44) } returns listOf(ClientMatchResponseData.matchResponse)
-        every { dataManitupulation.seasonTeamStats(any(), any()) } returns TeamStats(2.0f, 1.5f, 50.0f, 60.0f, 40.0f)
+        every { dataManitupulation.teamStats(any(), any()) } returns TeamStats(2, 1, 50, 60, 40)
 
         val result = underTest.getH2HStats(34, 44)
 
         assertThat(result).isInstanceOfAny(TwoTeamStats::class.java)
 
         verify { apidata.headToHead(34, 44) }
-        verify { dataManitupulation.seasonTeamStats(any(), any()) }
+        verify { dataManitupulation.teamStats(any(), any()) }
     }
 
     @Test

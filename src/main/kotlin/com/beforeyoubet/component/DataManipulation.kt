@@ -8,14 +8,14 @@ import com.beforeyoubet.model.TeamStats
 import com.beforeyoubet.response.Bet
 import com.beforeyoubet.response.SingleOdd
 import org.springframework.stereotype.Component
-import kotlin.math.roundToInt
+
 
 @Component
 class DataManipulation {
-    fun seasonTeamStats(teamId: Int, matches: List<MatchResponse>): TeamStats {
+    fun teamStats(teamId: Int, matches: List<MatchResponse>): TeamStats {
         var totalGoalsFor = 0
         var totalGoalsAgainst = 0
-        var played = 0
+
         var cleanSheets = 0
         var scoredIn = 0
         var concededIn = 0
@@ -32,7 +32,7 @@ class DataManipulation {
 
             totalGoalsFor += goalsFor
             totalGoalsAgainst += goalsAgainst
-            played++
+
 
             if (goalsAgainst == 0) cleanSheets++
             if (goalsFor > 0) scoredIn++
@@ -40,11 +40,11 @@ class DataManipulation {
         }
 
         return TeamStats(
-            if (played > 0) ((totalGoalsFor.toFloat() / played) * 100).roundToInt() / 100f else 0f,
-            if (played > 0) ((totalGoalsAgainst.toFloat() / played) * 100).roundToInt() / 100f else 0f,
-            if (played > 0) ((100f * cleanSheets / played) * 10).roundToInt() / 10f else 0f,
-            if (played > 0) ((100f * scoredIn / played) * 10).roundToInt() / 10f else 0f,
-            if (played > 0) ((100f * concededIn / played) * 10).roundToInt() / 10f else 0f
+            totalGoalsFor,
+            totalGoalsAgainst,
+            cleanSheets,
+            scoredIn,
+            concededIn
         )
 
     }

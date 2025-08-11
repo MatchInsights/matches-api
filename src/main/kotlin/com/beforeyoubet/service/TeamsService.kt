@@ -34,8 +34,8 @@ class TeamsService(
     fun getH2HStats(homeTeamId: Int, awayTeamId: Int): TwoTeamStats {
         val h2hMatches = apiData.headToHead(homeTeamId, awayTeamId)
         return TwoTeamStats(
-            team0 = dataManipulation.seasonTeamStats(homeTeamId, h2hMatches),
-            team1 = dataManipulation.seasonTeamStats(awayTeamId, h2hMatches)
+            team0 = dataManipulation.teamStats(homeTeamId, h2hMatches),
+            team1 = dataManipulation.teamStats(awayTeamId, h2hMatches)
         )
     }
 
@@ -43,8 +43,8 @@ class TeamsService(
     fun getTeamsStats(homeTeamId: Int, awayTeamId: Int, leagueId: Int): TwoTeamStats {
         val data = apiData.getTeamsLeagueMatches(homeTeamId, awayTeamId, leagueId)
         return TwoTeamStats(
-            team0 = dataManipulation.seasonTeamStats(homeTeamId, data[homeTeamId] ?: emptyList()),
-            team1 = dataManipulation.seasonTeamStats(awayTeamId, data[awayTeamId] ?: emptyList())
+            team0 = dataManipulation.teamStats(homeTeamId, data[homeTeamId] ?: emptyList()),
+            team1 = dataManipulation.teamStats(awayTeamId, data[awayTeamId] ?: emptyList())
         )
     }
 

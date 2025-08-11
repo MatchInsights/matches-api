@@ -65,8 +65,8 @@ class TeamControllerTest {
     @Test
     fun shouldGetH2HStats() {
         every { teamsService.getH2HStats(any(), any()) } returns TwoTeamStats(
-            team0 = TeamStats(34.0f, 12.0f, 8.0f, 14.0f, 1.0f),
-            team1 = TeamStats(34.0f, 12.0f, 8.0f, 14.0f, 1.0f),
+            team0 = TeamStats(34, 12, 8, 14, 1),
+            team1 = TeamStats(34, 12, 8, 14, 1),
         )
 
         val response = mvc.perform(
@@ -81,8 +81,8 @@ class TeamControllerTest {
     @Test
     fun shouldGetSeasonStats() {
         every { teamsService.getTeamsStats(any(), any(), any()) } returns TwoTeamStats(
-            team0 = TeamStats(34.0f, 12.0f, 8.0f, 14.0f, 1.0f),
-            team1 = TeamStats(34.0f, 12.0f, 8.0f, 14.0f, 1.0f),
+            team0 = TeamStats(34, 12, 8, 14, 1),
+            team1 = TeamStats(34, 12, 8, 14, 1),
         )
 
         val response = mvc.perform(

@@ -12,16 +12,16 @@ class DataManipulationTest {
     @Test
     fun shouldCalculateSeasonStats() {
 
-        val result = underTest.seasonTeamStats(
+        val result = underTest.teamStats(
             teamId = 33,
             ClientMatchResponseData.matchResponseList
         )
 
-        assertThat(result.avgGoalsFor).isEqualTo(3.33f)
-        assertThat(result.avgGoalsAgainst).isEqualTo(2.0f)
-        assertThat(result.scoredInPercent).isEqualTo(100.0f)
-        assertThat(result.concededInPercent).isEqualTo(100.0f)
-        assertThat(result.cleanSheetPercent).isEqualTo(0.0f)
+        assertThat(result.goalsFor).isEqualTo(10)
+        assertThat(result.goalsAgainst).isEqualTo(6)
+        assertThat(result.scoredIn).isEqualTo(3)
+        assertThat(result.concededIn).isEqualTo(3)
+        assertThat(result.cleanSheet).isEqualTo(0)
     }
 
     @Test
