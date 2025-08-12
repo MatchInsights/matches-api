@@ -2,6 +2,7 @@ package com.beforeyoubet.controller
 
 import com.beforeyoubet.response.H2HDetails
 import com.beforeyoubet.response.HomeAwayTeamLastFive
+import com.beforeyoubet.response.LastFiveMatchesEvents
 import com.beforeyoubet.response.TeamPositionsAndPoints
 import com.beforeyoubet.service.TeamsService
 import com.beforeyoubet.response.TwoTeamStats
@@ -39,5 +40,10 @@ class TeamController(private val teamsService: TeamsService) {
         @PathVariable awayTeamId: Int,
         @PathVariable leagueId: Int
     ): TeamPositionsAndPoints = teamsService.getTeamsPositionsAndPoints(homeTeamId, awayTeamId, leagueId)
+
+    @GetMapping("/matches/events/sum/{teamId}")
+    fun getLastFiveMatchesEvents(
+        @PathVariable teamId: Int,
+    ): LastFiveMatchesEvents = teamsService.getLast5MatchesEvents(teamId)
 
 }

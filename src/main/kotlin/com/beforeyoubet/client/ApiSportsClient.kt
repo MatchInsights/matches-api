@@ -2,6 +2,7 @@ package com.beforeyoubet.client
 
 import com.beforeyoubet.clientData.MatchResponse
 import com.beforeyoubet.clientData.ApiResponse
+import com.beforeyoubet.clientData.Event
 import com.beforeyoubet.clientData.Standing
 import com.beforeyoubet.clientData.StandingResponse
 import com.beforeyoubet.clientData.FixtureOdds
@@ -37,6 +38,11 @@ class ApiSportsClient(private val restClient: RestClient) {
     fun fetchMatchDetails(uri: String): MatchResponse {
         val response = fetch<ApiResponse<List<MatchResponse>>>(uri)
         return response.response.firstOrNull() ?: throw ApiFailedException(ErrorMessage.CLIENT_FAILED)
+    }
+
+    fun fetchMatchEvents(uri: String): List<Event> {
+        val result = fetch<ApiResponse<List<Event>>>(uri)
+        return result.response
     }
 
 

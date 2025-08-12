@@ -1,11 +1,11 @@
-package com.beforeyoubet.data
+package com.beforeyoubet.data.client
 
 import com.beforeyoubet.clientData.Bet
 import com.beforeyoubet.clientData.Bookmaker
 import com.beforeyoubet.clientData.FixtureOdds
 import com.beforeyoubet.clientData.OddValue
 
-class OddsData {
+class ClientOddsData {
     companion object {
         val mockResponse = listOf(
             FixtureOdds(

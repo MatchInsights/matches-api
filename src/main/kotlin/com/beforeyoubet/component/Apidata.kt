@@ -1,11 +1,13 @@
 package com.beforeyoubet.component
 
 import com.beforeyoubet.client.ApiSportsClient
+import com.beforeyoubet.clientData.Event
 import com.beforeyoubet.clientData.FixtureOdds
 import com.beforeyoubet.clientData.MatchResponse
 import com.beforeyoubet.clientData.Standing
 import com.beforeyoubet.props.SeasonProps
 import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.runBlocking
 import org.springframework.stereotype.Component
 import java.time.ZonedDateTime
@@ -50,6 +52,20 @@ class Apidata(
 
     fun fetchAllOdds(fixtureId: Int): List<FixtureOdds> =
         apiSportsClient.fetchFixtureOdds("/odds?fixture=$fixtureId")
+
+
+    fun lastFiveMatchesEvents(teamId: Int): List<Event> = runBlocking {
+        val matches = lastFiveMatches(teamId)
+
+        val deferredEvents = matches.map { match ->
+            async {
+                apiSportsClient.fetchMatchEvents("/fixtures/events?fixture=${match.fixture.id}")
+            }
+        }
+
+        val eventsList: List<List<Event>> = deferredEvents.awaitAll()
+        eventsList.flatten().filter { it.team.id == teamId }
+    }
 
 
     private fun lastFiveMatches(teamId: Int): List<MatchResponse> =

@@ -16,3 +16,4 @@ data class MatchResponse(
 data class StandingResponse(
     val league: LeagueWithStandings
 )
+

@@ -3,6 +3,7 @@ package com.beforeyoubet.service
 import com.beforeyoubet.clientData.Standing
 import com.beforeyoubet.component.Apidata
 import com.beforeyoubet.component.DataManipulation
+import com.beforeyoubet.component.EventsDataManipulation
 import com.beforeyoubet.response.H2HDetails
 import com.beforeyoubet.response.HomeAwayTeamLastFive
 import com.beforeyoubet.response.TeamPositionsAndPoints
@@ -15,6 +16,7 @@ import kotlin.collections.map
 class TeamsService(
     private val apiData: Apidata,
     private val dataManipulation: DataManipulation,
+    private val eventsDataManipulation: EventsDataManipulation
 ) {
 
     fun getLast5MatchesResults(homeTeamId: Int, awayTeamId: Int): HomeAwayTeamLastFive {
@@ -32,8 +34,8 @@ class TeamsService(
     fun getH2HStats(homeTeamId: Int, awayTeamId: Int): TwoTeamStats {
         val h2hMatches = apiData.headToHead(homeTeamId, awayTeamId)
         return TwoTeamStats(
-            team0 = dataManipulation.seasonTeamStats(homeTeamId, h2hMatches),
-            team1 = dataManipulation.seasonTeamStats(awayTeamId, h2hMatches)
+            team0 = dataManipulation.teamStats(homeTeamId, h2hMatches),
+            team1 = dataManipulation.teamStats(awayTeamId, h2hMatches)
         )
     }
 
@@ -41,8 +43,8 @@ class TeamsService(
     fun getTeamsStats(homeTeamId: Int, awayTeamId: Int, leagueId: Int): TwoTeamStats {
         val data = apiData.getTeamsLeagueMatches(homeTeamId, awayTeamId, leagueId)
         return TwoTeamStats(
-            team0 = dataManipulation.seasonTeamStats(homeTeamId, data[homeTeamId] ?: emptyList()),
-            team1 = dataManipulation.seasonTeamStats(awayTeamId, data[awayTeamId] ?: emptyList())
+            team0 = dataManipulation.teamStats(homeTeamId, data[homeTeamId] ?: emptyList()),
+            team1 = dataManipulation.teamStats(awayTeamId, data[awayTeamId] ?: emptyList())
         )
     }
 
@@ -55,6 +57,10 @@ class TeamsService(
 
         return TeamPositionsAndPoints.fromApiResponse(homeTeamStanding, awayTeamStanding)
     }
+
+    fun getLast5MatchesEvents(teamId: Int) =
+        eventsDataManipulation.fiveMachesEventsSum(apiData.lastFiveMatchesEvents(teamId))
+
 
 }
 
