@@ -67,6 +67,13 @@ class Apidata(
         eventsList.flatten().filter { it.team.id == teamId }
     }
 
+    fun mostRecentPlayedMatches(homeTeamId: Int, awayTeamId: Int) = runBlocking {
+        val jobs = mapOf(
+            homeTeamId to async { lastFiveMatches(homeTeamId).first() },
+            awayTeamId to async { lastFiveMatches(awayTeamId).first() }
+        )
+        jobs.mapValues { (_, job) -> job.await() }
+    }
 
     private fun lastFiveMatches(teamId: Int): List<MatchResponse> =
         apiSportsClient.fetchMatches("/fixtures?team=${teamId}&season=${seasonProps.year}")

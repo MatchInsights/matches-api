@@ -1,10 +1,12 @@
 package com.beforeyoubet.controller
 
 import com.beforeyoubet.TestCorsPropsConfig
+import com.beforeyoubet.model.TeamRestStatus
 import com.beforeyoubet.model.TeamStats
 import com.beforeyoubet.response.HomeAwayTeamLastFive
 import com.beforeyoubet.response.LastFiveMatchesEvents
 import com.beforeyoubet.response.TeamPositionsAndPoints
+import com.beforeyoubet.response.TeamsRestStatus
 import com.beforeyoubet.service.TeamsService
 import com.beforeyoubet.response.TwoTeamStats
 import com.ninjasquad.springmockk.MockkBean
@@ -110,7 +112,7 @@ class TeamControllerTest {
     }
 
     @Test
-    fun shouldLastFiveEventsSums() {
+    fun shouldGetLastFiveEventsSums() {
         val info = LastFiveMatchesEvents(1, 2, 3, 4, 5, 0, 0, 0, 0, 0)
         every { teamsService.getLast5MatchesEvents(any()) } returns info
 
@@ -122,5 +124,21 @@ class TeamControllerTest {
         assertThat(response.status).isEqualTo(HttpStatus.OK.value())
 
         verify { teamsService.getLast5MatchesEvents(any()) }
+    }
+
+    @Test
+    fun shouldGetTeamsRestStatuses() {
+        every { teamsService.teamRestStatuses(34, 55, "2025-08-04T16:30:00+00:00") } returns
+                TeamsRestStatus(TeamRestStatus.GOOD_REST.status, TeamRestStatus.UNKNOWN_STATE.status)
+
+
+        val response = mvc.perform(
+            get("/api/teams/rest/status/34/55/2025-08-04T16:30:00+00:00")
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andReturn().response
+
+        assertThat(response.status).isEqualTo(HttpStatus.OK.value())
+
+        verify { teamsService.teamRestStatuses(34, 55, "2025-08-04T16:30:00+00:00") }
     }
 }
