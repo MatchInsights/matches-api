@@ -3,11 +3,15 @@ package com.beforeyoubet.component
 
 import com.beforeyoubet.clientData.FixtureOdds
 import com.beforeyoubet.clientData.MatchResponse
+import com.beforeyoubet.model.TeamRestStatus
 
 import com.beforeyoubet.model.TeamStats
 import com.beforeyoubet.response.Bet
 import com.beforeyoubet.response.SingleOdd
 import org.springframework.stereotype.Component
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 
 
 @Component
@@ -87,4 +91,28 @@ class DataManipulation {
 
         return allBets
     }
+
+    fun daysBetween(date1: String?, date2: String?): Long? {
+        if (date1.isNullOrBlank() || date1 == "Unknown Date") return null
+        if (date2.isNullOrBlank() || date2 == "Unknown Date") return null
+
+        val formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
+
+        val d1 = runCatching { ZonedDateTime.parse(date1, formatter) }.getOrNull()
+        val d2 = runCatching { ZonedDateTime.parse(date2, formatter) }.getOrNull()
+
+        if (d1 != null && d2 != null) {
+            return ChronoUnit.DAYS.between(d1, d2)
+        }
+
+        return null
+    }
+
+    fun teamRestStatus(daysSinceLastMatch: Long): String {
+        if (daysSinceLastMatch >= 5) return TeamRestStatus.GOOD_REST.status
+        if (daysSinceLastMatch in 3..4) return TeamRestStatus.MODERATE_CONGESTION.status
+        if (daysSinceLastMatch in 0..2) return TeamRestStatus.SEVERE_CONGESTION.status
+        return TeamRestStatus.UNKNOWN_STATE.status
+    }
+
 }

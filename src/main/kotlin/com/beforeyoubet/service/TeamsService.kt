@@ -7,6 +7,7 @@ import com.beforeyoubet.component.EventsDataManipulation
 import com.beforeyoubet.response.H2HDetails
 import com.beforeyoubet.response.HomeAwayTeamLastFive
 import com.beforeyoubet.response.TeamPositionsAndPoints
+import com.beforeyoubet.response.TeamsRestStatus
 import com.beforeyoubet.response.TwoTeamStats
 import org.springframework.stereotype.Service
 import kotlin.collections.map
@@ -61,6 +62,24 @@ class TeamsService(
     fun getLast5MatchesEvents(teamId: Int) =
         eventsDataManipulation.fiveMachesEventsSum(apiData.lastFiveMatchesEvents(teamId))
 
+    fun teamRestStatuses(homeTeamId: Int, awayTeamId: Int, fixtureDate: String): TeamsRestStatus {
+        val matches = apiData.mostRecentPlayedMatches(homeTeamId, awayTeamId)
 
+
+        return TeamsRestStatus(
+            dataManipulation.teamRestStatus(
+                dataManipulation.daysBetween(
+                    matches[homeTeamId]?.fixture?.date,
+                    fixtureDate
+                ) ?: -1
+            ),
+            dataManipulation.teamRestStatus(
+                dataManipulation.daysBetween(
+                    matches[awayTeamId]?.fixture?.date,
+                    fixtureDate
+                ) ?: -1
+            )
+        )
+    }
 }
 

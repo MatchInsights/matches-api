@@ -6,6 +6,7 @@ import com.beforeyoubet.component.EventsDataManipulation
 import com.beforeyoubet.data.client.ClientEventsData
 import com.beforeyoubet.data.client.ClientMatchResponseData
 import com.beforeyoubet.data.client.ClientStandingData
+import com.beforeyoubet.model.TeamRestStatus
 import com.beforeyoubet.model.TeamStats
 import com.beforeyoubet.response.LastFiveMatchesEvents
 
@@ -119,6 +120,26 @@ class TeamsServiceTest {
 
         verify { apidata.lastFiveMatchesEvents(1234) }
         verify { eventsDataManitupulation.fiveMachesEventsSum(ClientEventsData.mockEvents) }
+    }
+
+    @Test
+    fun shouldGetTeamRestStatuses() {
+        every { apidata.mostRecentPlayedMatches(55, 33) } returns mapOf(
+            55 to ClientMatchResponseData.matchResponse,
+            33 to ClientMatchResponseData.matchResponse
+        )
+
+        every { dataManitupulation.teamRestStatus(any()) } returns TeamRestStatus.GOOD_REST.status
+        every { dataManitupulation.daysBetween(any(), any()) } returns 5
+
+        val result = underTest.teamRestStatuses(55, 33, "2025-09-22T16:30:00+00:00")
+
+        assertThat(result.homeTeamStatus).isEqualTo(TeamRestStatus.GOOD_REST.status)
+        assertThat(result.awayTeamStatus).isEqualTo(TeamRestStatus.GOOD_REST.status)
+
+        verify { apidata.mostRecentPlayedMatches(55, 33) }
+        verify { dataManitupulation.teamRestStatus(any()) }
+        verify { dataManitupulation.daysBetween(any(), any()) }
     }
 }
 

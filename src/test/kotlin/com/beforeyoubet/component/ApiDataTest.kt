@@ -125,5 +125,19 @@ class ApiDataTest {
         verify { apiSportsClient.fetchMatchEvents(any()) }
     }
 
+    @Test
+    fun `fetch most recent played matches`() {
+
+        every { apiSportsClient.fetchMatches("/fixtures?team=${33}&season=${props.year}") } returns ClientMatchResponseData.matchResponseList
+        every { apiSportsClient.fetchMatches("/fixtures?team=${44}&season=${props.year}") } returns ClientMatchResponseData.matchResponseList
+
+        val result = underTest.mostRecentPlayedMatches(33, 44)
+
+        assertThat(result[33]?.fixture?.date).isNotNull
+        assertThat(result[44]?.fixture?.date).isNotNull
+
+        verify { apiSportsClient.fetchMatches("/fixtures?team=${33}&season=${props.year}") }
+
+    }
 
 }

@@ -4,6 +4,7 @@ import com.beforeyoubet.response.H2HDetails
 import com.beforeyoubet.response.HomeAwayTeamLastFive
 import com.beforeyoubet.response.LastFiveMatchesEvents
 import com.beforeyoubet.response.TeamPositionsAndPoints
+import com.beforeyoubet.response.TeamsRestStatus
 import com.beforeyoubet.service.TeamsService
 import com.beforeyoubet.response.TwoTeamStats
 import org.springframework.web.bind.annotation.PathVariable
@@ -45,5 +46,15 @@ class TeamController(private val teamsService: TeamsService) {
     fun getLastFiveMatchesEvents(
         @PathVariable teamId: Int,
     ): LastFiveMatchesEvents = teamsService.getLast5MatchesEvents(teamId)
+
+    @GetMapping("/rest/status/{homeTeamId}/{awayTeamId}/{fixtureDate}")
+    fun getTeamsRestStatuses(
+        @PathVariable homeTeamId: Int,
+        @PathVariable awayTeamId: Int,
+        @PathVariable fixtureDate: String,
+    ): TeamsRestStatus {
+        print(fixtureDate)
+        return teamsService.teamRestStatuses(homeTeamId, awayTeamId, fixtureDate.trim())
+    }
 
 }
