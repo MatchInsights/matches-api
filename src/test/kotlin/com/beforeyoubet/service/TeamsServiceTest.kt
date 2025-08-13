@@ -1,8 +1,8 @@
 package com.beforeyoubet.service
 
-import com.beforeyoubet.component.Apidata
-import com.beforeyoubet.component.DataManipulation
-import com.beforeyoubet.component.EventsDataManipulation
+import com.beforeyoubet.apidata.Apidata
+import com.beforeyoubet.datamanipulation.DataManipulation
+import com.beforeyoubet.datamanipulation.EventsDataManipulation
 import com.beforeyoubet.data.client.ClientEventsData
 import com.beforeyoubet.data.client.ClientMatchResponseData
 import com.beforeyoubet.data.client.ClientStandingData

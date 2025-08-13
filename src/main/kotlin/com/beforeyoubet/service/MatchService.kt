@@ -1,6 +1,6 @@
 package com.beforeyoubet.service
 
-import com.beforeyoubet.component.Apidata
+import com.beforeyoubet.apidata.Apidata
 import com.beforeyoubet.model.MatchStatus
 import com.beforeyoubet.response.MatchDetails
 import com.beforeyoubet.response.TodayMatch

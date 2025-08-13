@@ -1,9 +1,9 @@
 package com.beforeyoubet.service
 
 import com.beforeyoubet.clientData.Standing
-import com.beforeyoubet.component.Apidata
-import com.beforeyoubet.component.DataManipulation
-import com.beforeyoubet.component.EventsDataManipulation
+import com.beforeyoubet.apidata.Apidata
+import com.beforeyoubet.datamanipulation.DataManipulation
+import com.beforeyoubet.datamanipulation.EventsDataManipulation
 import com.beforeyoubet.response.H2HDetails
 import com.beforeyoubet.response.HomeAwayTeamLastFive
 import com.beforeyoubet.response.TeamPositionsAndPoints
@@ -64,7 +64,6 @@ class TeamsService(
 
     fun teamRestStatuses(homeTeamId: Int, awayTeamId: Int, fixtureDate: String): TeamsRestStatus {
         val matches = apiData.mostRecentPlayedMatches(homeTeamId, awayTeamId)
-
 
         return TeamsRestStatus(
             dataManipulation.teamRestStatus(

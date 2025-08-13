@@ -1,7 +1,7 @@
 package com.beforeyoubet.service
 
-import com.beforeyoubet.component.Apidata
-import com.beforeyoubet.component.DataManipulation
+import com.beforeyoubet.apidata.Apidata
+import com.beforeyoubet.datamanipulation.DataManipulation
 import com.beforeyoubet.data.client.ClientOddsData
 import com.beforeyoubet.data.response.OddsResponseData
 import io.mockk.every
