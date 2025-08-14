@@ -1,6 +1,8 @@
 package com.beforeyoubet.controller
 
 import com.beforeyoubet.TestCorsPropsConfig
+import com.beforeyoubet.model.OddFeeling
+import com.beforeyoubet.response.OddsWinnerFeeling
 import com.beforeyoubet.service.OddsService
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
@@ -39,4 +41,22 @@ class OddsControllerTest {
         verify { oddsService.fetchAllOdds(any()) }
     }
 
+    @Test
+    fun shouldGetWinnerFeeling() {
+        every { oddsService.oddsWinnerFeeling(any()) } returns
+                OddsWinnerFeeling(
+                    OddFeeling.STRONG.value,
+                    OddFeeling.WEAK.value,
+                    OddFeeling.WEAK.value
+                )
+
+        val response = mvc.perform(
+            get("/api/odds/feeling/winner/2142")
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andReturn().response
+
+        assertThat(response.status).isEqualTo(HttpStatus.OK.value())
+
+        verify { oddsService.oddsWinnerFeeling(any()) }
+    }
 }

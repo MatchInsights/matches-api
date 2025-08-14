@@ -1,4 +1,4 @@
-package com.beforeyoubet.component
+package com.beforeyoubet.apidata
 
 import com.beforeyoubet.client.ApiSportsClient
 import com.beforeyoubet.clientData.Event

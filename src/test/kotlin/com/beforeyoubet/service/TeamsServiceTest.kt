@@ -1,14 +1,17 @@
 package com.beforeyoubet.service
 
-import com.beforeyoubet.component.Apidata
-import com.beforeyoubet.component.DataManipulation
-import com.beforeyoubet.component.EventsDataManipulation
+import com.beforeyoubet.apidata.Apidata
+import com.beforeyoubet.datamanipulation.DataManipulation
+import com.beforeyoubet.datamanipulation.EventsDataManipulation
 import com.beforeyoubet.data.client.ClientEventsData
 import com.beforeyoubet.data.client.ClientMatchResponseData
 import com.beforeyoubet.data.client.ClientStandingData
+import com.beforeyoubet.datamanipulation.PerformanceDataManipulation
+import com.beforeyoubet.model.Performance
 import com.beforeyoubet.model.TeamRestStatus
 import com.beforeyoubet.model.TeamStats
 import com.beforeyoubet.response.LastFiveMatchesEvents
+import com.beforeyoubet.response.TeamsScorePerformance
 
 import com.beforeyoubet.response.TwoTeamStats
 import io.mockk.every
@@ -24,7 +27,8 @@ class TeamsServiceTest {
 
     val dataManitupulation: DataManipulation = mockk()
     val eventsDataManitupulation: EventsDataManipulation = mockk()
-    val underTest = TeamsService(apidata, dataManitupulation, eventsDataManitupulation)
+    val performanceDataManipulation: PerformanceDataManipulation = mockk()
+    val underTest = TeamsService(apidata, dataManitupulation, eventsDataManitupulation, performanceDataManipulation)
 
     @Test
     fun shouldGetLastFiveMatches() {
@@ -140,6 +144,35 @@ class TeamsServiceTest {
         verify { apidata.mostRecentPlayedMatches(55, 33) }
         verify { dataManitupulation.teamRestStatus(any()) }
         verify { dataManitupulation.daysBetween(any(), any()) }
+    }
+
+    @Test
+    fun shouldGetTeamsScorePerformance() {
+        every { apidata.getTeamsLeagueMatches(34, 43, 1) } returns mapOf(
+            34 to listOf(ClientMatchResponseData.matchResponse),
+            43 to listOf(ClientMatchResponseData.matchResponse)
+        )
+
+        every {
+            performanceDataManipulation.calculateScorePerformance(
+                any(),
+                any()
+            )
+        } returns Performance.GOOD.value
+
+        val result: TeamsScorePerformance = underTest.teamsScorePerformance(34, 43, 1)
+
+        assertThat(result.homeTeamPerformance).isEqualTo(Performance.GOOD.value)
+        assertThat(result.awayTeamPerformance).isEqualTo(Performance.GOOD.value)
+
+        verify { apidata.getTeamsLeagueMatches(34, 43, 1) }
+        verify {
+            performanceDataManipulation.calculateScorePerformance(
+                any(),
+                any()
+            )
+        }
+
     }
 }
 

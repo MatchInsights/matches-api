@@ -1,8 +1,11 @@
-package com.beforeyoubet.component
+package com.beforeyoubet.datamanipulation
 
 import com.beforeyoubet.data.client.ClientMatchResponseData
 import com.beforeyoubet.data.client.ClientOddsData
 import com.beforeyoubet.data.response.OddsResponseData
+import com.beforeyoubet.model.Odd
+import com.beforeyoubet.model.OddFeeling
+
 import com.beforeyoubet.model.TeamRestStatus
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -18,10 +21,10 @@ class DataManipulationTest {
             ClientMatchResponseData.matchResponseList
         )
 
-        assertThat(result.goalsFor).isEqualTo(10)
-        assertThat(result.goalsAgainst).isEqualTo(6)
-        assertThat(result.scoredIn).isEqualTo(3)
-        assertThat(result.concededIn).isEqualTo(3)
+        assertThat(result.goalsFor).isEqualTo(12)
+        assertThat(result.goalsAgainst).isEqualTo(8)
+        assertThat(result.scoredIn).isEqualTo(4)
+        assertThat(result.concededIn).isEqualTo(4)
         assertThat(result.cleanSheet).isEqualTo(0)
     }
 
@@ -32,7 +35,7 @@ class DataManipulationTest {
             ClientMatchResponseData.matchResponseList
         )
 
-        assertThat(result).containsExactly("W", "W", "D")
+        assertThat(result).containsExactly("W", "W", "L", "D")
     }
 
     @Test
@@ -67,5 +70,23 @@ class DataManipulationTest {
         assertThat(underTest.teamRestStatus(3)).isEqualTo(TeamRestStatus.MODERATE_CONGESTION.status)
         assertThat(underTest.teamRestStatus(1)).isEqualTo(TeamRestStatus.SEVERE_CONGESTION.status)
         assertThat(underTest.teamRestStatus(-1)).isEqualTo(TeamRestStatus.UNKNOWN_STATE.status)
+    }
+
+
+    @Test
+    fun shouldCaptureOddsFeeling() {
+        val result = underTest.oddsFeeling(
+            ClientOddsData.mockResponse
+        )
+
+        assertThat(result).isEqualTo(
+            mapOf
+                (
+                Odd.HOME to OddFeeling.STRONG,
+                Odd.DRAW to OddFeeling.WEAK,
+                Odd.AWAY to OddFeeling.WEAK
+            )
+        )
+
     }
 }

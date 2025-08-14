@@ -1,9 +1,12 @@
 package com.beforeyoubet.service
 
-import com.beforeyoubet.component.Apidata
-import com.beforeyoubet.component.DataManipulation
+import com.beforeyoubet.apidata.Apidata
+import com.beforeyoubet.datamanipulation.DataManipulation
 import com.beforeyoubet.data.client.ClientOddsData
 import com.beforeyoubet.data.response.OddsResponseData
+import com.beforeyoubet.model.Odd
+import com.beforeyoubet.model.OddFeeling
+import com.beforeyoubet.response.OddsWinnerFeeling
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -32,5 +35,29 @@ class OddsServiceTest {
         verify { apidata.fetchAllOdds(any()) }
         verify { dataManipulation.extractBets(any()) }
 
+    }
+
+    @Test
+    fun shouldDetectOddsWinnerFeeling() {
+        every { apidata.fetchAllOdds(any()) } returns ClientOddsData.mockResponse
+        every { dataManipulation.oddsFeeling(any()) } returns mapOf(
+            Odd.HOME to OddFeeling.STRONG,
+            Odd.DRAW to OddFeeling.WEAK,
+            Odd.AWAY to OddFeeling.WEAK,
+        )
+
+
+        val result: OddsWinnerFeeling = underTest.oddsWinnerFeeling(123456)
+
+        assertThat(result).isEqualTo(
+            OddsWinnerFeeling(
+                OddFeeling.STRONG.value,
+                OddFeeling.WEAK.value,
+                OddFeeling.WEAK.value
+            )
+        )
+
+        verify { apidata.fetchAllOdds(any()) }
+        verify { dataManipulation.oddsFeeling(any()) }
     }
 }

@@ -1,4 +1,4 @@
-package com.beforeyoubet.component
+package com.beforeyoubet.datamanipulation
 
 import com.beforeyoubet.clientData.Event
 import com.beforeyoubet.clientData.EventTypes
@@ -6,7 +6,6 @@ import com.beforeyoubet.clientData.EventTypesDetail
 import com.beforeyoubet.clientData.Time
 import com.beforeyoubet.response.LastFiveMatchesEvents
 import org.springframework.stereotype.Component
-import kotlin.collections.forEach
 
 @Component
 class EventsDataManipulation {

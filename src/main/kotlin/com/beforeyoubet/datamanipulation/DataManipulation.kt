@@ -1,10 +1,12 @@
-package com.beforeyoubet.component
-
+package com.beforeyoubet.datamanipulation
 
 import com.beforeyoubet.clientData.FixtureOdds
 import com.beforeyoubet.clientData.MatchResponse
+import com.beforeyoubet.errors.ApiFailedException
+import com.beforeyoubet.errors.ErrorMessage
+import com.beforeyoubet.model.Odd
+import com.beforeyoubet.model.OddFeeling
 import com.beforeyoubet.model.TeamRestStatus
-
 import com.beforeyoubet.model.TeamStats
 import com.beforeyoubet.response.Bet
 import com.beforeyoubet.response.SingleOdd
@@ -12,7 +14,6 @@ import org.springframework.stereotype.Component
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
-
 
 @Component
 class DataManipulation {
@@ -61,6 +62,8 @@ class DataManipulation {
             when {
                 match.teams.home?.id == teamId && homeGoals > awayGoals -> "W"
                 match.teams.home?.id == teamId && homeGoals < awayGoals -> "L"
+                match.teams.away?.id == teamId && homeGoals > awayGoals -> "L"
+                match.teams.away?.id == teamId && homeGoals < awayGoals -> "W"
                 else -> "D"
             }
         }
@@ -113,6 +116,51 @@ class DataManipulation {
         if (daysSinceLastMatch in 3..4) return TeamRestStatus.MODERATE_CONGESTION.status
         if (daysSinceLastMatch in 0..2) return TeamRestStatus.SEVERE_CONGESTION.status
         return TeamRestStatus.UNKNOWN_STATE.status
+    }
+
+
+    fun oddsFeeling(data: List<FixtureOdds>): Map<Odd, OddFeeling> {
+        val bookmaker = data
+            .flatMap { it.bookmakers }
+            .firstOrNull()
+            ?: return emptyMap()
+
+        val matchWinner = bookmaker.bets.firstOrNull { it.name.contains("Match Winner", true) }
+            ?: return emptyMap()
+
+        val homeOdds = matchWinner.values.first { it.value.contains(Odd.HOME.value, true) }.odd.toDouble()
+        val drawOdds = matchWinner.values.first { it.value.contains(Odd.DRAW.value, true) }.odd.toDouble()
+        val awayOdds = matchWinner.values.first { it.value.contains(Odd.AWAY.value, true) }.odd.toDouble()
+
+        val (homeProb, drawProb, awayProb) = calculateOddsProbabilities(homeOdds, drawOdds, awayOdds)
+
+        return mapOf(
+            Odd.HOME to if (homeProb >= 0.5) OddFeeling.STRONG else OddFeeling.WEAK,
+            Odd.DRAW to if (drawProb >= 0.5) OddFeeling.STRONG else OddFeeling.WEAK,
+            Odd.AWAY to if (awayProb >= 0.5) OddFeeling.STRONG else OddFeeling.WEAK
+        )
+    }
+
+
+    fun calculateOddsProbabilities(
+        homeOdds: Double,
+        drawOdds: Double,
+        awayOdds: Double
+    ): Triple<Double, Double, Double> {
+        if (!(homeOdds > 0) || !(drawOdds > 0) || !(awayOdds > 0))
+            throw ApiFailedException(ErrorMessage.CALCULATION_FAILED)
+
+        val impliedHome = 1.0 / homeOdds
+        val impliedDraw = 1.0 / drawOdds
+        val impliedAway = 1.0 / awayOdds
+
+        val total = impliedHome + impliedDraw + impliedAway
+
+        val normalizedHome = impliedHome / total
+        val normalizedDraw = impliedDraw / total
+        val normalizedAway = impliedAway / total
+
+        return Triple(normalizedHome, normalizedDraw, normalizedAway)
     }
 
 }

@@ -1,4 +1,4 @@
-package com.beforeyoubet.component
+package com.beforeyoubet.datamanipulation
 
 
 import com.beforeyoubet.data.client.ClientEventsData

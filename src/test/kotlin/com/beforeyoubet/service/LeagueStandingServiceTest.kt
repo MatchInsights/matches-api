@@ -1,6 +1,6 @@
 package com.beforeyoubet.service
 
-import com.beforeyoubet.component.Apidata
+import com.beforeyoubet.apidata.Apidata
 import com.beforeyoubet.data.client.ClientStandingData
 import io.mockk.every
 import io.mockk.mockk

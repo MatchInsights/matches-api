@@ -14,7 +14,7 @@ class ClientOddsData {
                         name = "Bet365", bets = listOf(
                             Bet(
                                 name = "Match Winner", values = listOf(
-                                    OddValue("Home Team", "1.95"), OddValue("Draw", "3.2"), OddValue("Away Team", "3.8")
+                                    OddValue("Home Team", "1.05"), OddValue("Draw", "2.0"), OddValue("Away Team", "3.8")
                                 )
                             ), Bet(
                                 name = "Odd/Even - First Half", values = listOf(

@@ -1,4 +1,4 @@
-package com.beforeyoubet.component
+package com.beforeyoubet.apidata
 
 import com.beforeyoubet.client.ApiSportsClient
 import com.beforeyoubet.data.client.ClientEventsData
@@ -10,7 +10,7 @@ import com.beforeyoubet.props.SeasonProps
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 
 class ApiDataTest {
@@ -22,11 +22,11 @@ class ApiDataTest {
     @Test
     fun `fetch todayMatches`() {
         val day = "2023-10-01"
-        every { apiSportsClient.fetchMatches("/fixtures?date=$day&status=${MatchStatus.NOT_STARTED.code}") } returns ClientMatchResponseData.matchResponseList
+        every { apiSportsClient.fetchMatches("/fixtures?date=$day&status=${MatchStatus.NOT_STARTED.code}") } returns ClientMatchResponseData.Companion.matchResponseList
 
         val result = underTest.todayMatches(day, MatchStatus.NOT_STARTED.code)
 
-        assertThat(result).isNotEmpty()
+        Assertions.assertThat(result).isNotEmpty()
 
         verify { apiSportsClient.fetchMatches("/fixtures?date=$day&status=${MatchStatus.NOT_STARTED.code}") }
     }
@@ -34,11 +34,11 @@ class ApiDataTest {
     @Test
     fun `fetch match details`() {
 
-        every { apiSportsClient.fetchMatchDetails("/fixtures?id=1234") } returns ClientMatchResponseData.matchResponse
+        every { apiSportsClient.fetchMatchDetails("/fixtures?id=1234") } returns ClientMatchResponseData.Companion.matchResponse
 
         val result = underTest.matchDetails(1234)
 
-        assertThat(result).isNotNull()
+        Assertions.assertThat(result).isNotNull()
 
         verify { apiSportsClient.fetchMatchDetails("/fixtures?id=1234") }
     }
@@ -46,11 +46,11 @@ class ApiDataTest {
     @Test
     fun `fetch head to head`() {
 
-        every { apiSportsClient.fetchMatches("/fixtures/headtohead?h2h=${12}-${22}") } returns ClientMatchResponseData.matchResponseList
+        every { apiSportsClient.fetchMatches("/fixtures/headtohead?h2h=${12}-${22}") } returns ClientMatchResponseData.Companion.matchResponseList
 
         val result = underTest.headToHead(12, 22)
 
-        assertThat(result).isNotEmpty
+        Assertions.assertThat(result).isNotEmpty
 
         verify { apiSportsClient.fetchMatches("/fixtures/headtohead?h2h=${12}-${22}") }
     }
@@ -58,13 +58,13 @@ class ApiDataTest {
     @Test
     fun `fetch last five matches results`() {
 
-        every { apiSportsClient.fetchMatches("/fixtures?team=${1}&season=${props.year}") } returns ClientMatchResponseData.matchResponseList
-        every { apiSportsClient.fetchMatches("/fixtures?team=${2}&season=${props.year}") } returns ClientMatchResponseData.matchResponseList
+        every { apiSportsClient.fetchMatches("/fixtures?team=${1}&season=${props.year}") } returns ClientMatchResponseData.Companion.matchResponseList
+        every { apiSportsClient.fetchMatches("/fixtures?team=${2}&season=${props.year}") } returns ClientMatchResponseData.Companion.matchResponseList
 
         val result = underTest.lastFiveMatchesResults(1, 2)
 
-        assertThat(result[1]).isNotEmpty
-        assertThat(result[2]).isNotEmpty
+        Assertions.assertThat(result[1]).isNotEmpty
+        Assertions.assertThat(result[2]).isNotEmpty
 
         verify { apiSportsClient.fetchMatches("/fixtures?team=${1}&season=${props.year}") }
         verify { apiSportsClient.fetchMatches("/fixtures?team=${2}&season=${props.year}") }
@@ -73,13 +73,13 @@ class ApiDataTest {
     @Test
     fun `fetch teams leagues results`() {
 
-        every { apiSportsClient.fetchMatches("/fixtures/?team=${1}&season=${props.year}&league=${1}") } returns ClientMatchResponseData.matchResponseList
-        every { apiSportsClient.fetchMatches("/fixtures/?team=${2}&season=${props.year}&league=${1}") } returns ClientMatchResponseData.matchResponseList
+        every { apiSportsClient.fetchMatches("/fixtures/?team=${1}&season=${props.year}&league=${1}") } returns ClientMatchResponseData.Companion.matchResponseList
+        every { apiSportsClient.fetchMatches("/fixtures/?team=${2}&season=${props.year}&league=${1}") } returns ClientMatchResponseData.Companion.matchResponseList
 
         val result = underTest.getTeamsLeagueMatches(1, 2, 1)
 
-        assertThat(result[1]).isNotEmpty
-        assertThat(result[2]).isNotEmpty
+        Assertions.assertThat(result[1]).isNotEmpty
+        Assertions.assertThat(result[2]).isNotEmpty
 
         verify { apiSportsClient.fetchMatches("/fixtures/?team=${1}&season=${props.year}&league=${1}") }
         verify { apiSportsClient.fetchMatches("/fixtures/?team=${2}&season=${props.year}&league=${1}") }
@@ -89,12 +89,12 @@ class ApiDataTest {
     fun `fetch league standings`() {
 
         every { apiSportsClient.fetchLeagueStandings("/standings?league=1&season=${props.year}") } returns listOf(
-            ClientStandingData.standing
+            ClientStandingData.Companion.standing
         )
 
         val result = underTest.leagueStandings(1)
 
-        assertThat(result).isNotEmpty()
+        Assertions.assertThat(result).isNotEmpty()
 
         verify { apiSportsClient.fetchLeagueStandings("/standings?league=1&season=${props.year}") }
     }
@@ -102,11 +102,11 @@ class ApiDataTest {
     @Test
     fun `fetch all odds`() {
 
-        every { apiSportsClient.fetchFixtureOdds("/odds?fixture=1234") } returns ClientOddsData.mockResponse
+        every { apiSportsClient.fetchFixtureOdds("/odds?fixture=1234") } returns ClientOddsData.Companion.mockResponse
 
         val result = underTest.fetchAllOdds(1234)
 
-        assertThat(result).isNotEmpty()
+        Assertions.assertThat(result).isNotEmpty()
 
         verify { apiSportsClient.fetchFixtureOdds("/odds?fixture=1234") }
     }
@@ -114,12 +114,12 @@ class ApiDataTest {
     @Test
     fun `fetch last five matches events`() {
 
-        every { apiSportsClient.fetchMatches("/fixtures?team=${33}&season=${props.year}") } returns ClientMatchResponseData.matchResponseList
-        every { apiSportsClient.fetchMatchEvents(any()) } returns ClientEventsData.mockEvents
+        every { apiSportsClient.fetchMatches("/fixtures?team=${33}&season=${props.year}") } returns ClientMatchResponseData.Companion.matchResponseList
+        every { apiSportsClient.fetchMatchEvents(any()) } returns ClientEventsData.Companion.mockEvents
 
         val result = underTest.lastFiveMatchesEvents(33)
 
-        assertThat(result.size).isEqualTo(9)
+        Assertions.assertThat(result.size).isEqualTo(12)
 
         verify { apiSportsClient.fetchMatches("/fixtures?team=${33}&season=${props.year}") }
         verify { apiSportsClient.fetchMatchEvents(any()) }
@@ -128,13 +128,13 @@ class ApiDataTest {
     @Test
     fun `fetch most recent played matches`() {
 
-        every { apiSportsClient.fetchMatches("/fixtures?team=${33}&season=${props.year}") } returns ClientMatchResponseData.matchResponseList
-        every { apiSportsClient.fetchMatches("/fixtures?team=${44}&season=${props.year}") } returns ClientMatchResponseData.matchResponseList
+        every { apiSportsClient.fetchMatches("/fixtures?team=${33}&season=${props.year}") } returns ClientMatchResponseData.Companion.matchResponseList
+        every { apiSportsClient.fetchMatches("/fixtures?team=${44}&season=${props.year}") } returns ClientMatchResponseData.Companion.matchResponseList
 
         val result = underTest.mostRecentPlayedMatches(33, 44)
 
-        assertThat(result[33]?.fixture?.date).isNotNull
-        assertThat(result[44]?.fixture?.date).isNotNull
+        Assertions.assertThat(result[33]?.fixture?.date).isNotNull
+        Assertions.assertThat(result[44]?.fixture?.date).isNotNull
 
         verify { apiSportsClient.fetchMatches("/fixtures?team=${33}&season=${props.year}") }
 
