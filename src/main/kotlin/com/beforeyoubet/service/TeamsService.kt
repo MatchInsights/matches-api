@@ -4,10 +4,12 @@ import com.beforeyoubet.clientData.Standing
 import com.beforeyoubet.apidata.Apidata
 import com.beforeyoubet.datamanipulation.DataManipulation
 import com.beforeyoubet.datamanipulation.EventsDataManipulation
+import com.beforeyoubet.datamanipulation.PerformanceDataManipulation
 import com.beforeyoubet.response.H2HDetails
 import com.beforeyoubet.response.HomeAwayTeamLastFive
 import com.beforeyoubet.response.TeamPositionsAndPoints
 import com.beforeyoubet.response.TeamsRestStatus
+import com.beforeyoubet.response.TeamsScorePerformance
 import com.beforeyoubet.response.TwoTeamStats
 import org.springframework.stereotype.Service
 import kotlin.collections.map
@@ -17,7 +19,8 @@ import kotlin.collections.map
 class TeamsService(
     private val apiData: Apidata,
     private val dataManipulation: DataManipulation,
-    private val eventsDataManipulation: EventsDataManipulation
+    private val eventsDataManipulation: EventsDataManipulation,
+    private val performanceDataManipulation: PerformanceDataManipulation
 ) {
 
     fun getLast5MatchesResults(homeTeamId: Int, awayTeamId: Int): HomeAwayTeamLastFive {
@@ -78,6 +81,15 @@ class TeamsService(
                     fixtureDate
                 ) ?: -1
             )
+        )
+    }
+
+    fun teamsScorePerformance(homeTeamId: Int, awayTeamId: Int, leagueId: Int): TeamsScorePerformance {
+        val matches = apiData.getTeamsLeagueMatches(homeTeamId, awayTeamId, leagueId)
+
+        return TeamsScorePerformance(
+            performanceDataManipulation.calculateScorePerformance(homeTeamId, matches[homeTeamId] ?: emptyList()),
+            performanceDataManipulation.calculateScorePerformance(homeTeamId, matches[awayTeamId] ?: emptyList())
         )
     }
 }

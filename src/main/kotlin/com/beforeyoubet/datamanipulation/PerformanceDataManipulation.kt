@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component
 class PerformanceDataManipulation {
 
     fun calculateScorePerformance(teamId: Int, lastFiveMatches: List<MatchResponse>): String {
+        if (lastFiveMatches.isEmpty()) return Performance.NO_DATA.value
+        
         val points = lastFiveMatches.map { match ->
             val isHome = match.teams.home?.id == teamId
 

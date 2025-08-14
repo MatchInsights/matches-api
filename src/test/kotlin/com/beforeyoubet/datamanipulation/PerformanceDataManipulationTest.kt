@@ -17,4 +17,12 @@ class PerformanceDataManipulationTest {
 
         assertThat(result).isEqualTo(Performance.GOOD.value)
     }
+
+    @Test
+    fun shouldBeNoDataWithoutMatches() {
+        val result = underTest.calculateScorePerformance(
+            33, emptyList()
+        )
+        assertThat(result).isEqualTo(Performance.NO_DATA.value)
+    }
 }

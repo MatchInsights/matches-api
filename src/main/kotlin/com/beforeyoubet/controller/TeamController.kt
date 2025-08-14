@@ -5,6 +5,7 @@ import com.beforeyoubet.response.HomeAwayTeamLastFive
 import com.beforeyoubet.response.LastFiveMatchesEvents
 import com.beforeyoubet.response.TeamPositionsAndPoints
 import com.beforeyoubet.response.TeamsRestStatus
+import com.beforeyoubet.response.TeamsScorePerformance
 import com.beforeyoubet.service.TeamsService
 import com.beforeyoubet.response.TwoTeamStats
 import org.springframework.web.bind.annotation.PathVariable
@@ -56,5 +57,14 @@ class TeamController(private val teamsService: TeamsService) {
         print(fixtureDate)
         return teamsService.teamRestStatuses(homeTeamId, awayTeamId, fixtureDate.trim())
     }
+
+
+    @GetMapping("/score/performance/{homeTeamId}/{awayTeamId}/{leagueId}")
+    fun getScorePerformances(
+        @PathVariable homeTeamId: Int,
+        @PathVariable awayTeamId: Int,
+        @PathVariable leagueId: Int
+    ): TeamsScorePerformance = teamsService.teamsScorePerformance(homeTeamId, awayTeamId, leagueId)
+
 
 }

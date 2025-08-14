@@ -1,12 +1,14 @@
 package com.beforeyoubet.controller
 
 import com.beforeyoubet.TestCorsPropsConfig
+import com.beforeyoubet.model.Performance
 import com.beforeyoubet.model.TeamRestStatus
 import com.beforeyoubet.model.TeamStats
 import com.beforeyoubet.response.HomeAwayTeamLastFive
 import com.beforeyoubet.response.LastFiveMatchesEvents
 import com.beforeyoubet.response.TeamPositionsAndPoints
 import com.beforeyoubet.response.TeamsRestStatus
+import com.beforeyoubet.response.TeamsScorePerformance
 import com.beforeyoubet.service.TeamsService
 import com.beforeyoubet.response.TwoTeamStats
 import com.ninjasquad.springmockk.MockkBean
@@ -140,5 +142,21 @@ class TeamControllerTest {
         assertThat(response.status).isEqualTo(HttpStatus.OK.value())
 
         verify { teamsService.teamRestStatuses(34, 55, "2025-08-04T16:30:00+00:00") }
+    }
+
+
+    @Test
+    fun shouldGetTeamsScorePerformance() {
+        every { teamsService.teamsScorePerformance(34, 55, 1) } returns
+                TeamsScorePerformance(Performance.GOOD.value, Performance.POOR.value)
+
+        val response = mvc.perform(
+            get("/api/teams/score/performance/34/55/1")
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andReturn().response
+
+        assertThat(response.status).isEqualTo(HttpStatus.OK.value())
+
+        verify { teamsService.teamsScorePerformance(34, 55, 1) }
     }
 }
