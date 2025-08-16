@@ -54,7 +54,6 @@ class TeamController(private val teamsService: TeamsService) {
         @PathVariable awayTeamId: Int,
         @PathVariable fixtureDate: String,
     ): TeamsRestStatus {
-        print(fixtureDate)
         return teamsService.teamRestStatuses(homeTeamId, awayTeamId, fixtureDate.trim())
     }
 
