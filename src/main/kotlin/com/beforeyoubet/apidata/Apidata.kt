@@ -75,6 +75,7 @@ class Apidata(
         jobs.mapValues { (_, job) -> job.await() }
     }
 
+
     private fun lastFiveMatches(teamId: Int): List<MatchResponse> =
         apiSportsClient.fetchMatches("/fixtures?team=${teamId}&season=${seasonProps.year}")
             .filter { it.fixture.status?.short == "FT" }
