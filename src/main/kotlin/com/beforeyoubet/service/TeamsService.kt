@@ -2,11 +2,15 @@ package com.beforeyoubet.service
 
 import com.beforeyoubet.clientData.Standing
 import com.beforeyoubet.apidata.Apidata
+import com.beforeyoubet.clientData.CoachResponse
+import com.beforeyoubet.clientData.TeamResponse
 import com.beforeyoubet.datamanipulation.DataManipulation
 import com.beforeyoubet.datamanipulation.EventsDataManipulation
 import com.beforeyoubet.datamanipulation.PerformanceDataManipulation
 import com.beforeyoubet.response.H2HDetails
 import com.beforeyoubet.response.HomeAwayTeamLastFive
+import com.beforeyoubet.response.TeamDetails
+import com.beforeyoubet.response.TeamPlayer
 import com.beforeyoubet.response.TeamPositionsAndPoints
 import com.beforeyoubet.response.TeamsRestStatus
 import com.beforeyoubet.response.TeamsScorePerformance
@@ -92,5 +96,17 @@ class TeamsService(
             performanceDataManipulation.calculateScorePerformance(homeTeamId, matches[awayTeamId] ?: emptyList())
         )
     }
+
+    fun teamDetails(teamId: Int): TeamDetails {
+        return apiData.getTeamsDetails(teamId).let {
+            TeamDetails.fromClientResponse(
+                it["coach"] as CoachResponse,
+                it["details"] as TeamResponse
+            )
+        }
+    }
+
+    fun teamPlayers(teamId: Int): List<TeamPlayer> = apiData.squad(teamId).let { TeamPlayer.fromResponse(it) }
+
 }
 

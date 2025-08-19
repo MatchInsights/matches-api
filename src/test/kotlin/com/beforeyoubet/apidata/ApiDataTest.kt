@@ -5,12 +5,13 @@ import com.beforeyoubet.data.client.ClientEventsData
 import com.beforeyoubet.data.client.ClientMatchResponseData
 import com.beforeyoubet.data.client.ClientOddsData
 import com.beforeyoubet.data.client.ClientStandingData
+import com.beforeyoubet.data.client.ClientTeamDetails
 import com.beforeyoubet.model.MatchStatus
 import com.beforeyoubet.props.SeasonProps
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 class ApiDataTest {
@@ -26,7 +27,7 @@ class ApiDataTest {
 
         val result = underTest.todayMatches(day, MatchStatus.NOT_STARTED.code)
 
-        Assertions.assertThat(result).isNotEmpty()
+        assertThat(result).isNotEmpty()
 
         verify { apiSportsClient.fetchMatches("/fixtures?date=$day&status=${MatchStatus.NOT_STARTED.code}") }
     }
@@ -38,7 +39,7 @@ class ApiDataTest {
 
         val result = underTest.matchDetails(1234)
 
-        Assertions.assertThat(result).isNotNull()
+        assertThat(result).isNotNull()
 
         verify { apiSportsClient.fetchMatchDetails("/fixtures?id=1234") }
     }
@@ -50,7 +51,7 @@ class ApiDataTest {
 
         val result = underTest.headToHead(12, 22)
 
-        Assertions.assertThat(result).isNotEmpty
+        assertThat(result).isNotEmpty
 
         verify { apiSportsClient.fetchMatches("/fixtures/headtohead?h2h=${12}-${22}") }
     }
@@ -63,8 +64,8 @@ class ApiDataTest {
 
         val result = underTest.lastFiveMatchesResults(1, 2)
 
-        Assertions.assertThat(result[1]).isNotEmpty
-        Assertions.assertThat(result[2]).isNotEmpty
+        assertThat(result[1]).isNotEmpty
+        assertThat(result[2]).isNotEmpty
 
         verify { apiSportsClient.fetchMatches("/fixtures?team=${1}&season=${props.year}") }
         verify { apiSportsClient.fetchMatches("/fixtures?team=${2}&season=${props.year}") }
@@ -78,8 +79,8 @@ class ApiDataTest {
 
         val result = underTest.getTeamsLeagueMatches(1, 2, 1)
 
-        Assertions.assertThat(result[1]).isNotEmpty
-        Assertions.assertThat(result[2]).isNotEmpty
+        assertThat(result[1]).isNotEmpty
+        assertThat(result[2]).isNotEmpty
 
         verify { apiSportsClient.fetchMatches("/fixtures/?team=${1}&season=${props.year}&league=${1}") }
         verify { apiSportsClient.fetchMatches("/fixtures/?team=${2}&season=${props.year}&league=${1}") }
@@ -94,7 +95,7 @@ class ApiDataTest {
 
         val result = underTest.leagueStandings(1)
 
-        Assertions.assertThat(result).isNotEmpty()
+        assertThat(result).isNotEmpty()
 
         verify { apiSportsClient.fetchLeagueStandings("/standings?league=1&season=${props.year}") }
     }
@@ -106,7 +107,7 @@ class ApiDataTest {
 
         val result = underTest.fetchAllOdds(1234)
 
-        Assertions.assertThat(result).isNotEmpty()
+        assertThat(result).isNotEmpty()
 
         verify { apiSportsClient.fetchFixtureOdds("/odds?fixture=1234") }
     }
@@ -119,7 +120,7 @@ class ApiDataTest {
 
         val result = underTest.lastFiveMatchesEvents(33)
 
-        Assertions.assertThat(result.size).isEqualTo(12)
+        assertThat(result.size).isEqualTo(12)
 
         verify { apiSportsClient.fetchMatches("/fixtures?team=${33}&season=${props.year}") }
         verify { apiSportsClient.fetchMatchEvents(any()) }
@@ -133,11 +134,35 @@ class ApiDataTest {
 
         val result = underTest.mostRecentPlayedMatches(33, 44)
 
-        Assertions.assertThat(result[33]?.fixture?.date).isNotNull
-        Assertions.assertThat(result[44]?.fixture?.date).isNotNull
+        assertThat(result[33]?.fixture?.date).isNotNull
+        assertThat(result[44]?.fixture?.date).isNotNull
 
         verify { apiSportsClient.fetchMatches("/fixtures?team=${33}&season=${props.year}") }
 
     }
 
+    @Test
+    fun `fetch team details and coach map`() {
+        every { apiSportsClient.fetchTeamDetails("/teams?id=${33}") } returns ClientTeamDetails.details
+        every { apiSportsClient.fetchCoachDetails("/coachs?team=${33}") } returns ClientTeamDetails.coach
+
+        val result = underTest.getTeamsDetails(33)
+
+        assertThat(result["details"]).isEqualTo(ClientTeamDetails.details)
+        assertThat(result["coach"]).isEqualTo(ClientTeamDetails.coach)
+
+        verify { apiSportsClient.fetchTeamDetails("/teams?id=${33}") }
+        verify { apiSportsClient.fetchCoachDetails("/coachs?team=${33}") }
+    }
+
+    @Test
+    fun `fetch team squad`() {
+        every { apiSportsClient.fetchSquad("/players/squads?team=${33}") } returns ClientTeamDetails.squad
+
+        val result = underTest.squad(33)
+
+        assertThat(result.players).isEqualTo(ClientTeamDetails.squad.players)
+
+        verify { apiSportsClient.fetchSquad("/players/squads?team=${33}") }
+    }
 }

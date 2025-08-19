@@ -4,6 +4,7 @@ import com.beforeyoubet.client.ApiSportsClient
 import com.beforeyoubet.clientData.Event
 import com.beforeyoubet.clientData.FixtureOdds
 import com.beforeyoubet.clientData.MatchResponse
+import com.beforeyoubet.clientData.SquadResponse
 import com.beforeyoubet.clientData.Standing
 import com.beforeyoubet.props.SeasonProps
 import kotlinx.coroutines.async
@@ -47,6 +48,18 @@ class Apidata(
         jobs.mapValues { (_, job) -> job.await() }
     }
 
+    fun getTeamsDetails(teamId: Int) = runBlocking {
+        val jobs = mapOf(
+            "details" to async { apiSportsClient.fetchTeamDetails("/teams?id=$teamId") },
+            "coach" to async { apiSportsClient.fetchCoachDetails("/coachs?team=$teamId") }
+        )
+        jobs.mapValues { (_, job) -> job.await() }
+    }
+
+    fun squad(teamId: Int): SquadResponse =
+        apiSportsClient.fetchSquad("/players/squads?team=$teamId")
+
+
     fun leagueStandings(leagueId: Int): List<Standing> =
         apiSportsClient.fetchLeagueStandings("/standings?league=$leagueId&season=${seasonProps.year}")
 
@@ -74,6 +87,7 @@ class Apidata(
         )
         jobs.mapValues { (_, job) -> job.await() }
     }
+
 
     private fun lastFiveMatches(teamId: Int): List<MatchResponse> =
         apiSportsClient.fetchMatches("/fixtures?team=${teamId}&season=${seasonProps.year}")

@@ -1,5 +1,8 @@
 package com.beforeyoubet.client
 
+import com.beforeyoubet.clientData.CoachResponse
+import com.beforeyoubet.clientData.SquadResponse
+import com.beforeyoubet.clientData.TeamResponse
 import com.beforeyoubet.data.client.raw.ClientRawData
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -111,6 +114,66 @@ class ApiSportsClientTest {
         val result = underTest.fetchMatchEvents("/fixtures/events?fixture=${12124}")
 
         assertThat(result).isNotEmpty
+
+    }
+
+    @Test
+    fun `should fetch Team Details`() {
+        val mockJson = ClientRawData.teamDetailsRaw
+
+        mockWebServer.enqueue(
+            MockResponse().setResponseCode(200).setBody(mockJson).addHeader("Content-Type", "application/json")
+        )
+
+        val result: TeamResponse = underTest.fetchTeamDetails("/teams?id=${2431}")
+
+        assertThat(result.team).isNotNull
+        assertThat(result.venue).isNotNull
+
+    }
+
+    @Test
+    fun `should fetch Coach Details`() {
+        val mockJson = ClientRawData.coachResponse
+
+        mockWebServer.enqueue(
+            MockResponse().setResponseCode(200).setBody(mockJson).addHeader("Content-Type", "application/json")
+        )
+
+        val result: CoachResponse = underTest.fetchCoachDetails("/coachs?team=33")
+
+        assertThat(result.name).isEqualTo("Erik ten Hag")
+
+    }
+
+    @Test
+    fun `should fetch handle it when the response has not data`() {
+        val mockJson = ClientRawData.coachResponse
+
+        mockWebServer.enqueue(
+            MockResponse().setResponseCode(200).setBody(mockJson).addHeader("Content-Type", "application/json")
+        )
+
+        val result: CoachResponse = underTest.fetchCoachDetails("/coachs?team=33")
+
+        assertThat(result.name).isEqualTo("Erik ten Hag")
+
+    }
+
+
+    @Test
+    fun `should fetch Squad`() {
+        val mockJson = ClientRawData.squadsResponse
+
+
+        mockWebServer.enqueue(
+            MockResponse().setResponseCode(200).setBody(mockJson).addHeader("Content-Type", "application/json")
+        )
+
+        val result: SquadResponse = underTest.fetchSquad("/players/squads?team=33")
+
+        assertThat(result.players.size).isEqualTo(3)
+
 
     }
 }

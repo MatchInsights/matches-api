@@ -17,3 +17,20 @@ data class StandingResponse(
     val league: LeagueWithStandings
 )
 
+data class TeamResponse(
+    val team: Team,
+    val venue: Venue
+)
+
+data class SquadResponse(
+    val team: Team,
+    val players: List<Player>
+)
+
+data class CoachResponse(
+    val id: Int,
+    val name: String,
+    val firstname: String?,
+    val lastname: String?,
+    val age: Int?
+)

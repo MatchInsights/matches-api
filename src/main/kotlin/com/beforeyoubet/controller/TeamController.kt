@@ -3,6 +3,8 @@ package com.beforeyoubet.controller
 import com.beforeyoubet.response.H2HDetails
 import com.beforeyoubet.response.HomeAwayTeamLastFive
 import com.beforeyoubet.response.LastFiveMatchesEvents
+import com.beforeyoubet.response.TeamDetails
+import com.beforeyoubet.response.TeamPlayer
 import com.beforeyoubet.response.TeamPositionsAndPoints
 import com.beforeyoubet.response.TeamsRestStatus
 import com.beforeyoubet.response.TeamsScorePerformance
@@ -65,5 +67,13 @@ class TeamController(private val teamsService: TeamsService) {
         @PathVariable leagueId: Int
     ): TeamsScorePerformance = teamsService.teamsScorePerformance(homeTeamId, awayTeamId, leagueId)
 
+    @GetMapping("/{teamId}/details")
+    fun getTeamDetails(
+        @PathVariable teamId: Int,
+    ): TeamDetails = teamsService.teamDetails(teamId)
 
+    @GetMapping("/{teamId}/players")
+    fun getTeamPlayers(
+        @PathVariable teamId: Int,
+    ): List<TeamPlayer> = teamsService.teamPlayers(teamId)
 }

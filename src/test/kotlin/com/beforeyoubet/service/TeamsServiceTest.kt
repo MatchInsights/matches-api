@@ -6,11 +6,14 @@ import com.beforeyoubet.datamanipulation.EventsDataManipulation
 import com.beforeyoubet.data.client.ClientEventsData
 import com.beforeyoubet.data.client.ClientMatchResponseData
 import com.beforeyoubet.data.client.ClientStandingData
+import com.beforeyoubet.data.client.ClientTeamDetails
 import com.beforeyoubet.datamanipulation.PerformanceDataManipulation
 import com.beforeyoubet.model.Performance
 import com.beforeyoubet.model.TeamRestStatus
 import com.beforeyoubet.model.TeamStats
 import com.beforeyoubet.response.LastFiveMatchesEvents
+import com.beforeyoubet.response.TeamDetails
+import com.beforeyoubet.response.TeamPlayer
 import com.beforeyoubet.response.TeamsScorePerformance
 
 import com.beforeyoubet.response.TwoTeamStats
@@ -129,8 +132,7 @@ class TeamsServiceTest {
     @Test
     fun shouldGetTeamRestStatuses() {
         every { apidata.mostRecentPlayedMatches(55, 33) } returns mapOf(
-            55 to ClientMatchResponseData.matchResponse,
-            33 to ClientMatchResponseData.matchResponse
+            55 to ClientMatchResponseData.matchResponse, 33 to ClientMatchResponseData.matchResponse
         )
 
         every { dataManitupulation.teamRestStatus(any()) } returns TeamRestStatus.GOOD_REST.status
@@ -149,14 +151,12 @@ class TeamsServiceTest {
     @Test
     fun shouldGetTeamsScorePerformance() {
         every { apidata.getTeamsLeagueMatches(34, 43, 1) } returns mapOf(
-            34 to listOf(ClientMatchResponseData.matchResponse),
-            43 to listOf(ClientMatchResponseData.matchResponse)
+            34 to listOf(ClientMatchResponseData.matchResponse), 43 to listOf(ClientMatchResponseData.matchResponse)
         )
 
         every {
             performanceDataManipulation.calculateScorePerformance(
-                any(),
-                any()
+                any(), any()
             )
         } returns Performance.GOOD.value
 
@@ -168,12 +168,43 @@ class TeamsServiceTest {
         verify { apidata.getTeamsLeagueMatches(34, 43, 1) }
         verify {
             performanceDataManipulation.calculateScorePerformance(
-                any(),
-                any()
+                any(), any()
             )
         }
 
     }
+
+    @Test
+    fun shouldGiveMeTheTeamDetails() {
+        every { apidata.getTeamsDetails(22) } returns mapOf(
+            "details" to ClientTeamDetails.details, "coach" to ClientTeamDetails.coach
+        )
+
+        val result: TeamDetails = underTest.teamDetails(22)
+
+        assertThat(result.coachName).isEqualTo(ClientTeamDetails.coach.name)
+        assertThat(result.coachAge).isEqualTo(ClientTeamDetails.coach.age)
+        assertThat(result.venueCapacity).isEqualTo(ClientTeamDetails.details.venue.capacity)
+        assertThat(result.venueCity).isEqualTo(ClientTeamDetails.details.venue.city)
+        assertThat(result.venueName).isEqualTo(ClientTeamDetails.details.venue.name)
+        assertThat(result.teamCountry).isEqualTo(ClientTeamDetails.details.team.country)
+        assertThat(result.teamName).isEqualTo(ClientTeamDetails.details.team.name)
+        assertThat(result.teamLogo).isEqualTo(ClientTeamDetails.details.team.logo)
+
+        verify { apidata.getTeamsDetails(22) }
+    }
+
+    @Test
+    fun shouldGiveMeTheTeamPlayers() {
+        every { apidata.squad(22) } returns ClientTeamDetails.squad
+
+        val result: List<TeamPlayer> = underTest.teamPlayers(22)
+
+        assertThat(result.size).isEqualTo(3)
+
+        verify { apidata.squad(22) }
+    }
+
 }
 
 

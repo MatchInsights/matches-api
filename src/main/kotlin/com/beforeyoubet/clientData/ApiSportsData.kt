@@ -2,7 +2,9 @@ package com.beforeyoubet.clientData
 
 data class Venue(
     val name: String? = "Unknown Venue",
-    val city: String? = "Unknown City"
+    val city: String? = "Unknown City",
+    val id: Int? = -1,
+    val capacity: Int? = -1
 )
 
 data class MatchStatus(
@@ -27,7 +29,9 @@ data class Team(
     val name: String = "Unknown Team",
     val logo: String? = "",
     val winner: Boolean? = false,
-    val goals: Int? = 0
+    val goals: Int? = 0,
+    val country: String? = "Unkown Country",
+    val founded: Int? = -1
 )
 
 data class Fixture(
@@ -114,7 +118,10 @@ data class Time(
 
 data class Player(
     val id: Int,
-    val name: String
+    val name: String,
+    val age: Int? = -1,
+    val nationality: String? = "Unknown Nationality",
+    val position: String? = "Unknown Position"
 )
 
 enum class EventTypes(val typeName: String) {
@@ -128,3 +135,4 @@ enum class EventTypesDetail(val detail: String) {
     RED_CARD("Red Card"),
     PENALTY("Penalty");
 }
+
