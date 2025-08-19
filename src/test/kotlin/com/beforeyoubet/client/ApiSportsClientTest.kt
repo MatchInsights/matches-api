@@ -1,6 +1,9 @@
 package com.beforeyoubet.client
 
+import com.beforeyoubet.clientData.CoachResponse
+import com.beforeyoubet.clientData.SquadResponse
 import com.beforeyoubet.clientData.TeamResponse
+import com.beforeyoubet.clientData.TrophyResponse
 import com.beforeyoubet.data.client.raw.ClientRawData
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -127,6 +130,50 @@ class ApiSportsClientTest {
 
         assertThat(result.team).isNotNull
         assertThat(result.venue).isNotNull
+
+    }
+
+    @Test
+    fun `should fetch Coach Details`() {
+        val mockJson = ClientRawData.coachResponse
+
+        mockWebServer.enqueue(
+            MockResponse().setResponseCode(200).setBody(mockJson).addHeader("Content-Type", "application/json")
+        )
+
+        val result: CoachResponse = underTest.fetchCoachDetails("/coachs?team=33")
+
+        assertThat(result.name).isEqualTo("Erik ten Hag")
+
+    }
+
+    @Test
+    fun `should fetch trophies`() {
+        val mockJson = ClientRawData.trophiesRaw
+
+        mockWebServer.enqueue(
+            MockResponse().setResponseCode(200).setBody(mockJson).addHeader("Content-Type", "application/json")
+        )
+
+        val result: List<TrophyResponse> = underTest.fetchTrophies("/trophies?team=33")
+
+        assertThat(result.size).isEqualTo(3)
+
+    }
+
+    @Test
+    fun `should fetch Squad`() {
+        val mockJson = ClientRawData.squadsResponse
+
+
+        mockWebServer.enqueue(
+            MockResponse().setResponseCode(200).setBody(mockJson).addHeader("Content-Type", "application/json")
+        )
+
+        val result: SquadResponse = underTest.fetchSquad("/players/squads?team=33")
+
+        assertThat(result.players.size).isEqualTo(3)
+
 
     }
 }

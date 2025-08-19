@@ -31,9 +31,8 @@ data class Team(
     val winner: Boolean? = false,
     val goals: Int? = 0,
     val country: String? = "Unkown Country",
-    val founded: Int? = -1,
-
-    )
+    val founded: Int? = -1
+)
 
 data class Fixture(
     val id: Int,

@@ -1,12 +1,16 @@
 package com.beforeyoubet.controller
 
 import com.beforeyoubet.TestCorsPropsConfig
+import com.beforeyoubet.data.client.ClientTeamDetails
 import com.beforeyoubet.model.Performance
 import com.beforeyoubet.model.TeamRestStatus
 import com.beforeyoubet.model.TeamStats
 import com.beforeyoubet.response.HomeAwayTeamLastFive
 import com.beforeyoubet.response.LastFiveMatchesEvents
+import com.beforeyoubet.response.TeamDetails
+import com.beforeyoubet.response.TeamPlayer
 import com.beforeyoubet.response.TeamPositionsAndPoints
+import com.beforeyoubet.response.TeamTrophy
 import com.beforeyoubet.response.TeamsRestStatus
 import com.beforeyoubet.response.TeamsScorePerformance
 import com.beforeyoubet.service.TeamsService
@@ -158,5 +162,55 @@ class TeamControllerTest {
         assertThat(response.status).isEqualTo(HttpStatus.OK.value())
 
         verify { teamsService.teamsScorePerformance(34, 55, 1) }
+    }
+
+    @Test
+    fun shouldGetTeamDetails() {
+        every { teamsService.teamDetails(55) } returns TeamDetails.fromClientResponse(
+            ClientTeamDetails.coach,
+            ClientTeamDetails.details
+        )
+
+
+        val response = mvc.perform(
+            get("/api/teams/55/details")
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andReturn().response
+
+        assertThat(response.status).isEqualTo(HttpStatus.OK.value())
+
+        verify { teamsService.teamDetails(55) }
+    }
+
+    @Test
+    fun shouldGetTeamTrophies() {
+        every { teamsService.teamTrophies(55) } returns TeamTrophy.fromResponse(
+            ClientTeamDetails.trophies
+        )
+
+        val response = mvc.perform(
+            get("/api/teams/55/trophies")
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andReturn().response
+
+        assertThat(response.status).isEqualTo(HttpStatus.OK.value())
+
+        verify { teamsService.teamTrophies(55) }
+    }
+
+    @Test
+    fun shouldGetTeamSquad() {
+        every { teamsService.teamPlayers(55) } returns TeamPlayer.fromResponse(
+            ClientTeamDetails.squad
+        )
+
+        val response = mvc.perform(
+            get("/api/teams/55/players")
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andReturn().response
+
+        assertThat(response.status).isEqualTo(HttpStatus.OK.value())
+
+        verify { teamsService.teamPlayers(55) }
     }
 }

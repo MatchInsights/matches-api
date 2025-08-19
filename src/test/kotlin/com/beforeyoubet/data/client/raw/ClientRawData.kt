@@ -251,5 +251,143 @@ class ClientRawData {
 """.trimIndent()
 
 
+        val coachResponse = """
+            {
+              "get": "coachs",
+              "parameters": {
+                "team": "33"
+              },
+              "errors": [],
+              "results": 1,
+              "paging": {
+                "current": 1,
+                "total": 1
+              },
+              "response": [
+                {
+                  "id": 1234,
+                  "name": "Erik ten Hag",
+                  "firstname": "Erik",
+                  "lastname": "ten Hag",
+                  "age": 53,
+                  "birth": {
+                    "date": "1970-02-02",
+                    "place": "Haaksbergen",
+                    "country": "Netherlands"
+                  },
+                  "nationality": "Netherlands",
+                  "team": {
+                    "id": 33,
+                    "name": "Manchester United",
+                    "logo": "https://media.api-sports.io/football/teams/33.png"
+                  },
+                  "career": [
+                    {
+                      "team": {
+                        "id": 50,
+                        "name": "Ajax",
+                        "logo": "https://media.api-sports.io/football/teams/50.png"
+                      },
+                      "start": "2017-12-28",
+                      "end": "2022-05-15"
+                    }
+                  ]
+                }
+              ]
+            }
+
+            
+            
+        """.trimIndent()
+
+
+        val squadsResponse = """
+            {
+              "get": "players/squads",
+              "parameters": {
+                "team": "33"
+              },
+              "errors": [],
+              "results": 1,
+              "paging": {
+                "current": 1,
+                "total": 1
+              },
+              "response": [
+                {
+                  "team": {
+                    "id": 33,
+                    "name": "Manchester United",
+                    "logo": "https://media.api-sports.io/football/teams/33.png"
+                  },
+                  "players": [
+                    {
+                      "id": 101,
+                      "name": "David de Gea",
+                      "age": 32,
+                      "number": 1,
+                      "position": "Goalkeeper",
+                      "photo": "https://media.api-sports.io/football/players/101.png"
+                    },
+                    {
+                      "id": 102,
+                      "name": "Harry Maguire",
+                      "age": 30,
+                      "number": 5,
+                      "position": "Defender",
+                      "photo": "https://media.api-sports.io/football/players/102.png"
+                    },
+                    {
+                      "id": 103,
+                      "name": "Marcus Rashford",
+                      "age": 25,
+                      "number": 10,
+                      "position": "Attacker",
+                      "photo": "https://media.api-sports.io/football/players/103.png"
+                    }
+                  ]
+                }
+              ]
+            }
+            
+        """.trimIndent()
+
+        val trophiesRaw = """
+            {
+              "get": "trophies",
+              "parameters": {
+                "team": "33"
+              },
+              "errors": [],
+              "results": 3,
+              "paging": {
+                "current": 1,
+                "total": 1
+              },
+              "response": [
+                {
+                  "league": "Premier League",
+                  "country": "England",
+                  "season": "2022/2023",
+                  "place": "3rd Place"
+                },
+                {
+                  "league": "EFL Cup",
+                  "country": "England",
+                  "season": "2022/2023",
+                  "place": "Winner"
+                },
+                {
+                  "league": "FA Cup",
+                  "country": "England",
+                  "season": "2022/2023",
+                  "place": "Finalist"
+                }
+              ]
+            }
+
+        """.trimIndent()
     }
+
+
 }
