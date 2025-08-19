@@ -6,7 +6,6 @@ import com.beforeyoubet.clientData.FixtureOdds
 import com.beforeyoubet.clientData.MatchResponse
 import com.beforeyoubet.clientData.SquadResponse
 import com.beforeyoubet.clientData.Standing
-import com.beforeyoubet.clientData.TrophyResponse
 import com.beforeyoubet.props.SeasonProps
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -60,8 +59,6 @@ class Apidata(
     fun squad(teamId: Int): SquadResponse =
         apiSportsClient.fetchSquad("/players/squads?team=$teamId")
 
-    fun trophies(teamId: Int): List<TrophyResponse> =
-        apiSportsClient.fetchTrophies("/trophies?team=$teamId")
 
     fun leagueStandings(leagueId: Int): List<Standing> =
         apiSportsClient.fetchLeagueStandings("/standings?league=$leagueId&season=${seasonProps.year}")

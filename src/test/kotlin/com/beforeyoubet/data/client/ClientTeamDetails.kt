@@ -5,7 +5,6 @@ import com.beforeyoubet.clientData.Player
 import com.beforeyoubet.clientData.SquadResponse
 import com.beforeyoubet.clientData.Team
 import com.beforeyoubet.clientData.TeamResponse
-import com.beforeyoubet.clientData.TrophyResponse
 import com.beforeyoubet.clientData.Venue
 
 class ClientTeamDetails {
@@ -67,25 +66,5 @@ class ClientTeamDetails {
             age = 53
         )
 
-        val trophies = listOf(
-            TrophyResponse(
-                league = "Premier League",
-                country = "England",
-                season = "2022/2023",
-                place = "3rd Place"
-            ),
-            TrophyResponse(
-                league = "EFL Cup",
-                country = "England",
-                season = "2022/2023",
-                place = "Winner"
-            ),
-            TrophyResponse(
-                league = "FA Cup",
-                country = "England",
-                season = "2022/2023",
-                place = "Finalist"
-            )
-        )
     }
 }

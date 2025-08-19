@@ -165,17 +165,4 @@ class ApiDataTest {
 
         verify { apiSportsClient.fetchSquad("/players/squads?team=${33}") }
     }
-
-    @Test
-    fun `fetch team trophies`() {
-        every { apiSportsClient.fetchTrophies("/trophies?team=${33}") } returns ClientTeamDetails.trophies
-
-        val result = underTest.trophies(33)
-
-        assertThat(result).isEqualTo(ClientTeamDetails.trophies)
-
-        verify { apiSportsClient.fetchTrophies("/trophies?team=${33}") }
-    }
-
-
 }

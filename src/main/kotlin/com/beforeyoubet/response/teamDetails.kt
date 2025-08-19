@@ -3,7 +3,6 @@ package com.beforeyoubet.response
 import com.beforeyoubet.clientData.CoachResponse
 import com.beforeyoubet.clientData.SquadResponse
 import com.beforeyoubet.clientData.TeamResponse
-import com.beforeyoubet.clientData.TrophyResponse
 
 data class TeamDetails(
     val teamName: String,
@@ -54,21 +53,3 @@ data class TeamPlayer(
     }
 }
 
-data class TeamTrophy(
-    val league: String,
-    val country: String,
-    val season: String,
-    val place: String
-) {
-    companion object {
-        fun fromResponse(trophies: List<TrophyResponse>): List<TeamTrophy> =
-            trophies.map {
-                TeamTrophy(
-                    it.league,
-                    it.country,
-                    it.season,
-                    it.place
-                )
-            }
-    }
-}

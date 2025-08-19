@@ -12,7 +12,6 @@ import com.beforeyoubet.response.HomeAwayTeamLastFive
 import com.beforeyoubet.response.TeamDetails
 import com.beforeyoubet.response.TeamPlayer
 import com.beforeyoubet.response.TeamPositionsAndPoints
-import com.beforeyoubet.response.TeamTrophy
 import com.beforeyoubet.response.TeamsRestStatus
 import com.beforeyoubet.response.TeamsScorePerformance
 import com.beforeyoubet.response.TwoTeamStats
@@ -109,6 +108,5 @@ class TeamsService(
 
     fun teamPlayers(teamId: Int): List<TeamPlayer> = apiData.squad(teamId).let { TeamPlayer.fromResponse(it) }
 
-    fun teamTrophies(teamId: Int): List<TeamTrophy> = apiData.trophies(teamId).let { TeamTrophy.fromResponse(it) }
 }
 

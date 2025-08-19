@@ -10,7 +10,6 @@ import com.beforeyoubet.response.LastFiveMatchesEvents
 import com.beforeyoubet.response.TeamDetails
 import com.beforeyoubet.response.TeamPlayer
 import com.beforeyoubet.response.TeamPositionsAndPoints
-import com.beforeyoubet.response.TeamTrophy
 import com.beforeyoubet.response.TeamsRestStatus
 import com.beforeyoubet.response.TeamsScorePerformance
 import com.beforeyoubet.service.TeamsService
@@ -180,22 +179,6 @@ class TeamControllerTest {
         assertThat(response.status).isEqualTo(HttpStatus.OK.value())
 
         verify { teamsService.teamDetails(55) }
-    }
-
-    @Test
-    fun shouldGetTeamTrophies() {
-        every { teamsService.teamTrophies(55) } returns TeamTrophy.fromResponse(
-            ClientTeamDetails.trophies
-        )
-
-        val response = mvc.perform(
-            get("/api/teams/55/trophies")
-                .contentType(MediaType.APPLICATION_JSON)
-        ).andReturn().response
-
-        assertThat(response.status).isEqualTo(HttpStatus.OK.value())
-
-        verify { teamsService.teamTrophies(55) }
     }
 
     @Test

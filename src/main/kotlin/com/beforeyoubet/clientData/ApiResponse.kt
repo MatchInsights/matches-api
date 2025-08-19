@@ -34,11 +34,3 @@ data class CoachResponse(
     val lastname: String?,
     val age: Int?
 )
-
-data class TrophyResponse(
-    val league: String,
-    val country: String,
-    val season: String,
-    val place: String
-)
-

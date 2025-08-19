@@ -14,7 +14,6 @@ import com.beforeyoubet.model.TeamStats
 import com.beforeyoubet.response.LastFiveMatchesEvents
 import com.beforeyoubet.response.TeamDetails
 import com.beforeyoubet.response.TeamPlayer
-import com.beforeyoubet.response.TeamTrophy
 import com.beforeyoubet.response.TeamsScorePerformance
 
 import com.beforeyoubet.response.TwoTeamStats
@@ -206,16 +205,6 @@ class TeamsServiceTest {
         verify { apidata.squad(22) }
     }
 
-    @Test
-    fun shouldGiveMeTheTeamTrophies() {
-        every { apidata.trophies(22) } returns ClientTeamDetails.trophies
-
-        val result: List<TeamTrophy> = underTest.teamTrophies(22)
-
-        assertThat(result.size).isEqualTo(3)
-
-        verify { apidata.trophies(22) }
-    }
 }
 
 

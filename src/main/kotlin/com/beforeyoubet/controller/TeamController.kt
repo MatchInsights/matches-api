@@ -6,7 +6,6 @@ import com.beforeyoubet.response.LastFiveMatchesEvents
 import com.beforeyoubet.response.TeamDetails
 import com.beforeyoubet.response.TeamPlayer
 import com.beforeyoubet.response.TeamPositionsAndPoints
-import com.beforeyoubet.response.TeamTrophy
 import com.beforeyoubet.response.TeamsRestStatus
 import com.beforeyoubet.response.TeamsScorePerformance
 import com.beforeyoubet.service.TeamsService
@@ -73,14 +72,8 @@ class TeamController(private val teamsService: TeamsService) {
         @PathVariable teamId: Int,
     ): TeamDetails = teamsService.teamDetails(teamId)
 
-    @GetMapping("/{teamId}/trophies")
-    fun getTeamTrophies(
-        @PathVariable teamId: Int,
-    ): List<TeamTrophy> = teamsService.teamTrophies(teamId)
-
     @GetMapping("/{teamId}/players")
     fun getTeamPlayers(
         @PathVariable teamId: Int,
     ): List<TeamPlayer> = teamsService.teamPlayers(teamId)
-
 }

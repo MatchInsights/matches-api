@@ -352,41 +352,7 @@ class ClientRawData {
             
         """.trimIndent()
 
-        val trophiesRaw = """
-            {
-              "get": "trophies",
-              "parameters": {
-                "team": "33"
-              },
-              "errors": [],
-              "results": 3,
-              "paging": {
-                "current": 1,
-                "total": 1
-              },
-              "response": [
-                {
-                  "league": "Premier League",
-                  "country": "England",
-                  "season": "2022/2023",
-                  "place": "3rd Place"
-                },
-                {
-                  "league": "EFL Cup",
-                  "country": "England",
-                  "season": "2022/2023",
-                  "place": "Winner"
-                },
-                {
-                  "league": "FA Cup",
-                  "country": "England",
-                  "season": "2022/2023",
-                  "place": "Finalist"
-                }
-              ]
-            }
-
-        """.trimIndent()
+       
     }
 
 

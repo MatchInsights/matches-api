@@ -9,7 +9,6 @@ import com.beforeyoubet.clientData.StandingResponse
 import com.beforeyoubet.clientData.FixtureOdds
 import com.beforeyoubet.clientData.SquadResponse
 import com.beforeyoubet.clientData.TeamResponse
-import com.beforeyoubet.clientData.TrophyResponse
 import com.beforeyoubet.errors.ApiFailedException
 import com.beforeyoubet.errors.ErrorMessage
 import org.springframework.core.ParameterizedTypeReference
@@ -51,17 +50,12 @@ class ApiSportsClient(private val restClient: RestClient) {
 
     fun fetchTeamDetails(uri: String): TeamResponse {
         val result = fetch<ApiResponse<List<TeamResponse>>>(uri)
-        return result.response.first()
+        return result.response.firstOrNull() ?: throw ApiFailedException(ErrorMessage.CLIENT_FAILED)
     }
 
     fun fetchCoachDetails(uri: String): CoachResponse {
         val result = fetch<ApiResponse<List<CoachResponse>>>(uri)
-        return result.response.first()
-    }
-
-    fun fetchTrophies(uri: String): List<TrophyResponse> {
-        val result = fetch<ApiResponse<List<TrophyResponse>>>(uri)
-        return result.response
+        return result.response.firstOrNull() ?: throw ApiFailedException(ErrorMessage.CLIENT_FAILED)
     }
 
     fun fetchSquad(uri: String): SquadResponse {
