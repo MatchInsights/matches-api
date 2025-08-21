@@ -1,7 +1,10 @@
 spring:
   application:
     name: before-you-bet
-
+  redis:
+    host: localhost
+    port: 6379
+    timeout: 60000
 
 api-data:
   url: https://v3.football.api-sports.io
