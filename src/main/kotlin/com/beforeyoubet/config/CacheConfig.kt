@@ -6,8 +6,8 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.data.redis.cache.RedisCacheConfiguration
 import org.springframework.data.redis.cache.RedisCacheManager
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory
+import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer
 import org.springframework.data.redis.serializer.RedisSerializationContext
-import org.springframework.data.redis.serializer.StringRedisSerializer
 import java.time.Duration
 
 @Configuration
@@ -15,10 +15,12 @@ class CacheConfig {
 
     @Bean
     fun cacheManager(redisConnectionFactory: LettuceConnectionFactory): CacheManager {
+        val serializer = JdkSerializationRedisSerializer()
 
         val defaultConfig = RedisCacheConfiguration.defaultCacheConfig()
-            .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(StringRedisSerializer()))
-            .entryTtl(Duration.ofMinutes(10))
+            .serializeValuesWith(
+                RedisSerializationContext.SerializationPair.fromSerializer(serializer)
+            ).entryTtl(Duration.ofMinutes(10))
 
 
         val cacheConfigs: Map<String, RedisCacheConfiguration> = mapOf(
