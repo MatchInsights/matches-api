@@ -1,19 +1,11 @@
-# 🏆 BeforeYouBet: Sports Matches API
+# 🏆 Matches API
 
-BeforeYouBet is a RESTful API built with **Spring Boot** and **Kotlin**, designed to provide reliable sports match data, betting odds, and analytical insights. 
+REST API built with **Spring Boot** and **Kotlin**, designed to provide football data,
+betting odds, and analytical insights.
 
 It's open source and easy to run locally or deploy.
 
 Join the community, contribute, and build smarter sports tools.
-
-
-## 💬 Community & Support
-
-Stay up to date, ask questions, or contribute:
-
-- [Discord](https://discord.gg/7nJ8E75YjD) 👥
-- [Twitter/X](https://x.com/BeforeYouBetApp) 🐦
-
 
 ## 🚀 Features
 
@@ -28,9 +20,9 @@ Stay up to date, ask questions, or contribute:
 ## ⚙️ Tech Stack
 
 - 💻 Kotlin (JVM)
-- 🌐 Spring Boot (Web, Actuator)
+- 🌐 Spring Boot
 - 🛠 Gradle
-- 🐳 Docker (optional for deployment)
+- 🐳 Docker
 
 ---
 
@@ -38,12 +30,12 @@ Stay up to date, ask questions, or contribute:
 
 ### Prerequisites
 
-- Java 
+- Java
 - Gradle
 - Docker (optional)
 
-### Running Locally
+### Running Unit Tests
 
 ```bash
-./gradlew bootRun
+./gradlew clean test
 ```
