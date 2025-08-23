@@ -1,20 +1,19 @@
 spring:
   application:
-    name: before-you-bet
+    name: match-insights-api
   redis:
-    host: localhost
+    host: redis
     port: 6379
-    timeout: 60000
 
 api-data:
   url:
   key:
 
 season:
-  year: 2022
+  year:
 
 cors:
   allowed:
     - http://localhost:5173
-    - https://before-you-bet.com
-    - https://www.before-you-bet.com
+    - https://matchinsights.info
+    - https://www.matchinsights.info
