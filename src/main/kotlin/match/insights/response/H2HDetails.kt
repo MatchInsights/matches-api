@@ -2,6 +2,7 @@ package match.insights.response
 
 
 import match.insights.clientData.MatchResponse
+import match.insights.clientData.Team
 
 import match.insights.clientData.Venue
 
@@ -29,9 +30,7 @@ data class H2HDetails(
                 matchResponse.league.name,
                 matchResponse.league.season,
                 matchResponse.league.round ?: "",
-                matchResponse.teams.home?.winner.let {
-                    matchResponse.teams.home?.name ?: matchResponse.teams.away?.name
-                } ?: "Unknown Winner",
+                getWinner(matchResponse.teams.home, matchResponse.teams.away),
                 matchResponse.score?.halftime?.home ?: 0,
                 matchResponse.score?.halftime?.away ?: 0,
                 matchResponse.score?.fulltime?.home ?: 0,
@@ -41,6 +40,25 @@ data class H2HDetails(
                 matchResponse.score?.penalty?.home ?: 0,
                 matchResponse.score?.penalty?.away ?: 0,
             )
+
+
         }
+
+        fun getWinner(homeTeam: Team?, awayTeam: Team?): String {
+            if (homeTeam == null && awayTeam == null)
+                return "No Data";
+
+            if (homeTeam?.winner == true)
+                return homeTeam.name;
+
+            if (awayTeam?.winner == true)
+                return awayTeam.name;
+
+            return "Draw";
+        }
+
+
     }
+
+
 }
