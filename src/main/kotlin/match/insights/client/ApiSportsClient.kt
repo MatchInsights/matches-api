@@ -69,12 +69,13 @@ class ApiSportsClient(private val restClient: RestClient) {
 
 
     @Cacheable(value = ["fetchCoachDetails"], key = "#uri")
-    fun fetchCoachDetails(uri: String): CoachResponse {
+    fun fetchCoachDetails(uri: String): List<CoachResponse> {
         val result = fetch<ApiResponse<List<CoachResponse>>>(uri)
-        return runCatching { result.response.first() }.getOrElse {
+        return runCatching {
+            result.response
+        }.getOrElse {
             throw ApiFailedException(ErrorMessage.CLIENT_FAILED)
         }
-
     }
 
     @Cacheable(value = ["fetchSquad"], key = "#uri")

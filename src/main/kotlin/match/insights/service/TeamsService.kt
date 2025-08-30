@@ -100,7 +100,7 @@ class TeamsService(
     fun teamDetails(teamId: Int): TeamDetails {
         return apiData.getTeamsDetails(teamId).let {
             TeamDetails.fromClientResponse(
-                it["coach"] as CoachResponse,
+                it["coach"] as CoachResponse?,
                 it["details"] as TeamResponse
             )
         }
