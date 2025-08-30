@@ -144,7 +144,7 @@ class ApiDataTest {
     @Test
     fun `fetch team details and coach map`() {
         every { apiSportsClient.fetchTeamDetails("/teams?id=${33}") } returns ClientTeamDetails.details
-        every { apiSportsClient.fetchCoachDetails("/coachs?team=${33}") } returns ClientTeamDetails.coach
+        every { apiSportsClient.fetchCoachDetails("/coachs?team=${33}") } returns listOf(ClientTeamDetails.coach)
 
         val result = underTest.getTeamsDetails(33)
 

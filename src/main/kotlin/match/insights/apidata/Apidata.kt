@@ -51,7 +51,12 @@ class Apidata(
     fun getTeamsDetails(teamId: Int) = runBlocking {
         val jobs = mapOf(
             "details" to async { apiSportsClient.fetchTeamDetails("/teams?id=$teamId") },
-            "coach" to async { apiSportsClient.fetchCoachDetails("/coachs?team=$teamId") }
+            "coach" to async {
+                apiSportsClient.fetchCoachDetails("/coachs?team=$teamId")
+                    .firstOrNull { coach ->
+                        coach.career?.any { it.team?.id == teamId && it.end == null } == true
+                    }
+            }
         )
         jobs.mapValues { (_, job) -> job.await() }
     }

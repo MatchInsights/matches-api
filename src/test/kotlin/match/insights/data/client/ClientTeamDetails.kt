@@ -1,5 +1,6 @@
 package match.insights.data.client
 
+import match.insights.clientData.CoachCareer
 import match.insights.clientData.CoachResponse
 import match.insights.clientData.Player
 import match.insights.clientData.SquadResponse
@@ -63,7 +64,16 @@ class ClientTeamDetails {
             name = "Erik ten Hag",
             firstname = "Erik",
             lastname = "ten Hag",
-            age = 53
+            age = 53,
+            nationality = "Unkown",
+            team = Team(id = 33),
+            career = listOf(
+                CoachCareer(
+                    Team(id = 33),
+                    "22/06/1990",
+                    null
+                )
+            )
         )
 
     }

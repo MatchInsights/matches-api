@@ -141,3 +141,8 @@ enum class EventTypesDetail(val detail: String) {
     PENALTY("Penalty");
 }
 
+data class CoachCareer(
+    val team: Team?,
+    val start: String?,
+    val end: String?
+) : Serializable

@@ -34,5 +34,8 @@ data class CoachResponse(
     val name: String,
     val firstname: String?,
     val lastname: String?,
-    val age: Int?
+    val age: Int?,
+    val nationality: String?,
+    val team: Team?,
+    val career: List<CoachCareer>?
 ) : Serializable

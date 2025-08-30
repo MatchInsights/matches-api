@@ -140,9 +140,9 @@ class ApiSportsClientTest {
             MockResponse().setResponseCode(200).setBody(mockJson).addHeader("Content-Type", "application/json")
         )
 
-        val result: CoachResponse = underTest.fetchCoachDetails("/coachs?team=33")
+        val result: List<CoachResponse> = underTest.fetchCoachDetails("/coachs?team=33")
 
-        assertThat(result.name).isEqualTo("Erik ten Hag")
+        assertThat(result[0].name).isEqualTo("Erik ten Hag")
 
     }
 
@@ -154,9 +154,9 @@ class ApiSportsClientTest {
             MockResponse().setResponseCode(200).setBody(mockJson).addHeader("Content-Type", "application/json")
         )
 
-        val result: CoachResponse = underTest.fetchCoachDetails("/coachs?team=33")
+        val result: List<CoachResponse> = underTest.fetchCoachDetails("/coachs?team=33")
 
-        assertThat(result.name).isEqualTo("Erik ten Hag")
+        assertThat(result[0].name).isEqualTo("Erik ten Hag")
 
     }
 
