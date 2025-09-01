@@ -12,7 +12,7 @@ class TeamSquadDataManipulationTest {
 
         val result = underTest.teamSquadSummary(mapOf(1 to ClientTeamDetails.mockPlayersResponse))
 
-        val firstPlayer = ClientTeamDetails.mockPlayersResponse[0]
+        val firstPlayer = ClientTeamDetails.mockPlayersResponse[1]
         val stats = firstPlayer.statistics[0]
 
         assertThat(result[0].name).isEqualTo(firstPlayer.player.name)

@@ -111,8 +111,8 @@ data class Event(
     val time: Time,
     val team: Team,
     val player: Player,
-    val type: String,       // e.g. "Card", "Goal", "Penalty", etc.
-    val detail: String,     // e.g. "Yellow Card", "Red Card", "Penalty"
+    val type: String,
+    val detail: String,
     val comments: String? = null
 ) : Serializable
 

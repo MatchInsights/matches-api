@@ -1,5 +1,7 @@
 package match.insights.clientData
 
+import java.io.Serializable
+
 
 data class Player(
     val id: Int,
@@ -7,7 +9,7 @@ data class Player(
     val age: Int? = -1,
     val height: String? = "Unknown",
     val weight: String? = "Unknown"
-)
+) : Serializable
 
 data class PlayerStatistic(
     val team: Team,
@@ -15,26 +17,26 @@ data class PlayerStatistic(
     val goals: PlayerGoalStats,
     val cards: PlayerCardStats,
     val penalty: PlayerPenaltyStats
-)
+) : Serializable
 
 
 data class PlayerGameStats(
     val position: String?,
     val appearences: Int?,
     val minutes: Int?
-)
+) : Serializable
 
 data class PlayerGoalStats(
     val total: Int? = 0,
     val assists: Int? = 0,
     val conceded: Int? = 0,
     val saves: Int? = 0
-)
+) : Serializable
 
 data class PlayerCardStats(
     val yellow: Int? = 0,
     val red: Int? = 0
-)
+) : Serializable
 
 data class PlayerPenaltyStats(
     val saved: Int? = 0,
@@ -42,5 +44,5 @@ data class PlayerPenaltyStats(
     val commited: Int? = 0,
     val scored: Int? = 0,
     val missed: Int? = 0
-)
+) : Serializable
 

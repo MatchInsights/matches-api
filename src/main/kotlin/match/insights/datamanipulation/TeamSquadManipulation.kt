@@ -10,6 +10,12 @@ class TeamSquadManipulation {
     fun teamSquadSummary(data: Map<Int, List<PlayerResponse>>): List<PlayerSummary> {
         return data.values.flatten().map {
             PlayerSummary.fromResponse(it)
-        }
+        }.sortedWith(
+            compareByDescending<PlayerSummary> { it.goals }
+                .thenByDescending { it.redCards }
+                .thenByDescending { it.yellowCards }
+                .thenByDescending { it.penaltiesScored }
+                .thenByDescending { it.penaltiesSaved }
+        )
     }
 }
