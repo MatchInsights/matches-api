@@ -1,7 +1,9 @@
 package match.insights.client
 
+import match.insights.clientData.ApiPagingResponse
 import match.insights.clientData.CoachResponse
-import match.insights.clientData.SquadResponse
+import match.insights.clientData.Paging
+import match.insights.clientData.PlayerResponse
 import match.insights.clientData.TeamResponse
 import match.insights.data.client.raw.ClientRawData
 import okhttp3.mockwebserver.MockResponse
@@ -163,17 +165,18 @@ class ApiSportsClientTest {
 
     @Test
     fun `should fetch Squad`() {
-        val mockJson = ClientRawData.squadsResponse
+        val mockJson = ClientRawData.playersResponse
 
 
         mockWebServer.enqueue(
             MockResponse().setResponseCode(200).setBody(mockJson).addHeader("Content-Type", "application/json")
         )
 
-        val result: SquadResponse = underTest.fetchSquad("/players/squads?team=33")
+        val result: ApiPagingResponse<List<PlayerResponse>> =
+            underTest.fetchPlayers("/players?team=$33&season=2025&page=1")
 
-        assertThat(result.players.size).isEqualTo(3)
-
+        assertThat(result.response.size).isEqualTo(2)
+        assertThat(result.paging).isEqualTo(Paging(1, 1))
 
     }
 }

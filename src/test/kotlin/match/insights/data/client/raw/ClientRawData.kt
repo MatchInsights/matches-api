@@ -301,56 +301,66 @@ class ClientRawData {
         """.trimIndent()
 
 
-        val squadsResponse = """
-            {
-              "get": "players/squads",
-              "parameters": {
-                "team": "33"
-              },
-              "errors": [],
-              "results": 1,
-              "paging": {
-                "current": 1,
-                "total": 1
-              },
-              "response": [
-                {
-                  "team": {
-                    "id": 33,
-                    "name": "Manchester United",
-                    "logo": "https://media.api-sports.io/football/teams/33.png"
-                  },
-                  "players": [
-                    {
-                      "id": 101,
-                      "name": "David de Gea",
-                      "age": 32,
-                      "number": 1,
-                      "position": "Goalkeeper",
-                      "photo": "https://media.api-sports.io/football/players/101.png"
-                    },
-                    {
-                      "id": 102,
-                      "name": "Harry Maguire",
-                      "age": 30,
-                      "number": 5,
-                      "position": "Defender",
-                      "photo": "https://media.api-sports.io/football/players/102.png"
-                    },
-                    {
-                      "id": 103,
-                      "name": "Marcus Rashford",
-                      "age": 25,
-                      "number": 10,
-                      "position": "Attacker",
-                      "photo": "https://media.api-sports.io/football/players/103.png"
-                    }
-                  ]
-                }
-              ]
-            }
-            
-        """.trimIndent()
+        val playersResponse = """
+{
+  "get": "players",
+  "parameters": {
+    "team": "33",
+    "season": "2024",
+    "page": "1"
+  },
+  "errors": [],
+  "results": 2,
+  "paging": {
+    "current": 1,
+    "total": 1
+  },
+  "response": [
+    {
+      "player": {
+        "id": 201,
+        "name": "Rodrigo Rey",
+        "firstname": "Rodrigo",
+        "lastname": "Rey",
+        "age": 33,
+        "height": "187 cm",
+        "weight": "83 kg",
+        "photo": "https://media.api-sports.io/football/players/201.png"
+      },
+      "statistics": [
+        {
+          "team": { "id": 33, "name": "Independiente" },
+          "games": { "position": "G", "appearences": 20, "minutes": 1800 },
+          "goals": { "conceded": 22, "saves": 65 },
+          "cards": { "yellow": 1, "red": 0 },
+          "penalty": { "saved": 2, "scored": 0, "missed": 0 }
+        }
+      ]
+    },
+    {
+      "player": {
+        "id": 204,
+        "name": "Gabriel Ávalos",
+        "firstname": "Gabriel",
+        "lastname": "Ávalos",
+        "age": 29,
+        "height": "185 cm",
+        "weight": "80 kg",
+        "photo": "https://media.api-sports.io/football/players/204.png"
+      },
+      "statistics": [
+        {
+          "team": { "id": 33, "name": "Independiente" },
+          "games": { "position": "F", "appearences": 22, "minutes": 1700 },
+          "goals": { "total": 8, "assists": 2 },
+          "cards": { "yellow": 3, "red": 0 },
+          "penalty": { "saved": 0, "scored": 2, "missed": 1 }
+        }
+      ]
+    }
+  ]
+}
+""".trimIndent()
 
 
     }

@@ -7,10 +7,11 @@ import match.insights.clientData.TeamResponse
 import match.insights.datamanipulation.DataManipulation
 import match.insights.datamanipulation.EventsDataManipulation
 import match.insights.datamanipulation.PerformanceDataManipulation
+import match.insights.datamanipulation.TeamSquadManipulation
 import match.insights.response.H2HDetails
 import match.insights.response.HomeAwayTeamLastFive
+import match.insights.response.PlayerSummary
 import match.insights.response.TeamDetails
-import match.insights.response.TeamPlayer
 import match.insights.response.TeamPositionsAndPoints
 import match.insights.response.TeamsRestStatus
 import match.insights.response.TeamsScorePerformance
@@ -24,7 +25,8 @@ class TeamsService(
     private val apiData: Apidata,
     private val dataManipulation: DataManipulation,
     private val eventsDataManipulation: EventsDataManipulation,
-    private val performanceDataManipulation: PerformanceDataManipulation
+    private val performanceDataManipulation: PerformanceDataManipulation,
+    private val teamSquadManipulation: TeamSquadManipulation
 ) {
 
     fun getLast5MatchesResults(homeTeamId: Int, awayTeamId: Int): HomeAwayTeamLastFive {
@@ -106,7 +108,8 @@ class TeamsService(
         }
     }
 
-    fun teamPlayers(teamId: Int): List<TeamPlayer> = apiData.squad(teamId).let { TeamPlayer.fromResponse(it) }
+    fun teamPlayers(teamId: Int): List<PlayerSummary> =
+        teamSquadManipulation.teamSquadSummary(apiData.teamSquad(teamId))
 
 }
 

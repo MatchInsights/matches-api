@@ -4,7 +4,17 @@ import java.io.Serializable
 
 data class ApiResponse<T>(
     val response: T
-)
+) : Serializable
+
+data class ApiPagingResponse<T>(
+    val response: T,
+    val paging: Paging
+) : Serializable
+
+data class Paging(
+    val current: Int,
+    val total: Int
+) : Serializable
 
 data class MatchResponse(
     val fixture: Fixture,
@@ -24,9 +34,9 @@ data class TeamResponse(
     val venue: Venue
 ) : Serializable
 
-data class SquadResponse(
-    val team: Team,
-    val players: List<Player>
+data class PlayerResponse(
+    val player: Player,
+    val statistics: List<PlayerStatistic>
 ) : Serializable
 
 data class CoachResponse(

@@ -1,5 +1,6 @@
 package match.insights.client
 
+import match.insights.clientData.ApiPagingResponse
 import match.insights.clientData.MatchResponse
 import match.insights.clientData.ApiResponse
 import match.insights.clientData.CoachResponse
@@ -7,7 +8,7 @@ import match.insights.clientData.Event
 import match.insights.clientData.Standing
 import match.insights.clientData.StandingResponse
 import match.insights.clientData.FixtureOdds
-import match.insights.clientData.SquadResponse
+import match.insights.clientData.PlayerResponse
 import match.insights.clientData.TeamResponse
 import match.insights.errors.ApiFailedException
 import match.insights.errors.ErrorMessage
@@ -78,12 +79,9 @@ class ApiSportsClient(private val restClient: RestClient) {
         }
     }
 
-    @Cacheable(value = ["fetchSquad"], key = "#uri")
-    fun fetchSquad(uri: String): SquadResponse {
-        val result = fetch<ApiResponse<List<SquadResponse>>>(uri)
-        return runCatching { result.response.first() }.getOrElse {
-            throw ApiFailedException(ErrorMessage.CLIENT_FAILED)
-        }
+    @Cacheable(value = ["fetchPlayers"], key = "#uri")
+    fun fetchPlayers(uri: String): ApiPagingResponse<List<PlayerResponse>> {
+        return fetch<ApiPagingResponse<List<PlayerResponse>>>(uri)
     }
 
     private inline fun <reified T> fetch(uri: String): T {

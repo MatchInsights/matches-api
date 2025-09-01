@@ -4,12 +4,14 @@ import match.insights.client.ApiSportsClient
 import match.insights.clientData.Event
 import match.insights.clientData.FixtureOdds
 import match.insights.clientData.MatchResponse
-import match.insights.clientData.SquadResponse
 import match.insights.clientData.Standing
 import match.insights.props.SeasonProps
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.runBlocking
+import match.insights.clientData.ApiPagingResponse
+import match.insights.clientData.ApiResponse
+import match.insights.clientData.PlayerResponse
 import org.springframework.stereotype.Component
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -61,8 +63,23 @@ class Apidata(
         jobs.mapValues { (_, job) -> job.await() }
     }
 
-    fun squad(teamId: Int): SquadResponse =
-        apiSportsClient.fetchSquad("/players/squads?team=$teamId")
+    fun teamSquad(teamId: Int): Map<Int, List<PlayerResponse>> = runBlocking {
+        val page1: ApiPagingResponse<List<PlayerResponse>> =
+            apiSportsClient.fetchPlayers("/players?team=$teamId&season=${seasonProps.year}&page=1")
+        val totalPages = page1.paging.total;
+        val nextPage = 2;
+
+        val jobs = (nextPage..totalPages).associateWith { page ->
+            async {
+                apiSportsClient.fetchPlayers(
+                    "/players?team=$teamId&season=${seasonProps.year}&page=$page"
+                ).response
+
+            }
+        }
+
+        mapOf(1 to page1.response) + jobs.mapValues { it.value.await() }
+    }
 
 
     fun leagueStandings(leagueId: Int): List<Standing> =
