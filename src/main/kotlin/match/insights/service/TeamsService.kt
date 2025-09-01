@@ -39,7 +39,9 @@ class TeamsService(
     }
 
     fun getHeadToHead(homeTeamId: Int, awayTeamId: Int): List<H2HDetails> = apiData
-        .headToHead(homeTeamId, awayTeamId).take(5).map { H2HDetails.fromResponseData(it) }
+        .headToHead(homeTeamId, awayTeamId)
+        .take(10)
+        .map { H2HDetails.fromResponseData(it) }
 
     fun getH2HStats(homeTeamId: Int, awayTeamId: Int): TwoTeamStats {
         val h2hMatches = apiData.headToHead(homeTeamId, awayTeamId)
