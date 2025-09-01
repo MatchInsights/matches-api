@@ -10,7 +10,6 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.runBlocking
 import match.insights.clientData.ApiPagingResponse
-import match.insights.clientData.ApiResponse
 import match.insights.clientData.PlayerResponse
 import org.springframework.stereotype.Component
 import java.time.ZonedDateTime
@@ -30,6 +29,7 @@ class Apidata(
 
     fun headToHead(homeTeamId: Int, awayTeamId: Int): List<MatchResponse> =
         apiSportsClient.fetchMatches("/fixtures/headtohead?h2h=${homeTeamId}-${awayTeamId}")
+            .sortDescendingByDate()
 
 
     fun lastFiveMatchesResults(homeTeamId: Int, awayTeamId: Int): Map<Int, List<MatchResponse>> = runBlocking {
@@ -114,13 +114,18 @@ class Apidata(
     private fun lastFiveMatches(teamId: Int): List<MatchResponse> =
         apiSportsClient.fetchMatches("/fixtures?team=${teamId}&season=${seasonProps.year}")
             .filter { it.fixture.status?.short == "FT" }
-            .sortedByDescending {
-                val formatter = DateTimeFormatter.ISO_DATE_TIME
-                runCatching { ZonedDateTime.parse(it.fixture.date, formatter) }.getOrNull()
-            }
+            .sortDescendingByDate()
             .take(5)
 
     private fun teamOnLeagueMatches(teamId: Int, leagueId: Int): List<MatchResponse> =
         apiSportsClient.fetchMatches("/fixtures/?team=${teamId}&season=${seasonProps.year}&league=${leagueId}")
+
+
+    fun List<MatchResponse>.sortDescendingByDate(): List<MatchResponse> {
+        return this.sortedByDescending {
+            val formatter = DateTimeFormatter.ISO_DATE_TIME
+            runCatching { ZonedDateTime.parse(it.fixture.date, formatter) }.getOrNull()
+        }
+    }
 
 }
