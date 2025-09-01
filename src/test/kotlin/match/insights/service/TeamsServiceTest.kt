@@ -13,13 +13,14 @@ import match.insights.model.TeamRestStatus
 import match.insights.model.TeamStats
 import match.insights.response.LastFiveMatchesEvents
 import match.insights.response.TeamDetails
-import match.insights.response.TeamPlayer
 import match.insights.response.TeamsScorePerformance
 
 import match.insights.response.TwoTeamStats
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import match.insights.datamanipulation.TeamSquadManipulation
+import match.insights.response.PlayerSummary
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import kotlin.collections.mapOf
@@ -31,7 +32,15 @@ class TeamsServiceTest {
     val dataManitupulation: DataManipulation = mockk()
     val eventsDataManitupulation: EventsDataManipulation = mockk()
     val performanceDataManipulation: PerformanceDataManipulation = mockk()
-    val underTest = TeamsService(apidata, dataManitupulation, eventsDataManitupulation, performanceDataManipulation)
+    val teamSquadManipulation: TeamSquadManipulation = mockk()
+
+    val underTest = TeamsService(
+        apidata,
+        dataManitupulation,
+        eventsDataManitupulation,
+        performanceDataManipulation,
+        teamSquadManipulation
+    )
 
     @Test
     fun shouldGetLastFiveMatches() {
@@ -196,13 +205,29 @@ class TeamsServiceTest {
 
     @Test
     fun shouldGiveMeTheTeamPlayers() {
-        every { apidata.squad(22) } returns ClientTeamDetails.squad
+        val player = PlayerSummary(
+            "player-x",
+            22,
+            "1.80",
+            "78",
+            "Goalkeeper",
+            0,
+            1,
+            0,
+            3,
+            1
+        )
 
-        val result: List<TeamPlayer> = underTest.teamPlayers(22)
+        every { apidata.teamSquad(33) } returns mapOf(1 to ClientTeamDetails.mockPlayersResponse)
+        every { teamSquadManipulation.teamSquadSummary(mapOf(1 to ClientTeamDetails.mockPlayersResponse)) } returns
+                listOf(player)
 
-        assertThat(result.size).isEqualTo(3)
+        val result: List<PlayerSummary> = underTest.teamPlayers(33)
 
-        verify { apidata.squad(22) }
+        assertThat(result[0]).isEqualTo(player)
+
+        verify { apidata.teamSquad(33) }
+        verify { teamSquadManipulation.teamSquadSummary(mapOf(1 to ClientTeamDetails.mockPlayersResponse)) }
     }
 
 }

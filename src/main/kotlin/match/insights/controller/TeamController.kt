@@ -3,8 +3,8 @@ package match.insights.controller
 import match.insights.response.H2HDetails
 import match.insights.response.HomeAwayTeamLastFive
 import match.insights.response.LastFiveMatchesEvents
+import match.insights.response.PlayerSummary
 import match.insights.response.TeamDetails
-import match.insights.response.TeamPlayer
 import match.insights.response.TeamPositionsAndPoints
 import match.insights.response.TeamsRestStatus
 import match.insights.response.TeamsScorePerformance
@@ -75,5 +75,5 @@ class TeamController(private val teamsService: TeamsService) {
     @GetMapping("/{teamId}/players")
     fun getTeamPlayers(
         @PathVariable teamId: Int,
-    ): List<TeamPlayer> = teamsService.teamPlayers(teamId)
+    ): List<PlayerSummary> = teamsService.teamPlayers(teamId)
 }

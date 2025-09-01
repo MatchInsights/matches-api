@@ -6,6 +6,16 @@ data class ApiResponse<T>(
     val response: T
 )
 
+data class ApiPagingResponse<T>(
+    val response: T,
+    val paging: Paging
+)
+
+data class Paging(
+    val current: Int,
+    val total: Int
+)
+
 data class MatchResponse(
     val fixture: Fixture,
     val league: League,
@@ -24,10 +34,10 @@ data class TeamResponse(
     val venue: Venue
 ) : Serializable
 
-data class SquadResponse(
-    val team: Team,
-    val players: List<Player>
-) : Serializable
+data class PlayerResponse(
+    val player: Player,
+    val statistics: List<PlayerStatistic>
+)
 
 data class CoachResponse(
     val id: Int,

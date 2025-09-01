@@ -8,7 +8,6 @@ import match.insights.model.TeamStats
 import match.insights.response.HomeAwayTeamLastFive
 import match.insights.response.LastFiveMatchesEvents
 import match.insights.response.TeamDetails
-import match.insights.response.TeamPlayer
 import match.insights.response.TeamPositionsAndPoints
 import match.insights.response.TeamsRestStatus
 import match.insights.response.TeamsScorePerformance
@@ -18,6 +17,7 @@ import com.ninjasquad.springmockk.MockkBean
 
 import io.mockk.every
 import io.mockk.verify
+import match.insights.response.PlayerSummary
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -183,9 +183,23 @@ class TeamControllerTest {
 
     @Test
     fun shouldGetTeamSquad() {
-        every { teamsService.teamPlayers(55) } returns TeamPlayer.fromResponse(
-            ClientTeamDetails.squad
+        val player = PlayerSummary(
+            "player-x",
+            22,
+            "1.80",
+            "78",
+            "Goalkeeper",
+            0,
+            1,
+            0,
+            3,
+            1
         )
+
+        every { teamsService.teamPlayers(55) } returns
+                listOf(
+                    player
+                )
 
         val response = mvc.perform(
             get("/api/teams/55/players")

@@ -11,6 +11,8 @@ import match.insights.props.SeasonProps
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import match.insights.clientData.ApiPagingResponse
+import match.insights.clientData.Paging
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -157,12 +159,14 @@ class ApiDataTest {
 
     @Test
     fun `fetch team squad`() {
-        every { apiSportsClient.fetchSquad("/players/squads?team=${33}") } returns ClientTeamDetails.squad
+        every { apiSportsClient.fetchPlayers(any()) } returns ApiPagingResponse(
+            ClientTeamDetails.mockPlayersResponse, Paging(1, 1)
+        )
 
-        val result = underTest.squad(33)
+        val result = underTest.teamSquad(33)
 
-        assertThat(result.players).isEqualTo(ClientTeamDetails.squad.players)
+        assertThat(result).isEqualTo(mapOf(1 to ClientTeamDetails.mockPlayersResponse))
 
-        verify { apiSportsClient.fetchSquad("/players/squads?team=${33}") }
+        verify { apiSportsClient.fetchPlayers(any()) }
     }
 }

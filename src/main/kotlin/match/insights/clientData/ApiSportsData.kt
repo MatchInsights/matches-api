@@ -121,13 +121,6 @@ data class Time(
     val extra: Int? = null
 ) : Serializable
 
-data class Player(
-    val id: Int,
-    val name: String,
-    val age: Int? = -1,
-    val nationality: String? = "Unknown Nationality",
-    val position: String? = "Unknown Position"
-) : Serializable
 
 enum class EventTypes(val typeName: String) {
     GOAL("Goal"),

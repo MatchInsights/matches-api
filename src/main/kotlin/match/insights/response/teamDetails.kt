@@ -1,7 +1,7 @@
 package match.insights.response
 
 import match.insights.clientData.CoachResponse
-import match.insights.clientData.SquadResponse
+import match.insights.clientData.PlayerResponse
 import match.insights.clientData.TeamResponse
 
 data class TeamDetails(
@@ -34,22 +34,38 @@ data class TeamDetails(
     }
 }
 
-data class TeamPlayer(
+
+data class PlayerSummary(
     val name: String,
     val age: Int,
-    val nationality: String,
-    val position: String
+    val height: String,
+    val weight: String,
+    val position: String,
+    val goals: Int,
+    val yellowCards: Int,
+    val redCards: Int,
+    val penaltiesSaved: Int,
+    val penaltiesScored: Int
 ) {
     companion object {
-        fun fromResponse(squadResponse: SquadResponse): List<TeamPlayer> =
-            squadResponse.players.map {
-                TeamPlayer(
-                    it.name,
-                    it.age ?: -1,
-                    it.nationality ?: "Unknown Nationality",
-                    it.position ?: "Unknown Position"
-                )
-            }
+        fun fromResponse(playerResponse: PlayerResponse): PlayerSummary {
+            val stats = playerResponse.statistics.firstOrNull()
+            val position = stats?.games?.position
+
+            return PlayerSummary(
+                name = playerResponse.player.name,
+                age = playerResponse.player.age ?: -1,
+                height = playerResponse.player.height ?: "Unknown",
+                weight = playerResponse.player.weight ?: "Unknown",
+                position = position ?: "Unknown",
+                goals = stats?.goals?.total ?: 0,
+                yellowCards = stats?.cards?.yellow ?: 0,
+                redCards = stats?.cards?.red ?: 0,
+                penaltiesSaved = stats?.penalty?.saved ?: 0,
+                penaltiesScored = stats?.penalty?.scored ?: 0,
+            )
+        }
     }
 }
+
 
