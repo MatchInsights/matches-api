@@ -6,6 +6,7 @@ import match.insights.clientData.Paging
 import match.insights.clientData.PlayerResponse
 import match.insights.clientData.TeamResponse
 import match.insights.data.client.raw.ClientRawData
+import match.insights.data.client.raw.LeaguesRawData
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.assertj.core.api.Assertions.assertThat
@@ -58,18 +59,18 @@ class ApiSportsClientTest {
 
     @Test
     fun `should fetch league standings`() {
-        val mockJson = ClientRawData.leagueStandings
+        val mockJson = LeaguesRawData.leagueStandingsMock
 
         mockWebServer.enqueue(
             MockResponse().setResponseCode(200).setBody(mockJson).addHeader("Content-Type", "application/json")
         )
 
-        val result = underTest.fetchLeagueStandings("/standings?league=39&season=2025")
+        val result = underTest.fetchLeagueInfo("/standings?league=39&season=2025")
 
-        assertThat(result[0].rank).isEqualTo(1)
-        assertThat(result[0].team.name).isEqualTo("Manchester United")
-        assertThat(result[0].points).isEqualTo(86)
-        assertThat(result[0].all?.played).isEqualTo(0)
+        assertThat(result?.id).isEqualTo(128)
+        assertThat(result?.season).isEqualTo(2024)
+        assertThat(result?.standings?.size).isGreaterThan(0)
+
     }
 
     @Test

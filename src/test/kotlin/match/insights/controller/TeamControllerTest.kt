@@ -18,6 +18,7 @@ import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import io.mockk.verify
 import match.insights.response.PlayerSummary
+import match.insights.response.PositionAndPoints
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -103,9 +104,12 @@ class TeamControllerTest {
 
     @Test
     fun shouldGetLeagueStats() {
-        every { teamsService.getTeamsPositionsAndPoints(any(), any(), any()) } returns TeamPositionsAndPoints(
-            1, 3, 88, 73
-        )
+        every { teamsService.getTeamsPositionsAndPoints(any(), any(), any()) } returns
+                TeamPositionsAndPoints(
+                    listOf(PositionAndPoints(1, 15, "")),
+                    listOf(PositionAndPoints(2, 11, ""))
+                )
+
 
         val response = mvc.perform(
             get("/api/teams/league/stats/45/23/1").contentType(MediaType.APPLICATION_JSON)

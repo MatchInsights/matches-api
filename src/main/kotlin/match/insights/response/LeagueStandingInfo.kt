@@ -1,8 +1,25 @@
 package match.insights.response
 
-import match.insights.clientData.Standing
+import java.time.ZonedDateTime
 
-data class LeagueStandingInfo(
+data class LeagueInfo(
+    val id: Int,
+    val name: String? = "Unknown League",
+    val country: String? = "Unknown Country",
+    val logo: String? = "Unknown Logo",
+    val flag: String? = "Unknown Flag",
+    val season: Int,
+    val group: List<LeagueGroup>
+)
+
+
+data class LeagueGroup(
+    val label: String? = "Default",
+    val teams: List<LeagueTeamInfo>
+)
+
+data class LeagueTeamInfo(
+    val teamId: Int,
     val rank: Int,
     val teamName: String,
     val logo: String,
@@ -13,25 +30,6 @@ data class LeagueStandingInfo(
     val lost: Int,
     val goalsFor: Int,
     val goalsAgainst: Int,
-    val form: String
-) {
-    companion object {
-        fun fromApiResponse(standings: List<Standing>): List<LeagueStandingInfo> {
-            return standings.map {
-                LeagueStandingInfo(
-                    rank = it.rank,
-                    teamName = it.team.name,
-                    logo = it.team.logo ?: "",
-                    points = it.points,
-                    played = it.all?.played ?: 0,
-                    won = it.all?.win ?: 0,
-                    draw = it.all?.draw ?: 0,
-                    lost = it.all?.lose ?: 0,
-                    goalsFor = it.all?.goals?.`for` ?: 0,
-                    goalsAgainst = it.all?.goals?.against ?: 0,
-                    form = it.form ?: ""
-                )
-            }
-        }
-    }
-}
+    val form: String,
+    val update: String?
+)

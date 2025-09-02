@@ -4,12 +4,12 @@ import match.insights.client.ApiSportsClient
 import match.insights.clientData.Event
 import match.insights.clientData.FixtureOdds
 import match.insights.clientData.MatchResponse
-import match.insights.clientData.Standing
 import match.insights.props.SeasonProps
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.runBlocking
 import match.insights.clientData.ApiPagingResponse
+import match.insights.clientData.LeagueWithStandings
 import match.insights.clientData.PlayerResponse
 import org.springframework.stereotype.Component
 import java.time.ZonedDateTime
@@ -81,9 +81,8 @@ class Apidata(
         mapOf(1 to page1.response) + jobs.mapValues { it.value.await() }
     }
 
-
-    fun leagueStandings(leagueId: Int): List<Standing> =
-        apiSportsClient.fetchLeagueStandings("/standings?league=$leagueId&season=${seasonProps.year}")
+    fun leagueStandings(leagueId: Int): LeagueWithStandings? =
+        apiSportsClient.fetchLeagueInfo("/standings?league=$leagueId&season=${seasonProps.year}")
 
     fun fetchAllOdds(fixtureId: Int): List<FixtureOdds> =
         apiSportsClient.fetchFixtureOdds("/odds?fixture=$fixtureId")
@@ -121,7 +120,7 @@ class Apidata(
         apiSportsClient.fetchMatches("/fixtures/?team=${teamId}&season=${seasonProps.year}&league=${leagueId}")
 
 
-    fun List<MatchResponse>.sortDescendingByDate(): List<MatchResponse> {
+    private fun List<MatchResponse>.sortDescendingByDate(): List<MatchResponse> {
         return this.sortedByDescending {
             val formatter = DateTimeFormatter.ISO_DATE_TIME
             runCatching { ZonedDateTime.parse(it.fixture.date, formatter) }.getOrNull()

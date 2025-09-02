@@ -5,7 +5,7 @@ import match.insights.datamanipulation.DataManipulation
 import match.insights.datamanipulation.EventsDataManipulation
 import match.insights.data.client.ClientEventsData
 import match.insights.data.client.ClientMatchResponseData
-import match.insights.data.client.ClientStandingData
+import match.insights.data.client.ClientLeagueData
 import match.insights.data.client.ClientTeamDetails
 import match.insights.datamanipulation.PerformanceDataManipulation
 import match.insights.model.Performance
@@ -19,8 +19,11 @@ import match.insights.response.TwoTeamStats
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import match.insights.datamanipulation.LeagueDataManipulation
 import match.insights.datamanipulation.TeamSquadManipulation
 import match.insights.response.PlayerSummary
+import match.insights.response.PositionAndPoints
+import match.insights.response.TeamPositionsAndPoints
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import kotlin.collections.mapOf
@@ -33,13 +36,15 @@ class TeamsServiceTest {
     val eventsDataManitupulation: EventsDataManipulation = mockk()
     val performanceDataManipulation: PerformanceDataManipulation = mockk()
     val teamSquadManipulation: TeamSquadManipulation = mockk()
+    val leagueDataManipulation: LeagueDataManipulation = mockk()
 
     val underTest = TeamsService(
         apidata,
         dataManitupulation,
         eventsDataManitupulation,
         performanceDataManipulation,
-        teamSquadManipulation
+        teamSquadManipulation,
+        leagueDataManipulation
     )
 
     @Test
@@ -106,17 +111,26 @@ class TeamsServiceTest {
 
     @Test
     fun shouldGetTeamsPositionsAndPoints() {
-        every { apidata.leagueStandings(1) } returns listOf(ClientStandingData.standing)
-
+        every { apidata.leagueStandings(1) } returns ClientLeagueData.leagueStandings
+        every {
+            leagueDataManipulation.positionAndPoints(
+                33,
+                44,
+                any()
+            )
+        } returns TeamPositionsAndPoints(
+            listOf(PositionAndPoints(1, 15, "")),
+            listOf(PositionAndPoints(2, 11, ""))
+        )
 
         val result = underTest.getTeamsPositionsAndPoints(33, 44, 1)
 
-        assertThat(result.awayTeamPoints).isNull()
-        assertThat(result.homeTeamPoints).isEqualTo(89)
-        assertThat(result.awayTeamPosition).isNull()
-        assertThat(result.homeTeamPosition).isEqualTo(1)
+        assertThat(result.awayTeam).isEqualTo(listOf(PositionAndPoints(2, 11, "")))
+        assertThat(result.homeTeam).isEqualTo(listOf(PositionAndPoints(1, 15, "")))
+
 
         verify { apidata.leagueStandings(1) }
+        verify { leagueDataManipulation.positionAndPoints(33, 44, any()) }
     }
 
     @Test

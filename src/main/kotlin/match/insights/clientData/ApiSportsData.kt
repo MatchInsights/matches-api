@@ -61,51 +61,6 @@ data class Score(
     val penalty: Goal? = Goal()
 ) : Serializable
 
-data class LeagueWithStandings(
-    val id: Int,
-    val name: String? = "Unknown League",
-    val country: String? = "Unknown Country",
-    val logo: String? = "",
-    val flag: String? = "",
-    val season: Int,
-    val standings: List<List<Standing>>
-) : Serializable
-
-data class RecordStats(
-    val played: Int? = 0,
-    val win: Int? = 0,
-    val draw: Int? = 0,
-    val lose: Int? = 0,
-    val goals: Goals? = Goals()
-) : Serializable
-
-data class Goals(
-    val `for`: Int? = 0,
-    val against: Int? = 0
-) : Serializable
-
-data class Standing(
-    val rank: Int,
-    val team: Team,
-    val points: Int,
-    val goalsDiff: Int,
-    val form: String? = "",
-    val status: String? = "",
-    val description: String? = "",
-    val group: String? = "",
-    val all: RecordStats? = RecordStats(),
-    val home: RecordStats? = RecordStats(),
-    val away: RecordStats? = RecordStats(),
-    val update: String? = ""
-) : Serializable
-
-data class FixtureOdds(val bookmakers: List<Bookmaker>) : Serializable
-
-data class Bookmaker(val name: String, val bets: List<Bet>) : Serializable
-
-data class Bet(val name: String, val values: List<OddValue>) : Serializable
-
-data class OddValue(val value: String, val odd: String) : Serializable
 
 data class Event(
     val time: Time,
