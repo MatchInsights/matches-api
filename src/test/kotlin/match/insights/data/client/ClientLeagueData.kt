@@ -1,14 +1,18 @@
 package match.insights.data.client
 
-import match.insights.clientData.Goals
-import match.insights.clientData.RecordStats
-import match.insights.clientData.Standing
+
+import match.insights.clientData.LeagueGoals
+import match.insights.clientData.LeagueRecordStats
+import match.insights.clientData.LeagueStandings
+import match.insights.clientData.LeagueWithStandings
+
 import match.insights.clientData.Team
 
-class ClientStandingData {
+class ClientLeagueData {
     companion object {
 
-        val standing = Standing(
+
+        val standing = LeagueStandings(
             rank = 1,
             team = Team(
                 id = 33,
@@ -22,33 +26,33 @@ class ClientStandingData {
             form = "WWDWW",
             status = "same",
             description = "Champions League",
-            group = "Premier League",
-            all = RecordStats(
+            group = "default",
+            all = LeagueRecordStats(
                 played = 38,
                 win = 28,
                 draw = 5,
                 lose = 5,
-                goals = Goals(
+                goals = LeagueGoals(
                     `for` = 85,
                     against = 40
                 )
             ),
-            home = RecordStats(
+            home = LeagueRecordStats(
                 played = 19,
                 win = 15,
                 draw = 3,
                 lose = 1,
-                goals = Goals(
+                goals = LeagueGoals(
                     `for` = 50,
                     against = 15
                 )
             ),
-            away = RecordStats(
+            away = LeagueRecordStats(
                 played = 19,
                 win = 13,
                 draw = 2,
                 lose = 4,
-                goals = Goals(
+                goals = LeagueGoals(
                     `for` = 35,
                     against = 25
                 )
@@ -56,6 +60,11 @@ class ClientStandingData {
             update = "2025-05-20T18:00:00+00:00"
         )
 
+        val leagueStandings = LeagueWithStandings(
+            id = 1,
+            season = 2022,
+            standings = listOf(listOf(standing))
+        )
     }
 
 

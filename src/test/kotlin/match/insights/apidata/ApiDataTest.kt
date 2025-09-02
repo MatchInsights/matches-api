@@ -4,7 +4,6 @@ import match.insights.client.ApiSportsClient
 import match.insights.data.client.ClientEventsData
 import match.insights.data.client.ClientMatchResponseData
 import match.insights.data.client.ClientOddsData
-import match.insights.data.client.ClientStandingData
 import match.insights.data.client.ClientTeamDetails
 import match.insights.model.MatchStatus
 import match.insights.props.SeasonProps
@@ -13,6 +12,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import match.insights.clientData.ApiPagingResponse
 import match.insights.clientData.Paging
+import match.insights.data.client.ClientLeagueData
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -91,15 +91,17 @@ class ApiDataTest {
     @Test
     fun `fetch league standings`() {
 
-        every { apiSportsClient.fetchLeagueStandings("/standings?league=1&season=${props.year}") } returns listOf(
-            ClientStandingData.Companion.standing
-        )
+        every { apiSportsClient.fetchLeagueInfo("/standings?league=1&season=${props.year}") } returns
+                ClientLeagueData.leagueStandings
 
         val result = underTest.leagueStandings(1)
 
-        assertThat(result).isNotEmpty()
+        assertThat(result?.id).isEqualTo(1)
+        assertThat(result?.season).isEqualTo(2022)
+        assertThat(result?.standings?.first()?.first()?.rank).isEqualTo(1)
+        assertThat(result?.standings?.first()?.first()?.team?.id).isEqualTo(33)
 
-        verify { apiSportsClient.fetchLeagueStandings("/standings?league=1&season=${props.year}") }
+        verify { apiSportsClient.fetchLeagueInfo("/standings?league=1&season=${props.year}") }
     }
 
     @Test

@@ -11,5 +11,5 @@ import org.springframework.cache.annotation.EnableCaching
 class MatchInsights
 
 fun main(args: Array<String>) {
-    runApplication<match.insights.MatchInsights>(*args)
+    runApplication<MatchInsights>(*args)
 }

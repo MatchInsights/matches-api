@@ -1,11 +1,11 @@
 package match.insights.service
 
-import match.insights.clientData.Standing
 import match.insights.apidata.Apidata
 import match.insights.clientData.CoachResponse
 import match.insights.clientData.TeamResponse
 import match.insights.datamanipulation.DataManipulation
 import match.insights.datamanipulation.EventsDataManipulation
+import match.insights.datamanipulation.LeagueDataManipulation
 import match.insights.datamanipulation.PerformanceDataManipulation
 import match.insights.datamanipulation.TeamSquadManipulation
 import match.insights.response.H2HDetails
@@ -26,7 +26,8 @@ class TeamsService(
     private val dataManipulation: DataManipulation,
     private val eventsDataManipulation: EventsDataManipulation,
     private val performanceDataManipulation: PerformanceDataManipulation,
-    private val teamSquadManipulation: TeamSquadManipulation
+    private val teamSquadManipulation: TeamSquadManipulation,
+    private val leagueDataManipulation: LeagueDataManipulation
 ) {
 
     fun getLast5MatchesResults(homeTeamId: Int, awayTeamId: Int): HomeAwayTeamLastFive {
@@ -61,14 +62,9 @@ class TeamsService(
     }
 
 
-    fun getTeamsPositionsAndPoints(homeTeamId: Int, awayTeamId: Int, leagueId: Int): TeamPositionsAndPoints {
-        val response: List<Standing> = apiData.leagueStandings(leagueId)
+    fun getTeamsPositionsAndPoints(homeTeamId: Int, awayTeamId: Int, leagueId: Int): TeamPositionsAndPoints =
+        leagueDataManipulation.positionAndPoints(homeTeamId, awayTeamId, apiData.leagueStandings(leagueId))
 
-        val homeTeamStanding = response.firstOrNull { standing -> standing.team.id == homeTeamId }
-        val awayTeamStanding = response.firstOrNull { standing -> standing.team.id == awayTeamId }
-
-        return TeamPositionsAndPoints.fromApiResponse(homeTeamStanding, awayTeamStanding)
-    }
 
     fun getLast5MatchesEvents(teamId: Int) =
         eventsDataManipulation.fiveMachesEventsSum(apiData.lastFiveMatchesEvents(teamId))

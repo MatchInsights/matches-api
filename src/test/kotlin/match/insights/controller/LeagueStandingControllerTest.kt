@@ -1,12 +1,12 @@
 package match.insights.controller
 
 import match.insights.TestCorsPropsConfig
-import match.insights.response.LeagueStandingInfo
 import match.insights.service.LeagueStandingService
 import com.ninjasquad.springmockk.MockkBean
 
 import io.mockk.every
 import io.mockk.verify
+import match.insights.response.LeagueInfo
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -33,16 +33,16 @@ class LeagueStandingControllerTest {
 
     @Test
     fun shouldGetLeagueInfo() {
-        every { leagueStandingService.fetchStandings(any()) } returns
-                LeagueStandingInfo.fromApiResponse(listOf())
+        every { leagueStandingService.leagueInfo(any()) } returns
+                LeagueInfo(id = 1, season = 2025, group = emptyList())
 
         val response = mvc.perform(
-            get("/api/league/standing/39")
+            get("/api/league/standing/1")
                 .contentType(MediaType.APPLICATION_JSON)
         ).andReturn().response
 
         assertThat(response.status).isEqualTo(HttpStatus.OK.value())
 
-        verify { leagueStandingService.fetchStandings(any()) }
+        verify { leagueStandingService.leagueInfo(any()) }
     }
 }

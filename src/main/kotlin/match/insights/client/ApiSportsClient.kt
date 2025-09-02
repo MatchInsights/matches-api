@@ -5,9 +5,9 @@ import match.insights.clientData.MatchResponse
 import match.insights.clientData.ApiResponse
 import match.insights.clientData.CoachResponse
 import match.insights.clientData.Event
-import match.insights.clientData.Standing
 import match.insights.clientData.StandingResponse
 import match.insights.clientData.FixtureOdds
+import match.insights.clientData.LeagueWithStandings
 import match.insights.clientData.PlayerResponse
 import match.insights.clientData.TeamResponse
 import match.insights.errors.ApiFailedException
@@ -26,17 +26,15 @@ class ApiSportsClient(private val restClient: RestClient) {
         return result.response
     }
 
-    @Cacheable(value = ["fetchLeagueStandings"], key = "#uri")
-    fun fetchLeagueStandings(uri: String): List<Standing> {
+    @Cacheable(value = ["fetchLeagueInfo"], key = "#uri")
+    fun fetchLeagueInfo(uri: String): LeagueWithStandings? {
         val result = fetch<ApiResponse<List<StandingResponse>>>(uri)
         return runCatching {
             result.response
-                .first()
-                .league
-                .standings
-                .first()
+                .firstOrNull()
+                ?.league
         }.getOrElse {
-            emptyList()
+            throw ApiFailedException(ErrorMessage.CLIENT_FAILED)
         }
     }
 
