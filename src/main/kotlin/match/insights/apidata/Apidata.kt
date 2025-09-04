@@ -63,26 +63,23 @@ class Apidata(
         jobs.mapValues { (_, job) -> job.await() }
     }
 
-    fun teamSquad(teamId: Int): Map<Int, List<PlayerResponse>> = runBlocking {
-        val page1: ApiPagingResponse<List<PlayerResponse>> =
-            apiSportsClient.fetchPlayers("/players?team=$teamId&season=${seasonProps.year}&page=1")
-        val totalPages = page1.paging.total;
-        val nextPage = 2;
+    fun teamSquad(teamId: Int): Map<Int, List<PlayerResponse>> =
+        apiSportsClient.fetchPlayers("/players?team=$teamId&season=${seasonProps.year}&page=1")
+            .let { res ->
+                if (res.response.isNotEmpty())
+                    mapOf(1 to res.response) + teamSquadPages(teamId, 2, res.paging.total, false)
+                else
+                    apiSportsClient.fetchPlayers("/players?team=$teamId&season=${seasonProps.worldCupYear}&page=1")
+                        .let { wcRes ->
+                            mapOf(1 to wcRes.response) + teamSquadPages(teamId, 2, wcRes.paging.total, true)
 
-        val jobs = (nextPage..totalPages).associateWith { page ->
-            async {
-                apiSportsClient.fetchPlayers(
-                    "/players?team=$teamId&season=${seasonProps.year}&page=$page"
-                ).response
-
+                        }
             }
-        }
 
-        mapOf(1 to page1.response) + jobs.mapValues { it.value.await() }
-    }
 
     fun leagueStandings(leagueId: Int): LeagueWithStandings? =
         apiSportsClient.fetchLeagueInfo("/standings?league=$leagueId&season=${seasonProps.year}")
+            ?: apiSportsClient.fetchLeagueInfo("/standings?league=$leagueId&season=${seasonProps.worldCupYear}")
 
     fun fetchAllOdds(fixtureId: Int): List<FixtureOdds> =
         apiSportsClient.fetchFixtureOdds("/odds?fixture=$fixtureId")
@@ -112,12 +109,43 @@ class Apidata(
 
     private fun lastFiveMatches(teamId: Int): List<MatchResponse> =
         apiSportsClient.fetchMatches("/fixtures?team=${teamId}&season=${seasonProps.year}")
-            .filter { it.fixture.status?.short == "FT" }
-            .sortDescendingByDate()
-            .take(5)
+            .let {
+                return if (it.isNotEmpty())
+                    it.filter { it.fixture.status?.short == "FT" }
+                        .sortDescendingByDate()
+                        .take(5)
+                else
+                    apiSportsClient.fetchMatches("/fixtures?team=${teamId}&season=${seasonProps.worldCupYear}")
+                        .filter { it.fixture.status?.short == "FT" }
+                        .sortDescendingByDate()
+                        .take(5)
+            }
 
     private fun teamOnLeagueMatches(teamId: Int, leagueId: Int): List<MatchResponse> =
         apiSportsClient.fetchMatches("/fixtures/?team=${teamId}&season=${seasonProps.year}&league=${leagueId}")
+            .let {
+                return it.ifEmpty { apiSportsClient.fetchMatches("/fixtures/?team=${teamId}&season=${seasonProps.worldCupYear}&league=${leagueId}") }
+            }
+
+
+    private fun teamSquadPages(
+        teamId: Int,
+        nextPage: Int,
+        totalPages: Int,
+        userWC: Boolean
+    ): Map<Int, List<PlayerResponse>> = runBlocking {
+
+        val jobs = (nextPage..totalPages).associateWith { page ->
+            async {
+                apiSportsClient.fetchPlayers(
+                    "/players?team=$teamId&season=${if (userWC) seasonProps.worldCupYear else seasonProps.year}&page=$page"
+                ).response
+
+            }
+        }
+
+        jobs.mapValues { it.value.await() }
+    }
 
 
     private fun List<MatchResponse>.sortDescendingByDate(): List<MatchResponse> {

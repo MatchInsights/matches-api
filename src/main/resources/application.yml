@@ -9,9 +9,9 @@ spring:
 api-data:
   url:
   key:
-
 season:
   year:
+  worldCupYear: 2026
 
 cors:
   allowed:
