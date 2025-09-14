@@ -74,6 +74,23 @@ class ApiSportsClientTest {
     }
 
     @Test
+    fun `should fetch all leagues`() {
+        val mockJson = LeaguesRawData.allLeagues
+
+        mockWebServer.enqueue(
+            MockResponse().setResponseCode(200).setBody(mockJson).addHeader("Content-Type", "application/json")
+        )
+
+        val result = underTest.fetchAllLeagues("/leagues")
+
+        assertThat(result.size).isEqualTo(1)
+        assertThat(result[0].country.name).isEqualTo("England")
+        assertThat(result[0].league.id).isEqualTo(39)
+        assertThat(result[0].league.name).isEqualTo("Premier League")
+
+    }
+
+    @Test
     fun `should fetch match details`() {
         val mockJson = ClientRawData.matchDetails
 

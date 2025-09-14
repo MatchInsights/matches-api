@@ -19,11 +19,23 @@ data class MatchStatus(
 data class League(
     val id: Int = -1,
     val name: String = "Unknown League",
+    val type: String = "Unknown Type",
     val country: String? = "Unknown Country",
     val logo: String? = "",
     val flag: String? = "",
     val season: Int,
     val round: String? = ""
+) : Serializable
+
+data class LeagueCountry(
+    val name: String,
+    val code: String?,
+    val flag: String?
+) : Serializable
+
+data class LeagueAndCountry(
+    val league: League,
+    val country: LeagueCountry
 ) : Serializable
 
 data class Team(

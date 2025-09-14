@@ -2,7 +2,34 @@ package match.insights.data.client.raw
 
 class LeaguesRawData {
     companion object {
-
+        val allLeagues = """
+            {
+              "get": "leagues",
+              "parameters": [],
+              "errors": [],
+              "results": 1787,
+              "paging": { "current": 1, "total": 36 },
+              "response": [
+                {
+                  "league": {
+                    "id": 39,
+                    "name": "Premier League",
+                    "type": "League",
+                    "logo": "https://media.api-sports.io/football/leagues/39.png"
+                  },
+                  "country": {
+                    "name": "England",
+                    "code": "GB",
+                    "flag": "https://media.api-sports.io/flags/gb.svg"
+                  },
+                  "seasons": [
+                    { "year": 2024, "start": "2024-08-10", "end": "2025-05-25", "current": true }
+                  ]
+                }
+              ]
+            }
+            
+        """.trimIndent()
 
         val leagueStandingsMock = """
             {
