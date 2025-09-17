@@ -38,10 +38,10 @@ class LeaguesDataTest {
 
         val result = underTest.leagues()
 
-        assertThat(result[2].league.name).isEqualTo("Premier League")
-        assertThat(result[2].country.name).isEqualTo("England")
-        assertThat(result[3].league.name).isEqualTo("La Liga")
-        assertThat(result[3].country.name).isEqualTo("Spain")
+        assertThat(result[1].league.name).isEqualTo("Premier League")
+        assertThat(result[1].country.name).isEqualTo("England")
+        assertThat(result[2].league.name).isEqualTo("La Liga")
+        assertThat(result[2].country.name).isEqualTo("Spain")
 
         verify { apiSportsClient.fetchAllLeagues("/leagues") }
     }

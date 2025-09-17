@@ -5,6 +5,7 @@ import match.insights.clientData.LeagueAndCountry
 import match.insights.clientData.LeagueWithStandings
 import match.insights.props.SeasonProps
 import org.springframework.stereotype.Component
+import java.time.LocalDate
 
 @Component
 class LeaguesData(
@@ -13,6 +14,7 @@ class LeaguesData(
 ) {
 
     fun leagues(): List<LeagueAndCountry> = apiSportsClient.fetchAllLeagues("/leagues")
+        .filter { data -> data.seasons?.any { it.year == LocalDate.now().year } ?: false }
 
 
     fun leagueStandings(leagueId: Int): LeagueWithStandings? =

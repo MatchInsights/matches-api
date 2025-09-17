@@ -7,8 +7,8 @@ spring:
       port: 6379
 
 api-data:
-  url:
-  key:
+  url: https://v3.football.api-sports.io
+  key: b5a8eb588743b2105aadeb90c9bd29a5
 season:
   year:
   worldCupYear: 2026

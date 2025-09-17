@@ -1,6 +1,6 @@
 package match.insights.response
 
-import match.insights.clientData.League
+import match.insights.clientData.LeagueMinInfo
 
 data class LeagueBasicInfo(
     val id: Int = -1,
@@ -10,7 +10,7 @@ data class LeagueBasicInfo(
 ) {
     companion object {
 
-        fun fromLeague(league: League) = LeagueBasicInfo(
+        fun fromLeague(league: LeagueMinInfo) = LeagueBasicInfo(
             id = league.id,
             name = league.name,
             type = league.type,

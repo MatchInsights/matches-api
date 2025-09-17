@@ -4,7 +4,9 @@ package match.insights.data.client
 import match.insights.clientData.LeagueAndCountry
 import match.insights.clientData.LeagueCountry
 import match.insights.clientData.LeagueGoals
+import match.insights.clientData.LeagueMinInfo
 import match.insights.clientData.LeagueRecordStats
+import match.insights.clientData.LeagueSeason
 import match.insights.clientData.LeagueStandings
 import match.insights.clientData.LeagueWithStandings
 
@@ -14,24 +16,43 @@ class ClientLeagueData {
     companion object {
         val allLeagues: List<LeagueAndCountry> = listOf(
             LeagueAndCountry(
-                league = match.insights.clientData.League(
+
+                league = LeagueMinInfo(
                     id = 334,
                     name = "Unknown League",
                     type = "Cup",
-                    season = 2025
+                    logo = "https://media.api-sports.io/football/leagues/334.png"
                 ),
                 country = LeagueCountry(
                     name = "unknown country",
                     code = null,
                     flag = "https://media.api-sports.io/flags/gb.svg"
+                ),
+                seasons = listOf(
+                    LeagueSeason(
+                        year = 2024,
+                        start = "2025-01-01",
+                        end = "2025-12-31",
+                        current = true,
+                        coverage = null
+                    )
                 )
             ),
             LeagueAndCountry(
-                league = match.insights.clientData.League(
+                seasons = listOf(
+                    LeagueSeason(
+                        year = 2025,
+                        start = "2025-01-01",
+                        end = "2025-12-31",
+                        current = true,
+                        coverage = null
+                    )
+                ),
+                league = LeagueMinInfo(
                     id = 1,
                     name = "world cup",
                     type = "Cup",
-                    season = 2025
+                    logo = "https://media.api-sports.io/football/leagues/1.png"
                 ),
                 country = LeagueCountry(
                     name = "World",
@@ -40,11 +61,20 @@ class ClientLeagueData {
                 )
             ),
             LeagueAndCountry(
-                league = match.insights.clientData.League(
+                seasons = listOf(
+                    LeagueSeason(
+                        year = 2025,
+                        start = "2025-01-01",
+                        end = "2025-12-31",
+                        current = true,
+                        coverage = null
+                    )
+                ),
+                league = LeagueMinInfo(
                     id = 39,
                     name = "Premier League",
                     type = "League",
-                    season = 2025
+                    logo = "https://media.api-sports.io/football/leagues/39.png"
                 ),
                 country = LeagueCountry(
                     name = "England",
@@ -53,11 +83,20 @@ class ClientLeagueData {
                 )
             ),
             LeagueAndCountry(
-                league = match.insights.clientData.League(
+                seasons = listOf(
+                    LeagueSeason(
+                        year = 2025,
+                        start = "2025-01-01",
+                        end = "2025-12-31",
+                        current = true,
+                        coverage = null
+                    )
+                ),
+                league = LeagueMinInfo(
                     id = 140,
                     name = "La Liga",
                     type = "League",
-                    season = 2025
+                    logo = "https://media.api-sports.io/football/leagues/140.png"
                 ),
                 country = LeagueCountry(
                     name = "Spain",
