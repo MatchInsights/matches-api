@@ -1,6 +1,6 @@
 package match.insights.service
 
-import match.insights.apidata.Apidata
+import match.insights.apidata.GeneralData
 import match.insights.datamanipulation.DataManipulation
 import match.insights.datamanipulation.EventsDataManipulation
 import match.insights.data.client.ClientEventsData
@@ -19,6 +19,8 @@ import match.insights.response.TwoTeamStats
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import match.insights.apidata.LeaguesData
+import match.insights.apidata.MatchesData
 import match.insights.datamanipulation.LeagueDataManipulation
 import match.insights.datamanipulation.TeamSquadManipulation
 import match.insights.response.PlayerSummary
@@ -30,8 +32,9 @@ import kotlin.collections.mapOf
 
 class TeamsServiceTest {
 
-    val apidata: Apidata = mockk()
-
+    val apidata: GeneralData = mockk()
+    val matchesData: MatchesData = mockk()
+    val leaguesData: LeaguesData = mockk()
     val dataManitupulation: DataManipulation = mockk()
     val eventsDataManitupulation: EventsDataManipulation = mockk()
     val performanceDataManipulation: PerformanceDataManipulation = mockk()
@@ -40,6 +43,8 @@ class TeamsServiceTest {
 
     val underTest = TeamsService(
         apidata,
+        matchesData,
+        leaguesData,
         dataManitupulation,
         eventsDataManitupulation,
         performanceDataManipulation,
@@ -49,7 +54,7 @@ class TeamsServiceTest {
 
     @Test
     fun shouldGetLastFiveMatches() {
-        every { apidata.lastFiveMatchesResults(34, 44) } returns mapOf(
+        every { matchesData.lastFiveMatchesResults(34, 44) } returns mapOf(
             34 to listOf(ClientMatchResponseData.matchResponse), 44 to listOf(ClientMatchResponseData.matchResponse)
         )
 
@@ -63,26 +68,26 @@ class TeamsServiceTest {
         assertThat(matches.awayTeamLastFive[3]).isEqualTo("W")
         assertThat(matches.awayTeamLastFive[4]).isEqualTo("L")
 
-        verify { apidata.lastFiveMatchesResults(34, 44) }
+        verify { matchesData.lastFiveMatchesResults(34, 44) }
 
     }
 
     @Test
     fun shouldGetHead2HeadInfo() {
-        every { apidata.headToHead(34, 44) } returns listOf(ClientMatchResponseData.matchResponse)
+        every { matchesData.headToHead(34, 44) } returns listOf(ClientMatchResponseData.matchResponse)
 
         val h2hs = underTest.getHeadToHead(34, 44)
 
         assertThat(h2hs[0].winner).isNotNull
         assertThat(h2hs[0].date).isNotNull
 
-        verify { apidata.headToHead(34, 44) }
+        verify { matchesData.headToHead(34, 44) }
 
     }
 
     @Test
     fun shouldGetTeamsStats() {
-        every { apidata.getTeamsLeagueMatches(34, 44, 1) } returns mapOf(
+        every { matchesData.getTeamsLeagueMatches(34, 44, 1) } returns mapOf(
             34 to listOf(ClientMatchResponseData.matchResponse), 44 to listOf(ClientMatchResponseData.matchResponse)
         )
 
@@ -92,26 +97,26 @@ class TeamsServiceTest {
 
         assertThat(result).isInstanceOfAny(TwoTeamStats::class.java)
 
-        verify { apidata.getTeamsLeagueMatches(34, 44, 1) }
+        verify { matchesData.getTeamsLeagueMatches(34, 44, 1) }
         verify { dataManitupulation.teamStats(any(), any()) }
     }
 
     @Test
     fun shouldH2HTeamsStats() {
-        every { apidata.headToHead(34, 44) } returns listOf(ClientMatchResponseData.matchResponse)
+        every { matchesData.headToHead(34, 44) } returns listOf(ClientMatchResponseData.matchResponse)
         every { dataManitupulation.teamStats(any(), any()) } returns TeamStats(2, 1, 50, 60, 40)
 
         val result = underTest.getH2HStats(34, 44)
 
         assertThat(result).isInstanceOfAny(TwoTeamStats::class.java)
 
-        verify { apidata.headToHead(34, 44) }
+        verify { matchesData.headToHead(34, 44) }
         verify { dataManitupulation.teamStats(any(), any()) }
     }
 
     @Test
     fun shouldGetTeamsPositionsAndPoints() {
-        every { apidata.leagueStandings(1) } returns ClientLeagueData.leagueStandings
+        every { leaguesData.leagueStandings(1) } returns ClientLeagueData.leagueStandings
         every {
             leagueDataManipulation.positionAndPoints(
                 33,
@@ -129,7 +134,7 @@ class TeamsServiceTest {
         assertThat(result.homeTeam).isEqualTo(listOf(PositionAndPoints(1, 15, "")))
 
 
-        verify { apidata.leagueStandings(1) }
+        verify { leaguesData.leagueStandings(1) }
         verify { leagueDataManipulation.positionAndPoints(33, 44, any()) }
     }
 
@@ -137,7 +142,7 @@ class TeamsServiceTest {
     fun shouldGetTheSumOfTheLastFiveMatchesEvents() {
         val info = LastFiveMatchesEvents(1, 2, 3, 4, 5, 0, 0, 0, 0, 0)
         every {
-            apidata.lastFiveMatchesEvents(1234)
+            matchesData.lastFiveMatchesEvents(1234)
         } returns ClientEventsData.mockEvents
         every {
             eventsDataManitupulation.fiveMachesEventsSum(ClientEventsData.mockEvents)
@@ -148,13 +153,13 @@ class TeamsServiceTest {
 
         assertThat(result).isEqualTo(info)
 
-        verify { apidata.lastFiveMatchesEvents(1234) }
+        verify { matchesData.lastFiveMatchesEvents(1234) }
         verify { eventsDataManitupulation.fiveMachesEventsSum(ClientEventsData.mockEvents) }
     }
 
     @Test
     fun shouldGetTeamRestStatuses() {
-        every { apidata.mostRecentPlayedMatches(55, 33) } returns mapOf(
+        every { matchesData.mostRecentPlayedMatches(55, 33) } returns mapOf(
             55 to ClientMatchResponseData.matchResponse, 33 to ClientMatchResponseData.matchResponse
         )
 
@@ -166,14 +171,14 @@ class TeamsServiceTest {
         assertThat(result.homeTeamStatus).isEqualTo(TeamRestStatus.GOOD_REST.status)
         assertThat(result.awayTeamStatus).isEqualTo(TeamRestStatus.GOOD_REST.status)
 
-        verify { apidata.mostRecentPlayedMatches(55, 33) }
+        verify { matchesData.mostRecentPlayedMatches(55, 33) }
         verify { dataManitupulation.teamRestStatus(any()) }
         verify { dataManitupulation.daysBetween(any(), any()) }
     }
 
     @Test
     fun shouldGetTeamsScorePerformance() {
-        every { apidata.getTeamsLeagueMatches(34, 43, 1) } returns mapOf(
+        every { matchesData.getTeamsLeagueMatches(34, 43, 1) } returns mapOf(
             34 to listOf(ClientMatchResponseData.matchResponse), 43 to listOf(ClientMatchResponseData.matchResponse)
         )
 
@@ -188,7 +193,7 @@ class TeamsServiceTest {
         assertThat(result.homeTeamPerformance).isEqualTo(Performance.GOOD.value)
         assertThat(result.awayTeamPerformance).isEqualTo(Performance.GOOD.value)
 
-        verify { apidata.getTeamsLeagueMatches(34, 43, 1) }
+        verify { matchesData.getTeamsLeagueMatches(34, 43, 1) }
         verify {
             performanceDataManipulation.calculateScorePerformance(
                 any(), any()

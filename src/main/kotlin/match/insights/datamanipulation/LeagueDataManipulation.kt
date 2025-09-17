@@ -1,16 +1,30 @@
 package match.insights.datamanipulation
 
+import match.insights.clientData.LeagueAndCountry
 import match.insights.clientData.LeagueStandings
 import match.insights.clientData.LeagueWithStandings
+import match.insights.response.CountryLeagues
+import match.insights.response.LeagueBasicInfo
 import match.insights.response.LeagueGroup
 import match.insights.response.LeagueInfo
 import match.insights.response.LeagueTeamInfo
+import match.insights.response.LeaguesGroups
 import match.insights.response.PositionAndPoints
 import match.insights.response.TeamPositionsAndPoints
 import org.springframework.stereotype.Component
 
 @Component
 class LeagueDataManipulation {
+
+    private val internationalNames = setOf(
+        "world",
+        "europe",
+        "south america",
+        "asia",
+        "africa",
+        "north & central america",
+        "oceania"
+    )
 
     fun positionAndPoints(
         homeTeamId: Int, awayTeamId: Int, leagueWithStandings: LeagueWithStandings?
@@ -72,6 +86,50 @@ class LeagueDataManipulation {
         }
     }
 
+
+    fun groupLeagues(leagues: List<LeagueAndCountry>): LeaguesGroups {
+        val internationals = mutableListOf<LeagueBasicInfo>()
+        val byCountry = mutableMapOf<String, MutableList<LeagueBasicInfo>>()
+        val others = mutableListOf<LeagueBasicInfo>()
+
+        leagues.forEach { leagueAndCountry ->
+            val name = leagueAndCountry.country.name.lowercase()
+
+            when {
+                leagueAndCountry.country.code != null -> {
+                    byCountry.computeIfAbsent(leagueAndCountry.country.name) { mutableListOf() }
+                        .add(
+                            LeagueBasicInfo.fromLeague(leagueAndCountry.league)
+                        )
+                }
+
+                internationalNames.contains(name) -> {
+                    internationals.add(
+                        LeagueBasicInfo.fromLeague(leagueAndCountry.league)
+                    )
+                }
+
+                else -> {
+                    others.add(
+                        LeagueBasicInfo.fromLeague(leagueAndCountry.league)
+                    )
+                }
+            }
+        }
+
+        return LeaguesGroups(
+            internationals = internationals,
+            countryLeagues = byCountry.map { (country, leagues) ->
+                CountryLeagues(
+                    country = country,
+                    flag = leagues.firstOrNull()?.logo,
+                    leagues = leagues
+                )
+            },
+            others = others
+        )
+    }
+
     private fun rankAndPointsByTeamId(
         id: Int,
         groupsData: List<LeagueGroup>
@@ -80,5 +138,4 @@ class LeagueDataManipulation {
             teams.firstOrNull { teamInfo -> teamInfo.teamId == id }
                 ?.let { PositionAndPoints(it.rank, it.points, label) }
         }
-
 }

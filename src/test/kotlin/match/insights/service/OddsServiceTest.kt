@@ -1,6 +1,5 @@
 package match.insights.service
 
-import match.insights.apidata.Apidata
 import match.insights.datamanipulation.DataManipulation
 import match.insights.data.client.ClientOddsData
 import match.insights.data.response.OddsResponseData
@@ -10,11 +9,12 @@ import match.insights.response.OddsWinnerFeeling
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import match.insights.apidata.OddsData
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 class OddsServiceTest {
-    val apidata: Apidata = mockk()
+    val apidata: OddsData = mockk()
     val dataManipulation: DataManipulation = mockk()
     val underTest = OddsService(apidata, dataManipulation)
 

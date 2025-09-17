@@ -21,4 +21,16 @@ enum class MatchStatus(val code: String) {
     AWARDED("AWD"),
     WALKOVER("WO"),
     SUSPENDED("SUSP");
+
+    fun isNow() =
+        this in setOf(
+            LIVE,
+            FIRST_HALF,
+            HALF_TIME,
+            SECOND_HALF,
+            EXTRA_TIME,
+            PENALTIES,
+            BREAK_TIME,
+            INTERRUPTED
+        )
 }

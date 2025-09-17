@@ -1,6 +1,8 @@
 package match.insights.data.client
 
 
+import match.insights.clientData.LeagueAndCountry
+import match.insights.clientData.LeagueCountry
 import match.insights.clientData.LeagueGoals
 import match.insights.clientData.LeagueRecordStats
 import match.insights.clientData.LeagueStandings
@@ -10,7 +12,60 @@ import match.insights.clientData.Team
 
 class ClientLeagueData {
     companion object {
-
+        val allLeagues: List<LeagueAndCountry> = listOf(
+            LeagueAndCountry(
+                league = match.insights.clientData.League(
+                    id = 334,
+                    name = "Unknown League",
+                    type = "Cup",
+                    season = 2025
+                ),
+                country = LeagueCountry(
+                    name = "unknown country",
+                    code = null,
+                    flag = "https://media.api-sports.io/flags/gb.svg"
+                )
+            ),
+            LeagueAndCountry(
+                league = match.insights.clientData.League(
+                    id = 1,
+                    name = "world cup",
+                    type = "Cup",
+                    season = 2025
+                ),
+                country = LeagueCountry(
+                    name = "World",
+                    code = null,
+                    flag = "https://media.api-sports.io/flags/gb.svg"
+                )
+            ),
+            LeagueAndCountry(
+                league = match.insights.clientData.League(
+                    id = 39,
+                    name = "Premier League",
+                    type = "League",
+                    season = 2025
+                ),
+                country = LeagueCountry(
+                    name = "England",
+                    code = "ENG",
+                    flag = "https://media.api-sports.io/flags/gb.svg"
+                )
+            ),
+            LeagueAndCountry(
+                league = match.insights.clientData.League(
+                    id = 140,
+                    name = "La Liga",
+                    type = "League",
+                    season = 2025
+                ),
+                country = LeagueCountry(
+                    name = "Spain",
+                    code = "ESP",
+                    flag = "https://media.api-sports.io/flags/es.svg"
+                )
+            )
+        )
 
         val standing = LeagueStandings(
             rank = 1,

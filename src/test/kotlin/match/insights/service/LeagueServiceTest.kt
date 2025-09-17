@@ -1,21 +1,24 @@
 package match.insights.service
 
-import match.insights.apidata.Apidata
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import match.insights.apidata.LeaguesData
 import match.insights.data.client.ClientLeagueData
 import match.insights.datamanipulation.LeagueDataManipulation
 import match.insights.response.LeagueInfo
+import match.insights.response.LeaguesGroups
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 
-class LeagueStandingServiceTest {
+class LeagueServiceTest {
 
-    val apidata: Apidata = mockk()
+    val apidata: LeaguesData = mockk()
+
     val leagueDataManipulation: LeagueDataManipulation = mockk()
-    val underTest = LeagueStandingService(apidata, leagueDataManipulation)
+
+    val underTest = LeagueService(apidata, leagueDataManipulation)
 
     @Test
     fun shouldLeagueStanding() {
@@ -35,4 +38,22 @@ class LeagueStandingServiceTest {
         verify { apidata.leagueStandings(any()) }
         verify { leagueDataManipulation.extractLeaguesInfo(any()) }
     }
+
+
+    @Test
+    fun shouldFetchAllLeagues() {
+        every { apidata.leagues() } returns ClientLeagueData.allLeagues
+        every { leagueDataManipulation.groupLeagues(any()) } returns LeaguesGroups(
+            internationals = listOf(),
+            countryLeagues = listOf(),
+            others = listOf()
+        )
+
+        assertThat(underTest.allLeagues()).isNotNull
+
+
+        verify { apidata.leagues() }
+        verify { leagueDataManipulation.groupLeagues(any()) }
+    }
+
 }

@@ -1,6 +1,8 @@
 package match.insights.service
 
-import match.insights.apidata.Apidata
+import match.insights.apidata.GeneralData
+import match.insights.apidata.LeaguesData
+import match.insights.apidata.MatchesData
 import match.insights.clientData.CoachResponse
 import match.insights.clientData.TeamResponse
 import match.insights.datamanipulation.DataManipulation
@@ -22,7 +24,9 @@ import kotlin.collections.map
 
 @Service
 class TeamsService(
-    private val apiData: Apidata,
+    private val apiData: GeneralData,
+    private val matchesData: MatchesData,
+    private val leaguesData: LeaguesData,
     private val dataManipulation: DataManipulation,
     private val eventsDataManipulation: EventsDataManipulation,
     private val performanceDataManipulation: PerformanceDataManipulation,
@@ -31,7 +35,7 @@ class TeamsService(
 ) {
 
     fun getLast5MatchesResults(homeTeamId: Int, awayTeamId: Int): HomeAwayTeamLastFive {
-        val data = apiData.lastFiveMatchesResults(homeTeamId, awayTeamId)
+        val data = matchesData.lastFiveMatchesResults(homeTeamId, awayTeamId)
 
         return HomeAwayTeamLastFive(
             homeTeamLastFive = dataManipulation.lastFiveResults(homeTeamId, data[homeTeamId] ?: emptyList()),
@@ -39,13 +43,13 @@ class TeamsService(
         )
     }
 
-    fun getHeadToHead(homeTeamId: Int, awayTeamId: Int): List<H2HDetails> = apiData
+    fun getHeadToHead(homeTeamId: Int, awayTeamId: Int): List<H2HDetails> = matchesData
         .headToHead(homeTeamId, awayTeamId)
         .take(10)
         .map { H2HDetails.fromResponseData(it) }
 
     fun getH2HStats(homeTeamId: Int, awayTeamId: Int): TwoTeamStats {
-        val h2hMatches = apiData.headToHead(homeTeamId, awayTeamId)
+        val h2hMatches = matchesData.headToHead(homeTeamId, awayTeamId)
         return TwoTeamStats(
             team0 = dataManipulation.teamStats(homeTeamId, h2hMatches),
             team1 = dataManipulation.teamStats(awayTeamId, h2hMatches)
@@ -54,7 +58,7 @@ class TeamsService(
 
 
     fun getTeamsStats(homeTeamId: Int, awayTeamId: Int, leagueId: Int): TwoTeamStats {
-        val data = apiData.getTeamsLeagueMatches(homeTeamId, awayTeamId, leagueId)
+        val data = matchesData.getTeamsLeagueMatches(homeTeamId, awayTeamId, leagueId)
         return TwoTeamStats(
             team0 = dataManipulation.teamStats(homeTeamId, data[homeTeamId] ?: emptyList()),
             team1 = dataManipulation.teamStats(awayTeamId, data[awayTeamId] ?: emptyList())
@@ -63,14 +67,14 @@ class TeamsService(
 
 
     fun getTeamsPositionsAndPoints(homeTeamId: Int, awayTeamId: Int, leagueId: Int): TeamPositionsAndPoints =
-        leagueDataManipulation.positionAndPoints(homeTeamId, awayTeamId, apiData.leagueStandings(leagueId))
+        leagueDataManipulation.positionAndPoints(homeTeamId, awayTeamId, leaguesData.leagueStandings(leagueId))
 
 
     fun getLast5MatchesEvents(teamId: Int) =
-        eventsDataManipulation.fiveMachesEventsSum(apiData.lastFiveMatchesEvents(teamId))
+        eventsDataManipulation.fiveMachesEventsSum(matchesData.lastFiveMatchesEvents(teamId))
 
     fun teamRestStatuses(homeTeamId: Int, awayTeamId: Int, fixtureDate: String): TeamsRestStatus {
-        val matches = apiData.mostRecentPlayedMatches(homeTeamId, awayTeamId)
+        val matches = matchesData.mostRecentPlayedMatches(homeTeamId, awayTeamId)
 
         return TeamsRestStatus(
             dataManipulation.teamRestStatus(
@@ -89,7 +93,7 @@ class TeamsService(
     }
 
     fun teamsScorePerformance(homeTeamId: Int, awayTeamId: Int, leagueId: Int): TeamsScorePerformance {
-        val matches = apiData.getTeamsLeagueMatches(homeTeamId, awayTeamId, leagueId)
+        val matches = matchesData.getTeamsLeagueMatches(homeTeamId, awayTeamId, leagueId)
 
         return TeamsScorePerformance(
             performanceDataManipulation.calculateScorePerformance(homeTeamId, matches[homeTeamId] ?: emptyList()),

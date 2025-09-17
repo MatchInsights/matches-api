@@ -34,4 +34,18 @@ class LeagueDataManipulationTest {
         assertThat(result.homeTeam[0].description).isEqualTo("default")
     }
 
+
+    @Test
+    fun shouldGroupLeagues() {
+        val result = underTest.groupLeagues(ClientLeagueData.allLeagues)
+
+        assertThat(result.internationals.size).isEqualTo(1)
+        assertThat(result.countryLeagues[0].country).isEqualTo("England")
+        assertThat(result.countryLeagues[0].leagues[0].name).isEqualTo("Premier League")
+        assertThat(result.countryLeagues[1].country).isEqualTo("Spain")
+        assertThat(result.countryLeagues[1].leagues[0].name).isEqualTo("La Liga")
+
+        assertThat(result.others.size).isEqualTo(1)
+
+    }
 }
