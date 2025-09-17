@@ -1,6 +1,6 @@
 package match.insights.service
 
-import match.insights.apidata.Apidata
+import match.insights.apidata.OddsData
 import match.insights.datamanipulation.DataManipulation
 import match.insights.model.Odd
 import match.insights.model.OddFeeling
@@ -10,7 +10,7 @@ import match.insights.response.OddsWinnerFeeling
 import org.springframework.stereotype.Service
 
 @Service
-class OddsService(private val apidata: Apidata, private val dataManipulation: DataManipulation) {
+class OddsService(private val apidata: OddsData, private val dataManipulation: DataManipulation) {
 
     fun fetchAllOdds(fixtureId: Int): List<Bet> =
         dataManipulation.extractBets(apidata.fetchAllOdds(fixtureId))
@@ -24,6 +24,4 @@ class OddsService(private val apidata: Apidata, private val dataManipulation: Da
                     it[Odd.AWAY]?.value ?: OddFeeling.NO_DATA.value
                 )
             }
-
-
 }

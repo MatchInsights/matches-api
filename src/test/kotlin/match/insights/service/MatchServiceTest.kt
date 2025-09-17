@@ -1,28 +1,28 @@
 package match.insights.service
 
-import match.insights.apidata.Apidata
 import match.insights.data.client.ClientMatchResponseData
 import match.insights.model.MatchStatus
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import match.insights.apidata.MatchesData
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 class MatchServiceTest {
 
-    val apidata: Apidata = mockk()
+    val apidata: MatchesData = mockk()
     val underTest = MatchService(apidata)
 
     @Test
     fun shouldGetTodayMatches() {
-        every { apidata.todayMatches(any(), any()) } returns listOf(ClientMatchResponseData.matchResponse)
+        every { apidata.todayMatches(any(), any(), any()) } returns listOf(ClientMatchResponseData.matchResponse)
 
-        val matches = underTest.getTodayMatches(MatchStatus.LIVE)
+        val matches = underTest.getTodayMatches(MatchStatus.LIVE, 39)
 
         assertThat(matches).hasSize(1)
 
-        verify { apidata.todayMatches(any(), any()) }
+        verify { apidata.todayMatches(any(), any(), any()) }
 
     }
 
@@ -39,5 +39,4 @@ class MatchServiceTest {
         verify { apidata.matchDetails(any()) }
 
     }
-
 }

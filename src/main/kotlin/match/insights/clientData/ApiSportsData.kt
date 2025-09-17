@@ -19,11 +19,58 @@ data class MatchStatus(
 data class League(
     val id: Int = -1,
     val name: String = "Unknown League",
+    val type: String = "Unknown Type",
     val country: String? = "Unknown Country",
     val logo: String? = "",
     val flag: String? = "",
     val season: Int,
     val round: String? = ""
+) : Serializable
+
+data class LeagueMinInfo(
+    val id: Int,
+    val name: String,
+    val type: String,
+    val logo: String?
+) : Serializable
+
+data class LeagueCountry(
+    val name: String,
+    val code: String?,
+    val flag: String?
+) : Serializable
+
+data class LeagueAndCountry(
+    val league: LeagueMinInfo,
+    val country: LeagueCountry,
+    val seasons: List<LeagueSeason>?
+) : Serializable
+
+data class LeagueSeason(
+    val year: Int,
+    val start: String?,
+    val end: String?,
+    val current: Boolean,
+    val coverage: LeagueCoverage?
+) : Serializable
+
+data class LeagueCoverage(
+    val fixtures: LeagueFixtureCoverage?,
+    val standings: Boolean? = false,
+    val players: Boolean? = false,
+    val top_scorers: Boolean? = false,
+    val top_assists: Boolean? = false,
+    val top_cards: Boolean? = false,
+    val injuries: Boolean? = false,
+    val predictions: Boolean? = false,
+    val odds: Boolean? = false
+) : Serializable
+
+data class LeagueFixtureCoverage(
+    val events: Boolean? = false,
+    val lineups: Boolean? = false,
+    val statistics_fixtures: Boolean? = false,
+    val statistics_players: Boolean? = false
 ) : Serializable
 
 data class Team(

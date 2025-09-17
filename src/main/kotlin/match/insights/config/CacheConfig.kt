@@ -31,7 +31,8 @@ class CacheConfig {
             "fetchMatchEvents" to defaultConfig.entryTtl(Duration.ofMinutes(30)),
             "fetchTeamDetails" to defaultConfig.entryTtl(Duration.ofMinutes(30)),
             "fetchCoachDetails" to defaultConfig.entryTtl(Duration.ofMinutes(30)),
-            "fetchSquad" to defaultConfig.entryTtl(Duration.ofMinutes(30))
+            "fetchSquad" to defaultConfig.entryTtl(Duration.ofMinutes(30)),
+            "fetchAllLeagues" to defaultConfig.entryTtl(Duration.ofMinutes(120))
         )
 
         return RedisCacheManager.builder(redisConnectionFactory)

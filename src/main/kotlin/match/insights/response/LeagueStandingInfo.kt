@@ -1,6 +1,5 @@
 package match.insights.response
 
-import java.time.ZonedDateTime
 
 data class LeagueInfo(
     val id: Int,
