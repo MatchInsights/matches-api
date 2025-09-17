@@ -14,7 +14,7 @@ class LeaguesData(
 ) {
 
     fun leagues(): List<LeagueAndCountry> = apiSportsClient.fetchAllLeagues("/leagues")
-        .filter { data -> data.seasons?.any { it.year == LocalDate.now().year } ?: false }
+        .filter { data -> data.seasons?.any { it.current && it.year == LocalDate.now().year } ?: false }
 
 
     fun leagueStandings(leagueId: Int): LeagueWithStandings? =
