@@ -18,7 +18,7 @@ class MatchesData(
     private val seasonProps: SeasonProps
 ) {
 
-    fun todayMatches(day: String, statusCode: String, leagueId: Int?): List<MatchResponse> =
+    fun todayMatches(day: String, statusCode: String, leagueId: Int? = null): List<MatchResponse> =
         if (leagueId != null) apiSportsClient.fetchMatches("/fixtures?date=$day&status=$statusCode&league=$leagueId&season=${seasonProps.year}")
             .ifEmpty {
                 apiSportsClient.fetchMatches("/fixtures?date=$day&status=$statusCode&league=$leagueId&season=${seasonProps.worldCupYear}")
