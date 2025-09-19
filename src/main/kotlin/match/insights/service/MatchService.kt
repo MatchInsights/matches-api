@@ -4,11 +4,10 @@ import match.insights.apidata.MatchesData
 import match.insights.model.MatchStatus
 import match.insights.response.MatchDetails
 import match.insights.response.TodayMatch
-
 import org.springframework.stereotype.Service
-
-import java.time.LocalDate
+import java.time.ZoneId
 import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 
 
 @Service
@@ -17,7 +16,8 @@ class MatchService(
 ) {
 
     fun getTodayMatches(status: MatchStatus, leagueId: Int?): List<TodayMatch> {
-        val today = if (status.isNow()) null else LocalDate.now().toString()
+        val utcNow = ZonedDateTime.now(ZoneId.of("UTC"))
+        val today = utcNow.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 
         val response = apidata.todayMatches(today, status.code, leagueId)
 

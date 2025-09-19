@@ -10,6 +10,9 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import java.time.ZoneId
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 
 class MatchesDataTest {
 
@@ -18,16 +21,33 @@ class MatchesDataTest {
     val underTest = MatchesData(apiSportsClient, SeasonProps())
 
     @Test
-    fun `fetch todayMatches`() {
-        val day = "2023-10-01"
-        every { apiSportsClient.fetchMatches("/fixtures?date=$day&status=${MatchStatus.NOT_STARTED.code}&league=${39}") } returns ClientMatchResponseData.matchResponseList
+    fun `fetch todayMatches using league id`() {
+        val utcNow = ZonedDateTime.now(ZoneId.of("UTC"))
+        val today = utcNow.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 
-        val result = underTest.todayMatches(day, MatchStatus.NOT_STARTED.code, 39)
+        every { apiSportsClient.fetchMatches("/fixtures?date=$today&status=${MatchStatus.NOT_STARTED.code}&league=${39}&season=2025") } returns ClientMatchResponseData.matchResponseList
+
+        val result = underTest.todayMatches(today, MatchStatus.NOT_STARTED.code, 39)
 
         assertThat(result).isNotEmpty()
 
-        verify { apiSportsClient.fetchMatches("/fixtures?date=$day&status=${MatchStatus.NOT_STARTED.code}&league=${39}") }
+        verify { apiSportsClient.fetchMatches("/fixtures?date=$today&status=${MatchStatus.NOT_STARTED.code}&league=${39}&season=2025") }
     }
+
+    @Test
+    fun `fetch todayMatches`() {
+        val utcNow = ZonedDateTime.now(ZoneId.of("UTC"))
+        val today = utcNow.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+
+        every { apiSportsClient.fetchMatches("/fixtures?date=$today&status=${MatchStatus.NOT_STARTED.code}") } returns ClientMatchResponseData.matchResponseList
+
+        val result = underTest.todayMatches(today, MatchStatus.NOT_STARTED.code)
+
+        assertThat(result).isNotEmpty()
+
+        verify { apiSportsClient.fetchMatches("/fixtures?date=$today&status=${MatchStatus.NOT_STARTED.code}") }
+    }
+
 
     @Test
     fun `fetch match details`() {
